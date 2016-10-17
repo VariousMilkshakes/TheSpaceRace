@@ -3,8 +3,7 @@ using System.Collections;
 
 public class Inventory
 {
-	private Dictionary<string, int> resources;
-
+	private Dictionary<string, int> resources;  
 	public Inventory ()
 	{
 		resources = new Dictionary<string, int>();
