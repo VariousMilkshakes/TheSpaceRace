@@ -76,10 +76,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CameraContol.cs" />
-    <Compile Include="Assets\Scripts\MapGenerator.cs" />
-    <Compile Include="Assets\Scripts\Player\Inventory.cs" />
-    <Compile Include="Assets\Scripts\Player\Resources.cs" />
-    <Compile Include="Assets\Scripts\Tile.cs" />
+    <Compile Include="Assets\Scripts\GameRules.cs" />
+    <Compile Include="Assets\Scripts\Map\MapGenerator.cs" />
+    <Compile Include="Assets\Scripts\Map\Tile.cs" />
+    <Compile Include="Assets\Scripts\PlayerTools\Inventory.cs" />
+    <Compile Include="Assets\Scripts\PlayerTools\Player.cs" />
+    <Compile Include="Assets\Scripts\PlayerTools\ResourceBox.cs" />
+    <Compile Include="Assets\Scripts\PlayerTools\Resources.cs" />
+    <Compile Include="Assets\Scripts\World\Buildings\Building.cs" />
+    <Compile Include="Assets\Scripts\World\Buildings\BuildingException.cs" />
+    <Compile Include="Assets\Scripts\World\Buildings\Collection\House.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
