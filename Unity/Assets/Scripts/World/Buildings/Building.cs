@@ -29,16 +29,17 @@ namespace World.Buildings
 		}
 
 		/*
-		* The SpriteRenderer of building to replace tile sprite
+		* The Sprite of building to replace tile sprite
 		*/
-		private SpriteRenderer sr;
-
-		/// <summary>
-		/// The number of resources contained within building
-		/// </summary>
-		public int ResourceCount
+		public Sprite ActiveSprite
 		{
-			get; set;
+			get { return _buildingSprites[_buildingState]; }
+		}
+
+		public WorldStates State
+		{
+			get { return _buildingState; }
+			set { _buildingState = value; }
 		}
 
 		/// <summary>
@@ -46,6 +47,9 @@ namespace World.Buildings
 		/// </summary>
 		/// <returns>Required resources</returns>
 		public abstract ResourceBox BuildRequirements();
+
+		protected Dictionary<WorldStates, Sprite> _buildingSprites;
+		protected WorldStates _buildingState;
 
 		/// <summary>
 		/// Called when the building is built
