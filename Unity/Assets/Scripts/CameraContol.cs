@@ -13,7 +13,7 @@ public class CameraContol : MonoBehaviour {
 	public float zoomMin;
 	// The furthest (Largest orthographic size) one can zoom.
 	public float zoomMax;
-	// The ammount to multiply the users scrollwheel input by to get a reasonable change in zoom (Orthographic size).
+	// The ammount to multiply the users scrollwheel input by to get a reasonable change in zoom (Orthographic size).Cam
 	public float scrollMult;
 	// The lower bound of movement in x.
 	public float xMoveMin;
@@ -26,10 +26,15 @@ public class CameraContol : MonoBehaviour {
 	// The speed at which the zooming occurs.
 	private float zoomSpeed;
 
+	public MapGenerator planeManager;
+
 
 	// Use this for initialization
 	void Start () {
+		camera = Camera.main;
 		rb = camera.GetComponent<Rigidbody2D> ();
+		xMoveMax = planeManager.columns - 8;
+		yMoveMax = planeManager.rows - 3.5f;
 	}
 
 	/*
@@ -42,7 +47,7 @@ public class CameraContol : MonoBehaviour {
 		} else if (camera.orthographicSize < zoomMin) {
 			camera.orthographicSize = zoomMin;
 		} else {
-			camera.orthographicSize = Mathf.SmoothDamp (camera.orthographicSize, camera.orthographicSize + scroll * scrollMult, ref zoomSpeed, 0.2f);
+			camera.orthographicSize = Mathf.SmoothDamp (camera.orthographicSize, camera.orthographicSize + scroll * -scrollMult, ref zoomSpeed, 0.2f);
 		}
 
 	}
