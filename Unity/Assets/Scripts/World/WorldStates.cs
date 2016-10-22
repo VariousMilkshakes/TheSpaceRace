@@ -7,6 +7,7 @@
 	public enum WorldStates
 	{
 		None,
+		All,
 		Roman,		// /
 		Viking,		// |
 		MiddleAges,	// |

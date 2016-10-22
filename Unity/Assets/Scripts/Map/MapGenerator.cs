@@ -270,6 +270,7 @@ public class MapGenerator : MonoBehaviour
 			}
 		}
 	}
+
 	/*
 	* A struct is a data type similar to a class but is a value type rather than a refernce type.
 	* see: https://msdn.microsoft.com/en-us/library/aa288471(v=vs.71).aspx

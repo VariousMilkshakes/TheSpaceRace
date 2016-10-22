@@ -28,9 +28,13 @@ public class GameRules : MonoBehaviour {
 		return buildingTypes;
 	}
 
+	GameObject MapObject { get; set; }
+
 	// Use this for initialization
 	void Start () {
-		
+
+		MapGenerator map = MapObject.GetComponent<MapGenerator>();
+
 	}
 	
 	// Update is called once per frame
