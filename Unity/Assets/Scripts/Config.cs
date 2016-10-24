@@ -5,12 +5,38 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Assets.Scripts
+namespace Utils
 {
 	public class Config
 	{
+		public static Dictionary<string, Config> LOAD ()
+		{
+			string[] paths = Directory.GetFiles(Directory.GetCurrentDirectory() + "/Config", "*.ini");
+			Dictionary<string, Config> configs = new Dictionary<string, Config>();
+			
+			foreach (string path in paths)
+			{
+				Console.WriteLine(path);
+				Config c = new Config();
+				try
+				{
+					c.ReadConfig(path);
+				}
+				catch
+				{
+					continue;
+				}
+
+				configs.Add(c.ConfigHeader, c);
+			}
+
+			return configs;
+		}
 
 		public Dictionary<string, List<Property>> Properties;
+
+		public string ConfigHeader { get { return cHeader; } }
+		private string cHeader = "";
 
 		public Config ()
 		{
@@ -60,7 +86,15 @@ namespace Assets.Scripts
 				if (line[0] == '[')
 				{
 					currentHeader = getHeader(line);
-					Properties.Add(currentHeader, new List<Property>());
+					// First Header is used to indenitify config file
+					if (cHeader == "")
+					{
+						cHeader = currentHeader;
+					}
+					else
+					{
+						Properties.Add(currentHeader, new List<Property>());
+					}
 				}
 				else
 				{

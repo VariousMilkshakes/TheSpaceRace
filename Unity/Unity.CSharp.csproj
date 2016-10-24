@@ -77,6 +77,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\Scripts\CameraContol.cs" />
     <Compile Include="Assets\Scripts\Config.cs" />
     <Compile Include="Assets\Scripts\GameRules.cs" />
@@ -86,13 +87,11 @@
     <Compile Include="Assets\Scripts\PlayerTools\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerTools\ResourceBox.cs" />
     <Compile Include="Assets\Scripts\PlayerTools\Resources.cs" />
-    <Compile Include="Assets\Scripts\World\Buildings\Building.cs" />
+    <Compile Include="Assets\Scripts\World\Buildings\Building.Events.cs" />
     <Compile Include="Assets\Scripts\World\Buildings\BuildingException.cs" />
+    <Compile Include="Assets\Scripts\World\Buildings\Building.Setup.cs" />
     <Compile Include="Assets\Scripts\World\Buildings\Collection\House.cs" />
     <Compile Include="Assets\Scripts\World\WorldStates.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

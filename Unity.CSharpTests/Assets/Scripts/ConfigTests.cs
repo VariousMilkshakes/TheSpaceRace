@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Utils;
+
 namespace Assets.Scripts.Tests
 {
 	[TestClass()]
@@ -18,6 +20,7 @@ namespace Assets.Scripts.Tests
 		{
 			config = new Config();
 			Assert.IsNotNull(config.Properties);
+			Config.LOAD();
 		}
 
 		[TestMethod()]

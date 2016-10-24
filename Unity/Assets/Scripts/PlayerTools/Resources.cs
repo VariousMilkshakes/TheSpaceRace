@@ -3,16 +3,17 @@
 	[System.Serializable]
 	public enum Resources
 	{
-		None,       // 0
-		Wood,       // 1
-		Straw,      // 2
-		Iron,       // 3
-		Stone,      // 4
-		Steel,      // 5
-		Coal,       // 6
-		Oil,        // 7
-		Hydrogen,   // 8
-		Population, // 9
-		Faith       // 10
+		None,       // 0 Resource not set yet
+		Free,		// 1 No resources, but has been set
+		Wood,       // 2
+		Straw,      // 3
+		Iron,       // 4
+		Stone,      // 5
+		Steel,      // 6
+		Coal,       // 7
+		Oil,        // 8
+		Hydrogen,   // 9
+		Population, // 10
+		Faith       // 11
 	}
 }
