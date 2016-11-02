@@ -61,5 +61,12 @@ namespace PlayerTools
 		{
 			_q *= modifier;
 		}
+
+		public bool Spend (int volume)
+		{
+			if (volume < _q) return false;
+
+			IncreaseQuantity()
+		}
 	}
 }
