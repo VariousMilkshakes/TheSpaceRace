@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class MapGenerator : MonoBehaviour
-{
+public class MapGenerator : MonoBehaviour {
 	/*
 	* The number of columns (x) and rows (y). The dimensions of the grid.
+	* Capped at 100 for memory reasons.
 	*/
+	[Range (1, 100)]
 	public int columns;
+	[Range (1, 100)]
 	public int rows;
 
 	/*
@@ -32,11 +34,16 @@ public class MapGenerator : MonoBehaviour
 	* It's values are set in the editor.
 	*/
 	public Sprite[] sprites;
+	public Sprite[] hoverSprites;
+	public Sprite[] selectedSprites;
 
 	/*
 	* The position of the bottom left hand corner of the grid.
 	*/
 	private Transform mapHolder;
+
+	[HideInInspector]
+	public List<Tile> tiles;
 
 	/*
 	* The two dimensional integer array of grid positions used to refer to each position on the grid.
@@ -46,10 +53,10 @@ public class MapGenerator : MonoBehaviour
 	/*
 	* Called once at the start of the program.
 	*/
-	void Start()
-	{
-		GenerateMap();
-		SetUpMap();
+	void Start(){
+		tiles = new List<Tile> ();
+		GenerateMap ();
+		SetUpMap ();
 	}
 
 	/*
@@ -57,48 +64,39 @@ public class MapGenerator : MonoBehaviour
 	* It is also responsible for instanciateing gridPos.
 	* Calls Smooth 5 times to ensure smoothest map.
 	*/
-	void GenerateMap()
-	{
+	void GenerateMap(){
 		gridPos = new int[columns, rows];
-		RandomiseGrid();
-		for (int i = 0; i < 5; i++)
-		{
-			Smooth();
+		RandomiseGrid ();
+		for (int i = 0; i < 5; i++) {
+			Smooth ();
 		}
 
-		ProcessGrid();
+		ProcessGrid ();
 	}
 
 	/*
 	* This method uses foreach loops to iterate over each region (see GetRegionTiles) and if that region is smaller thatn the thershold size,
 	* 	sets the type of that tile to the opposite type.
 	*/
-	void ProcessGrid()
-	{
-		List<List<Coord>> waterRegions = GetRegions(1);
+	void ProcessGrid(){
+		List<List<Coord>> waterRegions = GetRegions (1);
 		int waterThresholdSize = 20;
 
-		foreach (List<Coord> waterRegion in waterRegions)
-		{
-			if (waterRegion.Count < waterThresholdSize)
-			{
-				foreach (Coord tile in waterRegion)
-				{
-					gridPos[tile.tileX, tile.tileY] = 0;
+		foreach (List<Coord> waterRegion in waterRegions) {
+			if(waterRegion.Count < waterThresholdSize){
+				foreach (Coord tile in waterRegion){
+					gridPos [tile.tileX, tile.tileY] = 0;
 				}
 			}
 		}
 
-		List<List<Coord>> grassRegions = GetRegions(0);
+		List<List<Coord>> grassRegions = GetRegions (0);
 		int grassThresholdSize = 20;
 
-		foreach (List<Coord> grassRegion in grassRegions)
-		{
-			if (grassRegion.Count < grassThresholdSize)
-			{
-				foreach (Coord tile in grassRegion)
-				{
-					gridPos[tile.tileX, tile.tileY] = 1;
+		foreach (List<Coord> grassRegion in grassRegions) {
+			if(grassRegion.Count < grassThresholdSize){
+				foreach(Coord tile in grassRegion){
+					gridPos [tile.tileX, tile.tileY] = 1;
 				}
 			}
 		}
@@ -107,23 +105,18 @@ public class MapGenerator : MonoBehaviour
 	/*
 	* This method creates a List of regions (see GetRegionTiles) of the specified type and returns this list.
 	*/
-	List<List<Coord>> GetRegions(int tileType)
-	{
-		List<List<Coord>> regions = new List<List<Coord>>();
+	List<List<Coord>> GetRegions(int tileType){
+		List<List<Coord>> regions = new List<List<Coord>> ();
 		int[,] gridFlags = new int[columns, rows];
 
-		for (int x = 0; x < columns; x++)
-		{
-			for (int y = 0; y < rows; y++)
-			{
-				if (gridFlags[x, y] == 0 && gridPos[x, y] == tileType)
-				{
-					List<Coord> newRegion = GetRegionTiles(x, y);
-					regions.Add(newRegion);
+		for (int x = 0; x < columns; x++){
+			for (int y = 0; y < rows; y++){
+				if (gridFlags [x, y] == 0 && gridPos [x, y] == tileType) {
+					List<Coord> newRegion = GetRegionTiles (x, y);
+					regions.Add (newRegion);
 
-					foreach (Coord tile in newRegion)
-					{
-						gridFlags[tile.tileX, tile.tileY] = 1;
+					foreach (Coord tile in newRegion) {
+						gridFlags [tile.tileX, tile.tileY] = 1;
 					}
 				}
 			}
@@ -137,30 +130,24 @@ public class MapGenerator : MonoBehaviour
 	* It creates a List of all the tiles of the same type in a region. (Where a region is a continuous area of tiles of the same type.)
 	* It then returns this list.
 	*/
-	List<Coord> GetRegionTiles(int startX, int startY)
-	{
-		List<Coord> tiles = new List<Coord>();
+	List<Coord> GetRegionTiles(int startX, int startY){
+		List<Coord> tiles = new List<Coord>(); 
 		int[,] gridFlags = new int[columns, rows];
-		int tileType = gridPos[startX, startY];
+		int tileType = gridPos [startX, startY];
 
-		Queue<Coord> queue = new Queue<Coord>();
-		queue.Enqueue(new Coord(startX, startY));
-		gridFlags[startX, startY] = 1;
+		Queue<Coord> queue = new Queue<Coord> ();
+		queue.Enqueue (new Coord(startX, startY));
+		gridFlags [startX, startY] = 1;
 
-		while (queue.Count > 0)
-		{
-			Coord tile = queue.Dequeue();
-			tiles.Add(tile);
-			for (int x = tile.tileX - 1; x <= tile.tileX + 1; x++)
-			{
-				for (int y = tile.tileY - 1; y <= tile.tileY + 1; y++)
-				{
-					if (IsInRange(x, y) && (y == tile.tileY || x == tile.tileX))
-					{
-						if (gridFlags[x, y] == 0 && gridPos[x, y] == tileType)
-						{
-							gridFlags[x, y] = 1;
-							queue.Enqueue(new Coord(x, y));
+		while (queue.Count > 0) {
+			Coord tile = queue.Dequeue ();
+			tiles.Add (tile);
+			for (int x = tile.tileX - 1; x <= tile.tileX + 1; x++) {
+				for (int y = tile.tileY - 1; y <= tile.tileY + 1; y++) {
+					if(IsInRange(x,y) && (y == tile.tileY || x == tile.tileX)){
+						if(gridFlags[x,y] == 0 && gridPos[x,y] == tileType){
+							gridFlags [x, y] = 1;
+							queue.Enqueue (new Coord (x, y));
 						}
 					}
 				}
@@ -172,8 +159,7 @@ public class MapGenerator : MonoBehaviour
 	/*
 	* Returns true if the grid position given is within the grid. i.e. is not beyond the edges of the grid.
 	*/
-	bool IsInRange(int x, int y)
-	{
+	bool IsInRange(int x, int y){
 		return x >= 0 && x < columns && y >= 0 && y < rows;
 	}
 
@@ -182,19 +168,15 @@ public class MapGenerator : MonoBehaviour
 	 * This is achieved by iterating over each element in the array and using Random.Next with a range of 0 - 100 and comparing the value with the waterPercentage int.
 	 * If the result is less than waterPercentage the type of the tile is set 1, otherwise 0.
 	*/
-	void RandomiseGrid()
-	{
-		if (randomSeed)
-		{
-			seed = Random.Range(-1000f, 1000f).ToString();
+	void RandomiseGrid(){
+		if(randomSeed){
+			seed = Random.Range (-1000f, 1000f).ToString ();
 		}
-		System.Random rnd = new System.Random(seed.GetHashCode());
+		System.Random rnd = new System.Random (seed.GetHashCode ());
 
-		for (int x = 0; x < columns; x++)
-		{
-			for (int y = 0; y < rows; y++)
-			{
-				gridPos[x, y] = (rnd.Next(0, 100) < waterPercentage) ? 1 : 0;
+		for (int x = 0; x < columns; x++) {
+			for (int y = 0; y < rows; y++) {
+				gridPos [x, y] = (rnd.Next (0, 100) < waterPercentage) ? 1 : 0;
 			}
 		}
 	}
@@ -206,20 +188,14 @@ public class MapGenerator : MonoBehaviour
 	* If there are fewer than four water tiles adjacent the tile becomes a grass tile.
 	* If there are four water tiles adjacent the tile stays as it was.
 	*/
-	void Smooth()
-	{
-		for (int x = 0; x < columns; x++)
-		{
-			for (int y = 0; y < rows; y++)
-			{
-				int adjacentTiles = GetAdjacentWaterCount(x, y);
-				if (adjacentTiles > 4)
-				{
-					gridPos[x, y] = 1;
-				}
-				else if (adjacentTiles < 4)
-				{
-					gridPos[x, y] = 0;
+	void Smooth(){
+		for (int x = 0; x < columns; x++) {
+			for (int y = 0; y < rows; y++) {
+				int adjacentTiles = GetAdjacentWaterCount (x, y);
+				if (adjacentTiles > 4){
+					gridPos [x, y] = 1;
+				}else if (adjacentTiles < 4){
+					gridPos [x, y] = 0;
 				}
 			}
 		}
@@ -230,18 +206,13 @@ public class MapGenerator : MonoBehaviour
 	* This method iterates over the eight positions adjacent to the given grid position and evaluates its type. 
 	* As water tiles are of type 1, simply returning the sum of all adjacent tiles will return the number of adjacent water tiles.
 	*/
-	int GetAdjacentWaterCount(int posX, int posY)
-	{
+	int GetAdjacentWaterCount(int posX, int posY){
 		int adjacentTiles = 0;
-		for (int adjX = posX - 1; adjX <= posX + 1; adjX++)
-		{
-			for (int adjY = posY - 1; adjY <= posY + 1; adjY++)
-			{
-				if (adjX >= 0 && adjX < columns && adjY >= 0 && adjY < rows)
-				{
-					if (adjX != posX || adjY != posY)
-					{
-						adjacentTiles += gridPos[adjX, adjY];
+		for (int adjX = posX -1; adjX <= posX +1; adjX++) {
+			for (int adjY = posY -1; adjY <= posY +1; adjY++) {
+				if(IsInRange(adjX, adjY)){
+					if (adjX != posX || adjY != posY) {
+						adjacentTiles += gridPos [adjX, adjY];
 					}
 				}
 			}
@@ -252,37 +223,42 @@ public class MapGenerator : MonoBehaviour
 	/*
 	* This method is responsable for creating the Tile of the type as set in gridPos by the RandomiseGrid method.
 	*/
-	void SetUpMap()
-	{
-		mapHolder = new GameObject("Map").transform;
+	void SetUpMap(){
+		mapHolder = new GameObject ("Map").transform;
+		mapHolder.tag = "Map";
 
-		if (gridPos != null)
-		{
-			for (int x = 0; x < columns; x++)
-			{
-				for (int y = 0; y < rows; y++)
-				{
-					Tile tile = new Tile(gridPos[x, y], sprites);
-					GameObject toInstantiate = tile.tile;
-					GameObject instance = Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-					instance.transform.SetParent(mapHolder);
+		if (gridPos != null) {
+			for(int x = 0; x < columns; x++){
+				for (int y = 0; y < rows; y++){
+					GameObject tile = new GameObject ("Tile");
+					tile.transform.SetParent (GameObject.Find("PlaneManager").transform);
+					tile.AddComponent<Tile>();
+					Tile script = (Tile) tile.GetComponent ("Tile");
+					script.NewTile (gridPos [x, y], sprites, hoverSprites, selectedSprites);
+					GameObject instance = Instantiate (tile, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
+					instance.transform.SetParent (mapHolder);
+					tiles.Add (script);
 				}
 			}
 		}
+		GameObject planeManager = GameObject.FindGameObjectWithTag ("PlaneManager");
+		Component[] oldTiles = planeManager.GetComponentsInChildren<Tile> ();
+		foreach(Tile t in oldTiles){
+			Destroy (t.gameObject);
+		}
 	}
+
 	/*
 	* A struct is a data type similar to a class but is a value type rather than a refernce type.
 	* see: https://msdn.microsoft.com/en-us/library/aa288471(v=vs.71).aspx
 	* 
 	* This struct defines a type called Coord that is a pair of integer coordinates representing one of the tiles in the map.
 	*/
-	struct Coord
-	{
+	struct Coord{
 		public int tileX;
 		public int tileY;
 
-		public Coord(int x, int y)
-		{
+		public Coord (int x, int y){
 			tileX = x;
 			tileY = y;
 		}
