@@ -1,10 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CameraContol.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\GitHub\TheSpaceRace\Unity\Assets\Scripts\Map\MapGenerator.cs">
     <Files>
-      <File FileName="Assets\Scripts\MapGenerator.cs" Line="122" Column="5" />
-      <File FileName="Assets\Scripts\Tile.cs" Line="75" Column="94" />
-      <File FileName="Assets\Scripts\CameraContol.cs" Line="34" Column="24" />
+      <File FileName="..\GitHub\TheSpaceRace\Unity\Assets\Scripts\Map\MapGenerator.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
