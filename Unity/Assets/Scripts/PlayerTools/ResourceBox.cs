@@ -66,7 +66,8 @@ namespace PlayerTools
 		{
 			if (volume < _q) return false;
 
-			IncreaseQuantity()
+			IncreaseQuantity(volume);
+			return true;
 		}
 	}
 }
