@@ -12,7 +12,7 @@ public class GameRules : MonoBehaviour {
 
 	public static readonly Dictionary<string, Config> CONFIG_REPO = Config.LOAD();
 
-	GameObject MapObject { get; set; }
+	public GameObject MapObject;
 
 	// Use this for initialization
 	void Start () {

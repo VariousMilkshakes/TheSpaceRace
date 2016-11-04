@@ -5,10 +5,11 @@ using System.Reflection;
 using System.Text;
 
 using PlayerTools;
+using SpaceRace;
 
 namespace World.Buildings
 {
-	abstract partial class Building<T>
+	abstract partial class Building<T> : TurnObject
 		where T : Building<T>, new()
 	{
 		public static T BUILD(Player builder)
@@ -33,6 +34,12 @@ namespace World.Buildings
 		public abstract ResourceBox BuildRequirements();
 
 		/// <summary>
+		/// Input and output resources from building
+		/// </summary>
+		public ResourceBox Input;
+		public ResourceBox Output;
+
+		/// <summary>
 		/// Called when the building is built
 		/// </summary>
 		/// <returns>Resources provided once the building is completed</returns>
@@ -42,13 +49,10 @@ namespace World.Buildings
 		}
 
 		/// <summary>
-		/// Called each game 'tick'
+		/// Called each game turn
 		/// </summary>
 		/// <returns>Resource provided on tick</returns>
-		public ResourceBox OnTick ()
-		{
-			return ResourceBox.EMPTY();
-		}
+		public abstract void OnTurn();
 
 		/// <summary>
 		/// Called each time building is upgraded
