@@ -1,4 +1,4 @@
-﻿namespace PlayerTools
+﻿namespace SpaceRace.PlayerTools
 {
 	[System.Serializable]
 	public enum Resources

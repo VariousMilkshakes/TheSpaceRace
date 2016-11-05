@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using PlayerTools;
+using SpaceRace.PlayerTools;
 
-namespace World.Buildings.Collection
+namespace SpaceRace.World.Buildings.Collection
 {
 	class LumberYard : Building<LumberYard>
 	{

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using PlayerTools;
-using Utils;
+using SpaceRace.PlayerTools;
+using SpaceRace.Utils;
 
 using UE = UnityEngine;
 
-namespace World.Buildings
+namespace SpaceRace.World.Buildings
 {
 	partial class Building<T>
 		where T : Building<T>, new()

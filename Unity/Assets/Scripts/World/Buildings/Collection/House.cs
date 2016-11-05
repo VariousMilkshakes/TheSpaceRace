@@ -1,11 +1,11 @@
 ﻿using System;
 
-using World.Buildings;
+using SpaceRace.World.Buildings;
 
-using PT = PlayerTools;
+using PT = SpaceRace.PlayerTools;
 using UnityEngine;
 
-namespace World.Buildings.Collection
+namespace SpaceRace.World.Buildings.Collection
 {
 	class House : Building<House>
 	{
@@ -20,6 +20,9 @@ namespace World.Buildings.Collection
 			return _eventResources["OnBuild"];
 		}
 
-
+		public override void OnTurn()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
