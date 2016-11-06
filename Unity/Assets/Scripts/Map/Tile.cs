@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
+using World.Buildings;
+using World.Buildings.Collection;
 
 public class Tile: MonoBehaviour{
 	/*
@@ -9,12 +12,21 @@ public class Tile: MonoBehaviour{
 	*/
 	[HideInInspector]
 	public SpriteRenderer sr;
-
+	[HideInInspector]
+	public SpriteRenderer hsr;
 	/*
 	* The BoxCollider2D of this Tiles GameObject to allow the mouse to be detected by the tiles.
 	*/
 	[HideInInspector]
 	private BoxCollider2D bx2D;
+
+	[HideInInspector]
+	GameObject highlighter;
+
+	/*
+	* The building on this tile.
+	*/
+	private Building<House> building;
 
 	/*
 	* Corrisponds to whether the Tile is selected or not.
@@ -25,8 +37,9 @@ public class Tile: MonoBehaviour{
 	* The arrays of sprites this Tile could possibly take. 
 	*/
 	public Sprite[] spriteArray;
-	public Sprite[] hoverArray;
-	public Sprite[] selectedArray;
+	public Sprite hoverSprite;
+	public Sprite selectedSprite;
+	public Sprite buildingSprite;
 
 	/*
 	* The type of Tile that this is. (Currently grass(0) or water(1))
@@ -48,16 +61,25 @@ public class Tile: MonoBehaviour{
 	* Sets bx2D as a new BoxCollider2D component of this Tile. Also sets bx2D's isTrigger and enabled values to 'true'.
 	* Sets the sprite that sr renders to the type of tile that this is.
 	*/
-	public void NewTile(int type, Sprite[] sprites, Sprite[] hovers, Sprite[] selected){
+	public void NewTile(int type, Sprite[] sprites, Sprite hover, Sprite selected, Sprite buildingSprite){
 		spriteArray = sprites;
-		hoverArray = hovers;
-		selectedArray = selected;
+		hoverSprite = hover;
+		selectedSprite = selected;
 		this.type = type;
 		sr = gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
+
+		highlighter = new GameObject ("Highliter");
+		highlighter.transform.SetParent (this.gameObject.transform);
+		hsr = highlighter.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
+		hsr.sortingOrder = 1;
+		hsr.sprite = null;
+
 		bx2D = gameObject.AddComponent (typeof(BoxCollider2D)) as BoxCollider2D;
 		bx2D.isTrigger = true;
 		bx2D.enabled = true;
 		SetTileSprite (this.type);
+		building = null;
+		this.buildingSprite = buildingSprite;
 	}
 
 	/*
@@ -65,9 +87,10 @@ public class Tile: MonoBehaviour{
 	* see https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnMouseEnter.html
 	*/
 	void OnMouseEnter (){
-		SpriteRenderer sptren = (SpriteRenderer)this.gameObject.GetComponent ("SpriteRenderer");
+		Component[] sptren = this.gameObject.GetComponentsInChildren <SpriteRenderer> ();
+		SpriteRenderer hisr = (SpriteRenderer)sptren [1];
 		if (!selected) {
-			sptren.sprite = hoverArray [type];
+			hisr.sprite = hoverSprite;
 		}
 	}
 
@@ -76,9 +99,10 @@ public class Tile: MonoBehaviour{
 	* see https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnMouseExit.html
 	*/
 	void OnMouseExit(){
-		SpriteRenderer sptren = (SpriteRenderer)this.gameObject.GetComponent ("SpriteRenderer");
+		Component[] sptren = this.gameObject.GetComponentsInChildren <SpriteRenderer> ();
+		SpriteRenderer hisr = (SpriteRenderer)sptren [1];
 		if (!selected) {
-			sptren.sprite = spriteArray [type];
+			hisr.sprite = null;
 		}
 	}
 
@@ -88,12 +112,18 @@ public class Tile: MonoBehaviour{
 	* see https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnMouseDown.html
 	*/
 	void OnMouseDown(){
-		DeselectTile ();
-		SpriteRenderer sprtren = (SpriteRenderer)this.gameObject.GetComponent ("SpriteRenderer");
+		
+		Component[] sprtren = this.gameObject.GetComponentsInChildren <SpriteRenderer> ();
+		SpriteRenderer tisr = (SpriteRenderer)sprtren [0];
+		SpriteRenderer hisr = (SpriteRenderer)sprtren [1];
 		if (!selected) {
+			DeselectTile ();
 			selected = true;
-			sprtren.sprite = selectedArray [type];
+			hisr.sprite = selectedSprite;
+		} else if (selected && type == 0) {
+			tisr.sprite = buildingSprite;
 		}
+
 	}
 
 	/*
@@ -107,7 +137,10 @@ public class Tile: MonoBehaviour{
 				foreach (Tile t in tiles) {
 					if (t.selected) {
 						t.selected = false;
-						t.sr.sprite = t.spriteArray [t.type];
+						Component[] sptren = t.GetComponentsInChildren<SpriteRenderer> ();
+						//SpriteRenderer tisr = (SpriteRenderer)sptren [0];
+						SpriteRenderer hisr = (SpriteRenderer)sptren [1];
+						hisr.sprite = null;
 					}
 				}
 			}
@@ -119,11 +152,7 @@ public class Tile: MonoBehaviour{
 	* This means that the array of sprites passed to the Tile object cannot changed or the indexing of the arry will fail.
 	*/
 	void SetTileSprite(int type){
-		if (type == 0) {
-			sr.sprite = spriteArray[0];
-		}else if(type == 1){
-			sr.sprite = spriteArray [1];
-		}
+		sr.sprite = spriteArray [type];
 	}
 
 }

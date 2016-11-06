@@ -31,7 +31,7 @@ namespace World.Buildings
 		/*
 		* The SpriteRenderer of building to replace tile sprite
 		*/
-		private SpriteRenderer sr;
+		/*private*/public SpriteRenderer sr = new SpriteRenderer ();
 
 		/// <summary>
 		/// The number of resources contained within building

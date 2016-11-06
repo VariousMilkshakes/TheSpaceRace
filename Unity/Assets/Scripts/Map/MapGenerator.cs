@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -34,8 +35,9 @@ public class MapGenerator : MonoBehaviour {
 	* It's values are set in the editor.
 	*/
 	public Sprite[] sprites;
-	public Sprite[] hoverSprites;
-	public Sprite[] selectedSprites;
+	public Sprite hoverSprite;
+	public Sprite selectedSprite;
+	public Sprite buildingSprite;
 
 	/*
 	* The position of the bottom left hand corner of the grid.
@@ -49,6 +51,56 @@ public class MapGenerator : MonoBehaviour {
 	* The two dimensional integer array of grid positions used to refer to each position on the grid.
 	*/
 	int[,] gridPos;
+
+	/*
+	* Setters
+	*/
+	//width
+	public void SetMapWidth(string width){
+		int newCols = 0;
+		if (Int32.TryParse (width, out newCols)) {
+			if (newCols >= 1 && newCols <= 100) {
+				columns = newCols;
+			} else {
+				Debug.Log ("The value for witdth must be between 1 and 100.");
+			}
+		} else {
+			Debug.Log ("The value for width must be an Integer between 1 and 100.");
+		}
+	}
+
+	//height
+	public void SetMapHeight(string height){
+		int newRows = 0;
+		if (Int32.TryParse (height, out newRows)) {
+			if (newRows >= 1 && newRows <= 100) {
+				rows = newRows;
+			} else {
+				Debug.Log ("The value for height must be between 1 and 100.");
+			}
+		} else {
+			Debug.Log ("The value for height must be an Integer between 1 and 100.");
+		}
+	}
+
+	public void SetMapWaterPercentage(string water){
+		int newWater = -1;
+		if (Int32.TryParse (water, out newWater)) {
+			if (newWater >= 0 && newWater <= 100) {
+				waterPercentage = newWater;
+			} else {
+				Debug.Log ("The value for waterPercentage must be between 0 and 100.");
+			}
+		} else {
+			Debug.Log ("The value for waterPercentage must be an Integer between 0 and 100.");
+		}
+	}
+
+	//seed
+	public void SetMapSeed(string seed){
+		randomSeed = false;
+		this.seed = seed;
+	}
 
 	/*
 	* Called once at the start of the program.
@@ -99,6 +151,17 @@ public class MapGenerator : MonoBehaviour {
 					gridPos [tile.tileX, tile.tileY] = 1;
 				}
 			}
+		}
+		List<Coord> sandTiles = new List<Coord> ();
+		foreach (List<Coord> grassregion in grassRegions) {
+			foreach (Coord tile in grassregion){
+				if (GetAdjacentWaterCount(tile.tileX, tile.tileY) >= 1){
+					sandTiles.Add (tile);
+				}
+			}
+		}
+		foreach (Coord tile in sandTiles) {
+			gridPos [tile.tileX, tile.tileY] = 2;
 		}
 	}
 
@@ -170,7 +233,7 @@ public class MapGenerator : MonoBehaviour {
 	*/
 	void RandomiseGrid(){
 		if(randomSeed){
-			seed = Random.Range (-1000f, 1000f).ToString ();
+			seed = UnityEngine.Random.Range (-1000f, 1000f).ToString ();
 		}
 		System.Random rnd = new System.Random (seed.GetHashCode ());
 
@@ -234,7 +297,7 @@ public class MapGenerator : MonoBehaviour {
 					tile.transform.SetParent (GameObject.Find("PlaneManager").transform);
 					tile.AddComponent<Tile>();
 					Tile script = (Tile) tile.GetComponent ("Tile");
-					script.NewTile (gridPos [x, y], sprites, hoverSprites, selectedSprites);
+					script.NewTile (gridPos [x, y], sprites, hoverSprite, selectedSprite, buildingSprite);
 					GameObject instance = Instantiate (tile, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 					instance.transform.SetParent (mapHolder);
 					tiles.Add (script);

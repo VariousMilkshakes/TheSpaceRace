@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{A48DCC41-8DEA-CB88-343D-5176FD52181F}</ProjectGuid>
+    <ProjectGuid>{CD8C9303-404B-FB8D-6B9B-21988D5CAC0A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -47,8 +47,15 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraContol.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\MapGenerator.cs" />
-     <Compile Include="Assets\Scripts\Tile.cs" />
+     <Compile Include="Assets\Scripts\Map\MapGenerator.cs" />
+     <Compile Include="Assets\Scripts\Map\Tile.cs" />
+     <Compile Include="Assets\Scripts\PlayerTools\Inventory.cs" />
+     <Compile Include="Assets\Scripts\PlayerTools\Player.cs" />
+     <Compile Include="Assets\Scripts\PlayerTools\ResourceBox.cs" />
+     <Compile Include="Assets\Scripts\PlayerTools\Resources.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Building.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\BuildingException.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\House.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
