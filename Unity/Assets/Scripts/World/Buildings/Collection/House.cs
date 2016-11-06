@@ -2,18 +2,24 @@
 
 using World.Buildings;
 
-using PlayerTools;
+using PT = PlayerTools;
+using UnityEngine;
 
 namespace World.Buildings.Collection
 {
 	class House : Building<House>
 	{
-		private Resources buildingResource = Resources.Wood;
-		private int buildingResourceCost = 5;
 
-		public override ResourceBox BuildRequirements()
+		public House () : base (typeof(House))
 		{
-			return new ResourceBox(buildingResource, buildingResourceCost);
+
 		}
+
+		public override PT.ResourceBox BuildRequirements()
+		{
+			return _eventResources["OnBuild"];
+		}
+
+
 	}
 }
