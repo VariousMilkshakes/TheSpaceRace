@@ -41,17 +41,24 @@ public class AI : MonoBehaviour {
 
 	private void placeTownHall() {
 		//iterate through tiles available to find area with good surrounding resources
-		for(int col=0; col<mapTilesAvailable[0].Length; col++){
-			for (int row = 0; row < mapTilesAvailable.Rank; row++) {
-				//TODO: make this more useful														**************!**************
-				if((mapTilesAvailable[row][col].type && (mapTilesAvailable[row-1][col].type
-					|| mapTilesAvailable[row][col+1].type || mapTilesAvailable[row+1][col+1].type 
-					|| mapTilesAvailable[row][col-1).type) != 1){
-						//CHECK this once tile/buliding class have been updated
-						mapTilesAvailable[row][col].building = Building.townHall; 
-					}
+		for(int col=0; col<mapTilesAvailable.GetLength(0); col++){
+			for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
+				if((mapTilesAvailable[col][row].type == 1) && //if current tile is empty
+					//check surrounding tiles for a tile that isn't blank
+					((mapTilesAvailable[col-1][row-1].type != 1) && (mapTilesAvailable[col-1][row-1].type != 0)) ||
+					((mapTilesAvailable[col-1][row].type !=1) && (mapTilesAvailable[col-1][row] != 0)) ||
+					((mapTilesAvailable[col-1][row+1].type !=1) && (mapTilesAvailable[col-1][row+1] !=0)) ||
+					((mapTilesAvailable[col][row-1].type !=1) && (mapTilesAvailable[col][row-1] !=0)) ||
+					((mapTilesAvailable[col][row+1].type !=1) && (mapTilesAvailable[col][row+1] !=0)) ||
+					((mapTilesAvailable[col+1][row-1].type !=1) && (mapTilesAvailable[col+1][row-1] !=0)) ||
+					((mapTilesAvailable[col+1][row].type !=1) && (mapTilesAvailable[col+1][row].type !=0)) ||
+					((mapTilesAvailable[col+1][row+1].type !=1) && (mapTilesAvailable[col+1][row+1].type !=0))
+				){
+					//CHECK this once tile/buliding class have been updated
+					mapTilesAvailable[row][col].building = Building.townHall; 
 				}
 			}
+		}
 		actionsTaken++;
 	}
 
@@ -60,30 +67,14 @@ public class AI : MonoBehaviour {
 	 * Returns the tile to place the building on*/
 	private Tile[][] surveyArea(Resources toFind) {
 		Tile[][] placeOn = null;
-		//TODO: make this more useful																**************!************
-		for(int col=0; col<cityTilesAvailable[0].Length; col++){
-			for (int row = 0; row < cityTilesAvailable.Rank; row++) {
-				if(cityTilesAvailable[row][col].type == toFind){
-					placeOn = cityTilesAvailable[row][col];
+		for(int col=0; col<mapTilesAvailable.GetLength(0); col++){
+			for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
+				if(cityTilesAvailable[col][row].type == toFind){
+					placeOn = cityTilesAvailable[col][row];
 				}
 			}
 		}
 		return placeOn;
-	}
-
-	/*Search for a specific resource within the available area
-	Returns tile containing that resource*/
-	private bool searchForResource(Resources toFind) {
-		Tile[][] hasResource = null;
-		//TODO: make this more useful																************!***********
-		for(int col=0; col<cityTilesAvailable[0].Length; col++){
-			for (int row = 0; row < cityTilesAvailable.Rank; row++) {
-				if(tilesAvailable[row][col]./*TODO: find resource of that tile*/ == toFind){
-					hasResource = cityTilesAvailable[row][col];
-				}
-			}
-		}
-		return hasResource;			
 	}
 
 	private void placeBuilding(Tile[][] tile, String buildingToPlace) {
@@ -116,6 +107,11 @@ public class AI : MonoBehaviour {
 	/*for after hack, returns number of a type of building within the city to determine whether it should be built*/
 	private int countConstruction(Building toCount) {
 		return null;
+	}
+				
+	/*for after hack*/
+	/*returns a list of resources with their priority for advancement in the game*/
+	private List<Resources> checkPriority(){
 	}
 
 	/*for after hack*/
