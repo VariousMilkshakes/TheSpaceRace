@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace PlayerTools
+namespace SpaceRace.PlayerTools
 {
 	/// <summary>
 	/// Keeps track of players resources
