@@ -11,4 +11,6 @@ Res.BuildRequirements.type=Wood
 Res.BuildRequirements.count=5
 Res.OnBuild.type=Population
 Res.OnBuild.count=1
-Sprite.All="/Assets/Sprites/House.png"
+Sprite.All=Buildings/Grass_With_House
+[LumberYard]
+Sprite.All=Buildings/Grass_With_LumberYard
