@@ -1,5 +1,3 @@
-using SpaceRace.Utils;
-using SpaceRace.World.Buildings;
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +5,8 @@ using System.Reflection;
 using System.Linq;
 using System;
 
-using Utils;
+using SpaceRace.Utils;
+using SpaceRace.World.Buildings;
 
 public class GameRules : MonoBehaviour {
 

@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
-using World.Buildings;
-using World.Buildings.Collection;
+
+using SpaceRace.World.Buildings;
+using SpaceRace.World.Buildings.Collection;
 
 public class Tile: MonoBehaviour{
 	/*

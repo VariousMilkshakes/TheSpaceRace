@@ -4,10 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using PlayerTools;
+using SpaceRace.PlayerTools;
 using SpaceRace;
 
-namespace World.Buildings
+namespace SpaceRace.World.Buildings
 {
 	abstract partial class Building<T> : TurnObject
 		where T : Building<T>, new()
