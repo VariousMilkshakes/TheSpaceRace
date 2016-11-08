@@ -53,6 +53,8 @@ public class Tile: MonoBehaviour{
 	int x;
 	int y;
 
+	public int score;
+
 	public WorldStates State
 	{
 		set { tileState = value; }
