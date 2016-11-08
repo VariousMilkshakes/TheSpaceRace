@@ -48,6 +48,9 @@ public class Tile: MonoBehaviour{
 	*/
 	public int type;
 
+	int x;
+	int y;
+
 	/*
 	* Constructor.
 	* 		Not realy a constructor but acts as one.
@@ -63,12 +66,14 @@ public class Tile: MonoBehaviour{
 	* Sets bx2D as a new BoxCollider2D component of this Tile. Also sets bx2D's isTrigger and enabled values to 'true'.
 	* Sets the sprite that sr renders to the type of tile that this is.
 	*/
-	public void NewTile(int type, Sprite[] sprites, Sprite hover, Sprite selected, Sprite buildingSprite){
+	public void NewTile(int type, Sprite[] sprites, Sprite hover, Sprite selected, Sprite buildingSprite, int x, int y){
 		spriteArray = sprites;
 		hoverSprite = hover;
 		selectedSprite = selected;
 		this.type = type;
 		sr = gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
+		this.x = x;
+		this.y = y;
 
 		highlighter = new GameObject ("Highliter");
 		highlighter.transform.SetParent (this.gameObject.transform);
