@@ -74,8 +74,11 @@ public class MapGenerator : MonoBehaviour {
 		randomSeed = false;
 		this.seed = seed;
 	}
+		
+	public int[,] getGridPos() {
+		return gridPos;
+	}
 
-	//returns array of tiles on the map
 	public List<Tile> getTiles() {
 		return tiles;
 	}
