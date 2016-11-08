@@ -33,7 +33,10 @@ namespace SpaceRace.Utils
 			clearBuildingMenu();
 
 			int xPos = 40;
-			int yPos = 25;
+			int yPos = 40;
+			int xSpacing = 10;
+
+			int buttonSize = 64;
 
 			foreach (Type building in Game.BUILDING_REPO)
 			{
@@ -44,12 +47,15 @@ namespace SpaceRace.Utils
 					targetTile.Build(building);
 				});
 
+				/// Set sprite for building button
 				try
 				{
 					Config buildingConfigs = GameRules.CONFIG_REPO["Buildings"];
 					string spritePath = buildingConfigs.LookForProperty(building.Name, "Sprite.All").Value;
-					Sprite rawSprite = Resources.Load(spritePath) as Sprite;
-					menuButton.image.sprite = rawSprite;
+					Texture2D rawSprite = Resources.Load(spritePath, typeof(Texture2D)) as Texture2D;
+					menuButton.image.sprite = Sprite.Create(rawSprite,
+						new Rect(0, 0, buttonSize, buttonSize),
+						new Vector2());
 				}
 				catch (Exception e)
 				{
@@ -58,7 +64,7 @@ namespace SpaceRace.Utils
 
 				menuItem.transform.SetParent(Canvas.transform);
 
-				xPos += 50;
+				xPos += buttonSize + xSpacing;
 
 				activeUIItems.Add(menuItem);
 			}
