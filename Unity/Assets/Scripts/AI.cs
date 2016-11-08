@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using System.Collections.Generic;
+using SpaceRace.PlayerTools;
+using SpaceRace.World.Buildings;
+using SpaceRace.World.Buildings.Collection;
 
 public class AI : MonoBehaviour {
 
 	//Initialisation
 	ResourceBox resourcesAvailable;
-	MapGenerator.tiles mapTilesAvailable;
-	/*Change to correct reference once other class is finished*/MapGenerator.tiles cityTilesAvailable;
-	Random random1;
+	List<Tile> mapTilesAvailable;
+	List<Tile> cityTilesAvailable;
+	System.Random random1;
 	double rocketSuccessProb;
 	Player playerAI;
 	Player oppt;
@@ -17,6 +22,9 @@ public class AI : MonoBehaviour {
 	void Start () {
 		actionsTaken = 0;
 		random1 = new Random ();
+		mapTilesAvailable = MapGenerator.getTiles ();
+		cityTilesAvailable = MapGenerator.getTiles (); //wrong - how is city boundary made?
+
 	}
 
 	//Main method to run in each turn
@@ -30,10 +38,10 @@ public class AI : MonoBehaviour {
 			/*after hack: look for which resource is needed for best advancement - if/while statement*/
 			/*after hack: look for which building is needed for best advancement based on that resource - if/while statement*/
 			/*after hack: sort out looping so player doesn't place duplicate buildings if they aren't useful for progression*/
-			
-			Tile[][] placeHouseTile = surveyArea (1); //survey for blank land
+
+			Tile placeHouseTile = surveyArea (1); //survey for blank land
 			placeBuilding(placeHouseTile, "house"); //place house
-			Tile[][] placeLumberTile = surveyArea (2); //survey for wood
+			Tile placeLumberTile = surveyArea (2); //survey for wood
 			placeBuilding(placeLumberTile, "lumber"); //place lumber yard
 		}
 		turnFinished = true;
@@ -65,8 +73,8 @@ public class AI : MonoBehaviour {
 
 	/*Surveys tiles avilable to place a building
 	 * Returns the tile to place the building on*/
-	private Tile[][] surveyArea(Resources toFind) {
-		Tile[][] placeOn = null;
+	private Tile surveyArea(SpaceRace.PlayerTools.Resources toFind) {
+		Tile placeOn = null;
 		for(int col=0; col<mapTilesAvailable.GetLength(0); col++){
 			for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
 				if(cityTilesAvailable[col][row].type == toFind){
@@ -77,7 +85,7 @@ public class AI : MonoBehaviour {
 		return placeOn;
 	}
 
-	private void placeBuilding(Tile[][] tile, String buildingToPlace) {
+	private void placeBuilding(Tile tile, string buildingToPlace) {
 		tile.building = Building.buildingToPlace; //TODO: correct when tile/building class has been updated
 		actionsTaken++;
 	}
@@ -85,40 +93,40 @@ public class AI : MonoBehaviour {
 
 
 	/*for after hack*/
-	private Building chooseBuilding() {
-	}
+	//	private Building<T> chooseBuilding() {
+	//	}
 
 	/*for after hack*/
-	private ResourceBox getOpptResource(Player oppt) {
-		return null;
-	}
+	//	private ResourceBox getOpptResource(Player oppt) {
+	//		return null;
+	//	}
 
 	/*for after hack*/
-	private int getOpptWealth(Player oppt) {
-		return null;
-	}
+	//	private int getOpptWealth(Player oppt) {
+	//		return null;
+	//	}
 
 	/*for after hack*/
-	private ResourceBox trade(Player oppt) {
-		actionsTaken++;
-		return null;
-	}
+	//	private ResourceBox trade(Player oppt) {
+	//		actionsTaken++;
+	//		return null;
+	//	}
 
 	/*for after hack, returns number of a type of building within the city to determine whether it should be built*/
-	private int countConstruction(Building toCount) {
-		return null;
-	}
-				
-	/*for after hack*/
-	/*returns a list of resources with their priority for advancement in the game*/
-	private List<Resources> checkPriority(){
-	}
+	//	private int countConstruction(Building<T> toCount) {
+	//		return null;
+	//	}
 
 	/*for after hack*/
-	private bool rocketLaunch(int hydrogen){
-		actionsTaken++;
-		return null;
-	}
+	/*returns a list of resources with their priority for advancement in the game*/
+	//	private List<Resources> checkPriority(){
+	//	}
+
+	/*for after hack*/
+	//	private bool rocketLaunch(int hydrogen){
+	//		actionsTaken++;
+	//		return null;
+	//	}
 
 }
 
