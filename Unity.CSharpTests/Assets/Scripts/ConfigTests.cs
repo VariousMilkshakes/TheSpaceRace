@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Utils;
+using SpaceRace.Utils;
 
 namespace Assets.Scripts.Tests
 {
@@ -30,7 +30,7 @@ namespace Assets.Scripts.Tests
 
 			try
 			{
-				config.ReadConfig(@"D:\Uni\y2\Group Word\TheSpaceRace\Unity\Assets\Scripts\Config\Buildings.ini");
+				config.ReadConfig(Resources);
 			}
 			catch (System.IO.IOException ioe)
 			{

@@ -4,6 +4,7 @@ using System.IO;
 
 using SpaceRace.World.Buildings;
 using SpaceRace.World.Buildings.Collection;
+using System;
 
 public class Tile: MonoBehaviour{
 	/*
@@ -125,6 +126,16 @@ public class Tile: MonoBehaviour{
 			tisr.sprite = buildingSprite;
 		}
 
+		try
+		{
+			GameObject ui = GameObject.Find("TempUIHandler");
+			SpaceRace.Utils.UiHack uih = ui.GetComponent<SpaceRace.Utils.UiHack>();
+			uih.DisplayBuildings(this);
+		}catch
+		{
+			Debug.Log("Could not find");
+		}
+
 	}
 
 	/*
@@ -154,6 +165,11 @@ public class Tile: MonoBehaviour{
 	*/
 	void SetTileSprite(int type){
 		sr.sprite = spriteArray [type];
+	}
+
+	public void Build(Type buildingType)
+	{
+		Debug.Log("Building " + buildingType.ToString());
 	}
 
 }

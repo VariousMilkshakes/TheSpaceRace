@@ -8,7 +8,7 @@ namespace SpaceRace.PlayerTools
 	/// Keeps track of players resources
 	/// </summary>
 	[System.Serializable]
-	class Inventory
+	public class Inventory
 	{
 
 		/// <summary>

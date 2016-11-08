@@ -5,22 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using UnityEngine;
+
 namespace SpaceRace.Utils
 {
 	public class Config
 	{
 		public static Dictionary<string, Config> LOAD ()
 		{
-			string[] paths = Directory.GetFiles(Directory.GetCurrentDirectory() + "/Config", "*.ini");
+			TextAsset[] assetArray = Resources.LoadAll<TextAsset>("Config/");
 			Dictionary<string, Config> configs = new Dictionary<string, Config>();
-			
-			foreach (string path in paths)
+
+			foreach (TextAsset ta in assetArray)
 			{
-				Console.WriteLine(path);
 				Config c = new Config();
 				try
 				{
-					c.ReadConfig(path);
+					c.ReadConfig(ta);
 				}
 				catch
 				{
@@ -33,6 +34,7 @@ namespace SpaceRace.Utils
 			return configs;
 		}
 
+
 		public Dictionary<string, List<Property>> Properties;
 
 		public string ConfigHeader { get { return cHeader; } }
@@ -41,6 +43,13 @@ namespace SpaceRace.Utils
 		public Config ()
 		{
 			Properties = new Dictionary<string, List<Property>>();
+		}
+
+		public void ReadConfig (TextAsset textFile)
+		{
+			List<string> lines = textFile.text.Split('\n').ToList<string>();
+			lines = cleanLines(lines);
+			collectHeaders(lines);
 		}
 
 		public void ReadConfig (string filePath)
@@ -63,6 +72,10 @@ namespace SpaceRace.Utils
 			for (int i = 0; i < c; i++)
 			{
 				string line = rawLines[i];
+
+				line = line.Replace("\r", "");
+				rawLines[i] = line;
+
 				if (line == "" || line[0] == ';')
 				{
 					rawLines.RemoveAt(i);
@@ -98,13 +111,27 @@ namespace SpaceRace.Utils
 				}
 				else
 				{
-					if (currentHeader == "") continue;
-
-					collectProperty(line, currentHeader);
+					if (currentHeader != "")
+						collectProperty(line, currentHeader);
 				}
 
 				cleanLines.Remove(line);
 			}
+		}
+
+		/// <summary>
+		/// Check if object has relevant config file
+		/// </summary>
+		/// <param name="t">Type of building to look for config of</param>
+		/// <returns>Relevant config</returns>
+		public Property LookForProperty(string configHeader, string propKey)
+		{
+			foreach (Property p in Properties[configHeader])
+			{
+				if (p.IsProperty(propKey)) return p;
+			}
+
+			throw new Exception("Could not find property in config file: " + propKey);
 		}
 
 		private string getHeader (string line)
@@ -135,6 +162,12 @@ namespace SpaceRace.Utils
 			public string ToString ()
 			{
 				return String.Format("key: {0}, value: {1}", Key, Value);
+			}
+
+			public bool IsProperty (string checkKey)
+			{
+				if (checkKey == Key) return true;
+				return false;
 			}
 		}
 

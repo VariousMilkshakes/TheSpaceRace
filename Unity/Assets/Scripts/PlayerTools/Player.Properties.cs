@@ -6,7 +6,7 @@ using System.Text;
 namespace SpaceRace.PlayerTools
 {
 	[System.Serializable]
-	partial class Player
+	public partial class Player
 	{
 
 		private Inventory inventory;

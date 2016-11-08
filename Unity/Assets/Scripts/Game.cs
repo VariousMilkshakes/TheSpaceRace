@@ -23,13 +23,23 @@ namespace SpaceRace
 		/// <returns>All buildings</returns>
 		public static List<Type> LOAD_BUILDINGS()
 		{
-			List<Type> buildingTypes = new List<Type>(Assembly.GetAssembly(typeof(Building<>))
+			List<Type> buildingTypes = Assembly.GetExecutingAssembly()
 				.GetTypes()
-				.Where(b => b.IsClass &&
-				!b.IsAbstract &&
-				b.IsSubclassOf(typeof(Building<>))));
+				.Where(t => t.BaseType != null &&
+				t.BaseType.IsGenericType &&
+				t.BaseType.GetGenericTypeDefinition() == typeof(Building<>)).ToList<Type>();
 
 			return buildingTypes;
+		}
+
+		public static Type LOOK_FOR_BUILDING (string buildingName)
+		{
+			foreach (Type t in BUILDING_REPO)
+			{
+				if (t.Name == buildingName) return t;
+			}
+
+			return null;
 		}
 
 		void Start ()
