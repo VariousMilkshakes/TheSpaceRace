@@ -102,6 +102,11 @@ public class MapGenerator : MonoBehaviour {
 		this.seed = seed;
 	}
 
+	//returns array of tiles on the map
+	public List<Tile> getTiles() {
+		return tiles;
+	}
+
 	/*
 	* Called once at the start of the program.
 	*/
@@ -297,7 +302,7 @@ public class MapGenerator : MonoBehaviour {
 					tile.transform.SetParent (GameObject.Find("PlaneManager").transform);
 					tile.AddComponent<Tile>();
 					Tile script = (Tile) tile.GetComponent ("Tile");
-					script.NewTile (gridPos [x, y], sprites, hoverSprite, selectedSprite, buildingSprite);
+					script.NewTile (gridPos [x, y], sprites, hoverSprite, selectedSprite, buildingSprite, x, y);
 					GameObject instance = Instantiate (tile, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 					instance.transform.SetParent (mapHolder);
 					tiles.Add (script);

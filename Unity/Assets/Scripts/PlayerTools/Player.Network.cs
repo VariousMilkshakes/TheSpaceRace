@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace SpaceRace.PlayerTools
 {
-	partial class Player : MonoBehaviour
+	public partial class Player : MonoBehaviour
 	{
 		public float speed = 10f;
 

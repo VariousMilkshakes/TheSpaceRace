@@ -8,7 +8,7 @@ using UnityEngine;
 namespace SpaceRace.World.Buildings.Collection
 {
 	class House : Building<House>
-	{
+	{	
 
 		public House () : base (typeof(House))
 		{
@@ -17,12 +17,12 @@ namespace SpaceRace.World.Buildings.Collection
 
 		public override PT.ResourceBox BuildRequirements()
 		{
-			return _eventResources["OnBuild"];
+			return new PT.ResourceBox(PT.Resources.Wood, 10);
 		}
 
 		public override void OnTurn()
 		{
-			throw new NotImplementedException();
+			return;
 		}
 	}
 }

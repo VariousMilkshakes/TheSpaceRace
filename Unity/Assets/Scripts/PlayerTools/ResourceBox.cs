@@ -9,7 +9,7 @@ namespace SpaceRace.PlayerTools
 	/// <summary>
 	/// Datatype for transferring resources
 	/// </summary>
-	struct ResourceBox
+	public struct ResourceBox
 	{
 		/// <summary>
 		/// Used for returning an empty resource box
