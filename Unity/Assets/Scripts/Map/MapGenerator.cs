@@ -102,6 +102,11 @@ public class MapGenerator : MonoBehaviour {
 		this.seed = seed;
 	}
 
+	//returns array of tiles on the map
+	public List<Tile> getTiles() {
+		return tiles;
+	}
+
 	/*
 	* Called once at the start of the program.
 	*/
