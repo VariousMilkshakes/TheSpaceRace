@@ -54,7 +54,7 @@ namespace SpaceRace
 			activePlayers = new List<TurnObject>()
 			{
 				player1,
-				new AI()
+				new AI(new Player())
 			};
 
 			uiHandler = UIHandlerObject.GetComponent<UiHack>();
