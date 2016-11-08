@@ -92,6 +92,14 @@ public class MapGenerator : MonoBehaviour {
 		SetUpMap ();
 	}
 
+	public Tile GetTile(int x, int y){
+		foreach (Tile t in tiles) {
+			if (t.GetX () == x && t.GetY () == y) {
+				return t;
+			}
+		} throw new NoTileException ("No such Tile");
+	}
+
 	/*
 	* This method is an amalgam of other methods.
 	* It is also responsible for instanciateing gridPos.

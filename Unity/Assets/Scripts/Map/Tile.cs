@@ -89,6 +89,14 @@ public class Tile: MonoBehaviour{
 		this.buildingSprite = buildingSprite;
 	}
 
+	public int GetX(){
+		return x;
+	}
+
+	public int GetY(){
+		return y;
+	}
+
 	/*
 	* This method changes the sprite of this tiles sprite renderer if it is not currently seleceted to the hover version of this Tile.
 	* see https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnMouseEnter.html

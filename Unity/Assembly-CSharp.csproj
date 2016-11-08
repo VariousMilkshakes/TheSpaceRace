@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameRules.cs" />
      <Compile Include="Assets\Scripts\Map\MapGenerator.cs" />
+     <Compile Include="Assets\Scripts\Map\NoTileException.cs" />
      <Compile Include="Assets\Scripts\Map\Tile.cs" />
      <Compile Include="Assets\Scripts\NetworkManager.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Inventory.cs" />
