@@ -32,6 +32,16 @@ namespace SpaceRace
 			return buildingTypes;
 		}
 
+		public static Type LOOK_FOR_BUILDING (string buildingName)
+		{
+			foreach (Type t in BUILDING_REPO)
+			{
+				if (t.Name == buildingName) return t;
+			}
+
+			return null;
+		}
+
 		void Start ()
 		{
 			
