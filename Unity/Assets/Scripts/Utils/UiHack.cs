@@ -6,6 +6,7 @@ using SpaceRace;
 using SpaceRace.PlayerTools;
 
 using UnityEngine.UI;
+using SpaceRace.World.Buildings;
 
 namespace SpaceRace.Utils
 {
@@ -74,7 +75,7 @@ namespace SpaceRace.Utils
 				Button menuButton = menuItem.GetComponent<Button>();
 				menuButton.onClick.AddListener(delegate
 				{
-					targetTile.Build(building);
+					targetTile.Build(building, currentPlayer);
 				});
 
 				/// Set sprite for building button

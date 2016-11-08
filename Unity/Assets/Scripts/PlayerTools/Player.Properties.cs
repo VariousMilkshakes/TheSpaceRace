@@ -12,7 +12,7 @@ namespace SpaceRace.PlayerTools
 
 		private Inventory inventory;
 
-		private List<TurnObject> playerBuildings;
+		private List<Building> playerBuildings;
 
 		public Inventory Inventory
 		{
@@ -21,7 +21,7 @@ namespace SpaceRace.PlayerTools
 
 		public Player ()
 		{
-			playerBuildings = new List<TurnObject>();
+			playerBuildings = new List<Building>();
 
 			inventory = new Inventory();
 			inventory.AddResource(Resources.Wood, 10);
@@ -31,10 +31,19 @@ namespace SpaceRace.PlayerTools
 
 		public void OnTurn()
 		{
-			foreach (TurnObject buildingObject in playerBuildings)
+			foreach (Building building in playerBuildings)
 			{
-				Building<> building = buildingObject as Building<>;
+				building.OnTurn();
 			}
+		}
+
+		/// <summary>
+		/// Keep track of newly constructed building
+		/// </summary>
+		/// <param name="newBuilding"></param>
+		public void TrackBuilding (Building newBuilding)
+		{
+			playerBuildings.Add(newBuilding);
 		}
 	}
 }

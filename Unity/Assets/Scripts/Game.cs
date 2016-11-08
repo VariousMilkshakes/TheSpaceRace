@@ -25,11 +25,9 @@ namespace SpaceRace
 		/// <returns>All buildings</returns>
 		public static List<Type> LOAD_BUILDINGS()
 		{
-			List<Type> buildingTypes = Assembly.GetExecutingAssembly()
-				.GetTypes()
-				.Where(t => t.BaseType != null &&
-				t.BaseType.IsGenericType &&
-				t.BaseType.GetGenericTypeDefinition() == typeof(Building<>)).ToList<Type>();
+			List<Type> buildingTypes = typeof(Building)
+				.Assembly.GetTypes()
+				.Where(t => t.IsSubclassOf(typeof(Building)) && !t.IsAbstract).ToList<Type>();
 
 			return buildingTypes;
 		}
@@ -61,9 +59,11 @@ namespace SpaceRace
 
 			uiHandler = UIHandlerObject.GetComponent<UiHack>();
 			uiHandler.currentPlayer = player1;
+
+			NewTurn();
 		}
 
-		private void newTurn ()
+		public void NewTurn ()
 		{
 			foreach (TurnObject p in activePlayers)
 			{
