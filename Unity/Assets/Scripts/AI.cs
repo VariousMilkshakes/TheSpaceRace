@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using SpaceRace;
 using SpaceRace.PlayerTools;
 using SpaceRace.World.Buildings;
 using SpaceRace.World.Buildings.Collection;
-using SpaceRace;
 
 
 //Tiles don't currently hold their own position (errors)
 //Check actionsTaken increment 
 
-public class AI : MonoBehaviour {
+public class AI : MonoBehaviour, TurnObject {
 
 	//Initialisation
 	ResourceBox resourcesAvailable;
-	List<Tile> mapTilesAvailable;
-	List<Tile> cityTilesAvailable;
+	int[,] mapTilesAvailable;
+	int[,] cityTilesAvailable;	//will be different once town hall has been written
 	System.Random random1;
 	double rocketSuccessProb;
 	Player playerAI;
@@ -24,15 +24,14 @@ public class AI : MonoBehaviour {
 	int turn;
 	int actionsTaken;
 	bool turnFinished;
-	MapGenerator mapgen;
+	MapGenerator mapGen;
 
 	void Start () {
 		actionsTaken = 0;
 		turn = 0;
 		random1 = new System.Random ();
-		mapTilesAvailable = mapgen.getTiles ();
-		cityTilesAvailable = mapgen.getTiles (); //after hack: change to tiles inside city boundary, currently all tiles on map
-		takeTurn();
+		mapTilesAvailable = mapGen.getGridPos();
+		cityTilesAvailable = mapGen.getGridPos (); //will be different once town hall has been written
 	}
 		
 
@@ -48,7 +47,7 @@ public class AI : MonoBehaviour {
 	 *******************/
 
 	//Main method to run in each turn
-	private void takeTurn () {
+	public void onTurn () {
 		turnFinished = false;
 		while (actionsTaken < 3) {
 			surveyArea (SpaceRace.PlayerTools.Resources.Free);
@@ -68,22 +67,21 @@ public class AI : MonoBehaviour {
 
 	private void placeTownHall () {
 		//iterate through tiles available to find area with good surrounding resources
-		for (int col=0; col<mapTilesAvailable.Count; col++){
-			for (int row = 0; row < mapTilesAvailable.Count; row++) {
-				if ((mapTilesAvailable[col][row].type == 1) && //if current tile is empty
+		for (int col= 0; col<mapTilesAvailable.GetLength(0); col++){
+			for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
+				if ((mapGen.method(col,row).type == 1) && //if current tile is empty
 					//check surrounding tiles for a tile that isn't blank
-					//!!!!!!!shouldn't be mapTilesAvailable, should be the tile in that position
-					((mapTilesAvailable[col-1][row-1].type != 1) && (mapTilesAvailable[col-1][row-1].type != 0)) ||
-					((mapTilesAvailable[col-1][row].type !=1) && (mapTilesAvailable[col-1][row] != 0)) ||
-					((mapTilesAvailable[col-1][row+1].type !=1) && (mapTilesAvailable[col-1][row+1] !=0)) ||
-					((mapTilesAvailable[col][row-1].type !=1) && (mapTilesAvailable[col][row-1] !=0)) ||
-					((mapTilesAvailable[col][row+1].type !=1) && (mapTilesAvailable[col][row+1] !=0)) ||
-					((mapTilesAvailable[col+1][row-1].type !=1) && (mapTilesAvailable[col+1][row-1] !=0)) ||
-					((mapTilesAvailable[col+1][row].type !=1) && (mapTilesAvailable[col+1][row].type !=0)) ||
-					((mapTilesAvailable[col+1][row+1].type !=1) && (mapTilesAvailable[col+1][row+1].type !=0))
+					((mapGen.method(col-1,row-1).type != 1) && (mapGen.method(col-1,row-1).type != 0)) ||
+					((mapGen.method(col-1,row).type !=1) && (mapGen.method(col-1,row).type != 0)) ||
+					((mapGen.method(col-1,row+1).type !=1) && (mapGen.method(col-1,row+1).type !=0)) ||
+					((mapGen.method(col,row-1).type !=1) && (mapGen.method(col,row-1).type !=0)) ||
+					((mapGen.method(col,row+1).type !=1) && (mapGen.method(col,row+1).type !=0)) ||
+					((mapGen.method(col+1,row-1).type !=1) && (mapGen.method(col+1,row-1).type !=0)) ||
+					((mapGen.method(col+1][row].type !=1) && (mapGen.method(col+1,row).type !=0)) ||
+					((mapGen.method(col+1,row+1).type !=1) && (mapGen.method(col+1,row+1).type !=0))
 				   ){
 					//CHECK this once tile/buliding class have been updated
-					placeBuilding (mapTilesAvailable[col][row], "townHall"); 
+					placeBuilding (mapTilesAvailable[col,row], "townHall"); 
 				}
 			}
 		}
@@ -95,11 +93,11 @@ public class AI : MonoBehaviour {
 	 * Returns the tile to place the building on*/
 	private Tile surveyArea (SpaceRace.PlayerTools.Resources toFind) {
 		Tile placeOn = null;
-		for (int col=0; col<mapTilesAvailable.Count; col++){
-			for (int row = 0; row < mapTilesAvailable.Count; row++) {
-				//tile in that position, not cityTilesAvaiable
-				if (cityTilesAvailable[col][row].type == toFind){
-					placeOn = cityTilesAvailable[col][row];
+			for (int col=0; col<mapTilesAvailable.GetLength(0); col++){
+				for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
+					//tile in that position, not cityTilesAvaiable
+					if (mapGen.method(col,row).type == toFind){
+						placeOn = mapGen.method(col,row);
 				}
 			}
 		}
@@ -173,13 +171,13 @@ public class AI : MonoBehaviour {
 
 
 	/*for after hack*/
-	//	private ResourceBox getOpptResource(Player oppt, Resource resource) {		
+	//	private List<Resources> getOpptResource(Player oppt, Resource resourceToFind) {		
 	//		return null;
 	//	}
 
 
 	/*for after hack*/
-	//	private ResourceBox trade(Player oppt) {
+	//	private void trade(Player oppt, Resource resourceToTrade) {
 	//		actionsTaken++;
 	//		return null;
 	//	}
@@ -187,6 +185,7 @@ public class AI : MonoBehaviour {
 
 	/*for after hack*/
 	//	private bool rocketLaunch(int hydrogen){
+	//		how is this initiated?
 	//		actionsTaken++;
 	//		return null;
 	//	}
