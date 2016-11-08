@@ -46,8 +46,8 @@ public class AI : MonoBehaviour, TurnObject {
 	 * take the best action
 	 *******************/
 
-	//Main method to run in each turn
-	public void onTurn () {
+	//Main GetTile to run in each turn
+	public void OnTurn () {
 		turnFinished = false;
 		while (actionsTaken < 3) {
 			surveyArea (SpaceRace.PlayerTools.Resources.Free);
@@ -69,19 +69,19 @@ public class AI : MonoBehaviour, TurnObject {
 		//iterate through tiles available to find area with good surrounding resources
 		for (int col= 0; col<mapTilesAvailable.GetLength(0); col++){
 			for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
-				if ((mapGen.method(col,row).type == 1) && //if current tile is empty
+				if ((mapGen.GetTile(col,row).type == 1) && //if current tile is empty
 					//check surrounding tiles for a tile that isn't blank
-					((mapGen.method(col-1,row-1).type != 1) && (mapGen.method(col-1,row-1).type != 0)) ||
-					((mapGen.method(col-1,row).type !=1) && (mapGen.method(col-1,row).type != 0)) ||
-					((mapGen.method(col-1,row+1).type !=1) && (mapGen.method(col-1,row+1).type !=0)) ||
-					((mapGen.method(col,row-1).type !=1) && (mapGen.method(col,row-1).type !=0)) ||
-					((mapGen.method(col,row+1).type !=1) && (mapGen.method(col,row+1).type !=0)) ||
-					((mapGen.method(col+1,row-1).type !=1) && (mapGen.method(col+1,row-1).type !=0)) ||
-					((mapGen.method(col+1][row].type !=1) && (mapGen.method(col+1,row).type !=0)) ||
-					((mapGen.method(col+1,row+1).type !=1) && (mapGen.method(col+1,row+1).type !=0))
+					((mapGen.GetTile(col-1,row-1).type != 1) && (mapGen.GetTile(col-1,row-1).type != 0)) ||
+					((mapGen.GetTile(col-1,row).type !=1) && (mapGen.GetTile(col-1,row).type != 0)) ||
+					((mapGen.GetTile(col-1,row+1).type !=1) && (mapGen.GetTile(col-1,row+1).type !=0)) ||
+					((mapGen.GetTile(col,row-1).type !=1) && (mapGen.GetTile(col,row-1).type !=0)) ||
+					((mapGen.GetTile(col,row+1).type !=1) && (mapGen.GetTile(col,row+1).type !=0)) ||
+					((mapGen.GetTile(col+1,row-1).type !=1) && (mapGen.GetTile(col+1,row-1).type !=0)) ||
+					((mapGen.GetTile(col+1,row).type !=1) && (mapGen.GetTile(col+1,row).type !=0)) ||
+					((mapGen.GetTile(col+1,row+1).type !=1) && (mapGen.GetTile(col+1,row+1).type !=0))
 				   ){
 					//CHECK this once tile/buliding class have been updated
-					placeBuilding (mapTilesAvailable[col,row], "townHall"); 
+					placeBuilding (mapGen.GetTile(col,row), "townHall"); 
 				}
 			}
 		}
@@ -96,8 +96,8 @@ public class AI : MonoBehaviour, TurnObject {
 			for (int col=0; col<mapTilesAvailable.GetLength(0); col++){
 				for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
 					//tile in that position, not cityTilesAvaiable
-					if (mapGen.method(col,row).type == toFind){
-						placeOn = mapGen.method(col,row);
+				if (mapGen.GetTile(col,row).type.Equals(toFind)){
+						placeOn = mapGen.GetTile(col,row);
 				}
 			}
 		}
