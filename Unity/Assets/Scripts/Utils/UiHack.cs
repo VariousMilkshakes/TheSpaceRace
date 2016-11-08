@@ -14,15 +14,19 @@ namespace SpaceRace.Utils
 
 		public GameObject BuildingMenuItem;
 		public GameObject Canvas;
+		
+		public Player currentPlayer;
 
 		private List<GameObject> activeUIItems;
-
-		public Player currentPlayer;
 
 		#region ResourceTrackers
 		public GameObject WoodTracker;
 		public GameObject PopTracker;
 		public GameObject MoneyTracker;
+
+		private Text woodValue;
+		private Text popValue;
+		private Text moneyValue;
 		#endregion
 
 
@@ -32,20 +36,31 @@ namespace SpaceRace.Utils
 			activeUIItems = new List<GameObject>();
 			//Text currentText = WoodTracker.GetComponent<Text>();
 			//currentText.text = "" + currentPlayer.Inventory.CheckResource(PlayerTools.Resources.Wood);
-			Text currentText = MoneyTracker.GetComponent<Text>();
-			currentText.text = "0";
-			currentText = PopTracker.GetComponent<Text>();
-			currentText.text = "10";
+			moneyValue = MoneyTracker.GetComponent<Text>();
+			popValue = PopTracker.GetComponent<Text>();
+			woodValue = WoodTracker.GetComponent<Text>();
 		}
 
-		// Update is called once per frame
-		void Update()
+		/// <summary>
+		/// Called everytime player resources change
+		/// </summary>
+		void ResourceUpdate()
 		{
+			Inventory inv = currentPlayer.Inventory;
+			moneyValue.text = "" + inv.CheckResource(PlayerTools.Resources.Money);
+			popValue.text = "" + inv.CheckResource(PlayerTools.Resources.Population);
+			woodValue.text = "" + inv.CheckResource(PlayerTools.Resources.Wood);
 		}
 
+		/// <summary>
+		/// Display menu of buildings available on the tile
+		/// </summary>
+		/// <param name="targetTile"></param>
 		public void DisplayBuildings (Tile targetTile)
 		{
 			clearBuildingMenu();
+
+			if (targetTile.type == 1) return;
 
 			int xPos = 40;
 			int yPos = 40;

@@ -9,10 +9,9 @@ using SpaceRace;
 
 namespace SpaceRace.World.Buildings
 {
-	abstract partial class Building<T> : TurnObject
-		where T : Building<T>, new()
+	abstract partial class Building : TurnObject
 	{
-		public static T BUILD(Player builder)
+		public static T BUILD<T>(Player builder) where T : Building, new()
 		{
 			T newBuilding = new T();
 			Inventory builderInv = builder.Inventory;

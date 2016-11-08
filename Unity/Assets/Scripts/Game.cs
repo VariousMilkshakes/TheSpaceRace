@@ -7,6 +7,8 @@ using System.Text;
 using SpaceRace.World.Buildings;
 
 using UnityEngine;
+using SpaceRace.PlayerTools;
+using SpaceRace.Utils;
 
 namespace SpaceRace
 {
@@ -42,9 +44,31 @@ namespace SpaceRace
 			return null;
 		}
 
-		void Start ()
+		public GameObject UIHandlerObject;
+
+		private List<TurnObject> activePlayers;
+		private UiHack uiHandler;
+
+		void Start()
 		{
-			
+			Player player1 = new Player();
+
+			activePlayers = new List<TurnObject>()
+			{
+				player1,
+				new AI()
+			};
+
+			uiHandler = UIHandlerObject.GetComponent<UiHack>();
+			uiHandler.currentPlayer = player1;
+		}
+
+		private void newTurn ()
+		{
+			foreach (TurnObject p in activePlayers)
+			{
+				p.OnTurn();
+			}
 		}
 	}
 }

@@ -11,7 +11,7 @@ using UE = UnityEngine;
 namespace SpaceRace.World.Buildings
 {
 	partial class Building<T>
-		where T : Building<T>, new()
+		where T : Building<T>, TurnObject, new()
 	{
 		protected Dictionary<WorldStates, UE.Sprite> _buildingSprites;
 		protected WorldStates _buildingState;
