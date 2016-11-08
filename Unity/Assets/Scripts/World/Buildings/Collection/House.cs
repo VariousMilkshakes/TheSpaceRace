@@ -9,7 +9,7 @@ using SpaceRace.Utils;
 namespace SpaceRace.World.Buildings.Collection
 {
 	class House : Building
-	{	
+	{
 
 		public House () : base (typeof(House))
 		{
@@ -27,6 +27,9 @@ namespace SpaceRace.World.Buildings.Collection
 				Debug.Log(e);
 			}
 			_buildingSprites.Add(WorldStates.All, sprite);
+
+			Input = new PT.ResourceBox(PT.Resources.Free, 0, 0);
+			Output = new PT.ResourceBox(PT.Resources.Money, 0, 10);
 		}
 
 		public override PT.ResourceBox BuildRequirements()
@@ -36,7 +39,7 @@ namespace SpaceRace.World.Buildings.Collection
 
 		public override void OnTurn()
 		{
-			return;
+			base.OnTurn();
 		}
 	}
 }

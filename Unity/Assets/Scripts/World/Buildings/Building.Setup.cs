@@ -30,6 +30,7 @@ namespace SpaceRace.World.Buildings
 
 		public Building(Type t)
 		{
+			_buildingSprites = new Dictionary<WorldStates, UE.Sprite>();
 			useConfig(checkForConfig(t));
 			_buildingState = WorldStates.All;
 		}

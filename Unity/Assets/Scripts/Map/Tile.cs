@@ -30,6 +30,10 @@ public class Tile: MonoBehaviour{
 	/*
 	* The building on this tile.
 	*/
+	public Building Building
+	{
+		get { return building; }
+	}
 	private Building building;
 
 	/*
@@ -193,7 +197,7 @@ public class Tile: MonoBehaviour{
 	public void Build (Type buildingType, Player builder)
 	{
 		var buildMethod = typeof(Building).GetMethod("BUILD");
-		var genericBuildMethod = buildMethod.MakeGenericMethod(new[] { buildingType });
+		var genericBuildMethod = buildMethod.MakeGenericMethod(buildingType);
 
 		Building newBuilding;
 
@@ -201,9 +205,9 @@ public class Tile: MonoBehaviour{
 		{
 			newBuilding = genericBuildMethod.Invoke(null, new object[] { builder }) as Building;
 		}
-		catch (BuildingException be)
+		catch (Exception)
 		{
-			Debug.Log("Not enough resources: " + be);
+			Debug.Log("Not enough resources");
 			return;
 		}
 

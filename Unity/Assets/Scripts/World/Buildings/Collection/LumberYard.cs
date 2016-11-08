@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using SpaceRace.PlayerTools;
+using PT = SpaceRace.PlayerTools;
 using UnityEngine;
 using SpaceRace.Utils;
 
@@ -27,26 +27,19 @@ namespace SpaceRace.World.Buildings.Collection
 				Debug.Log(e);
 			}
 			_buildingSprites.Add(WorldStates.All, sprite);
+
+			Input = new PT.ResourceBox(PT.Resources.Money, 0, 10);
+			Output = new PT.ResourceBox(PT.Resources.Wood, 0, 25);
 		}
 
-		public override ResourceBox BuildRequirements ()
+		public override PT.ResourceBox BuildRequirements ()
 		{
-			return _eventResources["OnBuild"];
+			return new PT.ResourceBox(PlayerTools.Resources.Money, 50);
 		}
 
 		public override void OnTurn ()
 		{
-			Output = ResourceBox.EMPTY();
-
-			if (Input.Type == _eventResources["input"].Type)
-			{
-				/// If the building gets insufficient input resources
-				/// then the output is left empty
-				if (Input.Spend(_eventResources["input"].Quantity))
-				{
-					Output = _eventResources["output"];
-				}
-			}
+			base.OnTurn();
 		}
 	}
 }

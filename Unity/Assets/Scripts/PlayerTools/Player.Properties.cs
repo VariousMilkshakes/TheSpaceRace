@@ -33,7 +33,18 @@ namespace SpaceRace.PlayerTools
 		{
 			foreach (Building building in playerBuildings)
 			{
+				Resources requiredRes = building.Input.Type;
+
+				if (requiredRes != Resources.None && requiredRes != Resources.Free)
+				{
+					int resInInv = inventory.CheckResource(requiredRes);
+					int resDeposit = building.Input.Fill(resInInv);
+					inventory.SpendResource(new ResourceBox(requiredRes, resDeposit));
+				}
+
 				building.OnTurn();
+
+				inventory.AddResource(building.Output);
 			}
 		}
 

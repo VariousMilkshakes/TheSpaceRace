@@ -27,6 +27,9 @@ public class AI : TurnObject {
 	MapGenerator mapGen;
 
 	public AI (Player player) {
+		mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
+			.GetComponent<MapGenerator>();
+		playerAI = player;
 		actionsTaken = 0;
 		turn = 0;
 		random1 = new System.Random ();
@@ -109,8 +112,9 @@ public class AI : TurnObject {
 		for (int col=0; col<mapTilesAvailable.GetLength(0); col++){
 			for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
 				//tile in that position, not cityTilesAvaiable
-				if (mapGen.GetTile(col,row).type.Equals(toFind)){
+				if (mapGen.GetTile(col,row).type.Equals(0)){ /// Tile does not yet use resource types
 					placeOn = mapGen.GetTile(col,row);
+					return placeOn;
 				}
 			}
 		}

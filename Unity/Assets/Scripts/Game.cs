@@ -58,7 +58,8 @@ namespace SpaceRace
 			};
 
 			uiHandler = UIHandlerObject.GetComponent<UiHack>();
-			uiHandler.currentPlayer = player1;
+			uiHandler.BindPlayer(player1);
+			uiHandler.ResourceUpdate();
 
 			NewTurn();
 		}

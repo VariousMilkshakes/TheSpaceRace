@@ -16,7 +16,7 @@ namespace SpaceRace.Utils
 		public GameObject BuildingMenuItem;
 		public GameObject Canvas;
 		
-		public Player currentPlayer;
+		private Player currentPlayer;
 
 		private List<GameObject> activeUIItems;
 
@@ -45,12 +45,21 @@ namespace SpaceRace.Utils
 		/// <summary>
 		/// Called everytime player resources change
 		/// </summary>
-		void ResourceUpdate()
+		public void ResourceUpdate()
 		{
 			Inventory inv = currentPlayer.Inventory;
-			moneyValue.text = "" + inv.CheckResource(PlayerTools.Resources.Money);
-			popValue.text = "" + inv.CheckResource(PlayerTools.Resources.Population);
-			woodValue.text = "" + inv.CheckResource(PlayerTools.Resources.Wood);
+			moneyValue.text = "Money: " + inv.CheckResource(PlayerTools.Resources.Money);
+			popValue.text = "Population: " + inv.CheckResource(PlayerTools.Resources.Population);
+			woodValue.text = "Wood: " + inv.CheckResource(PlayerTools.Resources.Wood);
+		}
+
+		public void BindPlayer (Player targetPlayer)
+		{
+			currentPlayer = targetPlayer;
+			currentPlayer.Inventory.AddListener(delegate
+			{
+				ResourceUpdate();
+			});
 		}
 
 		/// <summary>
@@ -61,10 +70,10 @@ namespace SpaceRace.Utils
 		{
 			clearBuildingMenu();
 
-			if (targetTile.type == 1) return;
+			if (targetTile.type == 1 || targetTile.Building != null) return;
 
-			int xPos = 40;
-			int yPos = 40;
+			int xPos = 200;
+			int yPos = 50;
 			int xSpacing = 10;
 
 			int buttonSize = 64;
@@ -73,9 +82,12 @@ namespace SpaceRace.Utils
 			{
 				GameObject menuItem = Instantiate(BuildingMenuItem, new Vector3(xPos, yPos), BuildingMenuItem.transform.rotation) as GameObject;
 				Button menuButton = menuItem.GetComponent<Button>();
+
+				Type targetBuilding = building;
 				menuButton.onClick.AddListener(delegate
 				{
-					targetTile.Build(building, currentPlayer);
+					targetTile.Build(targetBuilding, currentPlayer);
+					clearBuildingMenu();
 				});
 
 				/// Set sprite for building button
