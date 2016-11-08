@@ -5,6 +5,8 @@ using System.IO;
 using SpaceRace.World.Buildings;
 using SpaceRace.World.Buildings.Collection;
 using System;
+using SpaceRace.PlayerTools;
+using SpaceRace.World;
 
 public class Tile: MonoBehaviour{
 	/*
@@ -28,7 +30,7 @@ public class Tile: MonoBehaviour{
 	/*
 	* The building on this tile.
 	*/
-	private Building<House> building;
+	private Building building;
 
 	/*
 	* Corrisponds to whether the Tile is selected or not.
@@ -50,6 +52,12 @@ public class Tile: MonoBehaviour{
 
 	int x;
 	int y;
+
+	public WorldStates State
+	{
+		set { tileState = value; }
+	}
+	private WorldStates tileState;
 
 	/*
 	* Constructor.
@@ -180,9 +188,26 @@ public class Tile: MonoBehaviour{
 		sr.sprite = spriteArray [type];
 	}
 
-	public void Build(Type buildingType)
+	public void Build (Type buildingType, Player builder)
 	{
-		Debug.Log("Building " + buildingType.ToString());
+		var buildMethod = typeof(Building).GetMethod("BUILD");
+		var genericBuildMethod = buildMethod.MakeGenericMethod(new[] { buildingType });
+
+		Building newBuilding;
+
+		try
+		{
+			newBuilding = genericBuildMethod.Invoke(null, new object[] { builder }) as Building;
+		}
+		catch (BuildingException be)
+		{
+			Debug.Log("Not enough resources: " + be);
+			return;
+		}
+
+		builder.TrackBuilding(newBuilding);
+		building = newBuilding;
+		sr.sprite = building.ActiveSprite;
 	}
 
 }

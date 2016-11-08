@@ -9,10 +9,16 @@ using SpaceRace;
 
 namespace SpaceRace.World.Buildings
 {
-	abstract partial class Building<T> : TurnObject
-		where T : Building<T>, new()
+	public abstract partial class Building : TurnObject
 	{
-		public static T BUILD(Player builder)
+		/// <summary>
+		/// Attempt for player to create instance of building
+		/// </summary>
+		/// <typeparam name="T">Type of building to create</typeparam>
+		/// <param name="builder">Player building building</param>
+		/// <returns>New instance of building</returns>
+		/// <throws>Buidling Exception if player has insufficient resources</throws>
+		public static T BUILD<T>(Player builder) where T : Building, new()
 		{
 			T newBuilding = new T();
 			Inventory builderInv = builder.Inventory;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpaceRace.World.Buildings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,12 @@ using System.Text;
 namespace SpaceRace.PlayerTools
 {
 	[System.Serializable]
-	public partial class Player
+	public partial class Player : TurnObject
 	{
 
 		private Inventory inventory;
+
+		private List<Building> playerBuildings;
 
 		public Inventory Inventory
 		{
@@ -18,8 +21,29 @@ namespace SpaceRace.PlayerTools
 
 		public Player ()
 		{
+			playerBuildings = new List<Building>();
+
 			inventory = new Inventory();
+			inventory.AddResource(Resources.Wood, 10);
+			inventory.AddResource(Resources.Population, 0);
+			inventory.AddResource(Resources.Money, 100);
 		}
 
+		public void OnTurn()
+		{
+			foreach (Building building in playerBuildings)
+			{
+				building.OnTurn();
+			}
+		}
+
+		/// <summary>
+		/// Keep track of newly constructed building
+		/// </summary>
+		/// <param name="newBuilding"></param>
+		public void TrackBuilding (Building newBuilding)
+		{
+			playerBuildings.Add(newBuilding);
+		}
 	}
 }

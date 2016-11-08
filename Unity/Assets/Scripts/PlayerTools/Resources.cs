@@ -14,6 +14,7 @@
 		Oil,        // 8
 		Hydrogen,   // 9
 		Population, // 10
-		Faith       // 11
+		Faith,      // 11
+		Money		// 12
 	}
 }
