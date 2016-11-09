@@ -15,6 +15,8 @@ namespace SpaceRace.Utils
 
 		public GameObject BuildingMenuItem;
 		public GameObject Canvas;
+		public GameObject AdvanceAge;
+		public GameObject AdvanceAgeNotice;
 		
 		private Player currentPlayer;
 
@@ -40,6 +42,7 @@ namespace SpaceRace.Utils
 			moneyValue = MoneyTracker.GetComponent<Text>();
 			popValue = PopTracker.GetComponent<Text>();
 			woodValue = WoodTracker.GetComponent<Text>();
+			AdvanceAge.SetActive(false);
 		}
 
 		/// <summary>
@@ -111,6 +114,18 @@ namespace SpaceRace.Utils
 
 				activeUIItems.Add(menuItem);
 			}
+		}
+
+		public void DisplayAdvanceButton ()
+		{
+			AdvanceAge.SetActive(true);
+		}
+
+		public void AdvancePlayer ()
+		{
+			GameObject notice = Instantiate(AdvanceAgeNotice, new Vector3(100, 100), Canvas.transform.rotation) as GameObject;
+			notice.transform.SetParent(Canvas.transform);
+			currentPlayer.Age = World.WorldStates.Viking;
 		}
 
 		private void clearBuildingMenu ()

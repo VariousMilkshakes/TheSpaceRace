@@ -34,7 +34,7 @@ namespace SpaceRace.World.Buildings.Collection
 
 		public override PT.ResourceBox BuildRequirements ()
 		{
-			return new PT.ResourceBox(PlayerTools.Resources.Money, 50);
+			return new PT.ResourceBox(PT.Resources.Money, 50);
 		}
 
 		public override void OnTurn ()

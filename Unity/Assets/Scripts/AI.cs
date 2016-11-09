@@ -53,17 +53,18 @@ public class AI : TurnObject {
 	public void OnTurn () {
 		playerAI.OnTurn ();
 		turnFinished = false;
+		actionsTaken = 0;
 		while (actionsTaken < 3) {
 			surveyArea (SpaceRace.PlayerTools.Resources.Free);
 			if (turn == 0) { /*after hack: how should turns be handled?*/
-				placeTownHall ();
+				//placeTownHall ();
 			}
 			/*after hack: sort out looping so player doesn't place duplicate buildings if they aren't useful for progression*/
 
 			Tile placeHouseTile = surveyArea (SpaceRace.PlayerTools.Resources.Free); //survey for blank land
-			placeBuilding (placeHouseTile, "house"); //place house
+			placeBuilding (placeHouseTile, "House"); //place house
 			Tile placeLumberTile = surveyArea (SpaceRace.PlayerTools.Resources.Wood); //survey for wood
-			placeBuilding (placeLumberTile, "lumber"); //place lumber yard
+			placeBuilding (placeLumberTile, "LumberYard"); //place lumber yard
 		}
 		turnFinished = true;
 		turn++;

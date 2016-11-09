@@ -68,6 +68,12 @@ namespace SpaceRace
 		{
 			foreach (TurnObject p in activePlayers)
 			{
+				if (p.GetType().Name == "Player")
+				{
+					Player player = p as Player;
+					if (player.ReadyToAdvance) uiHandler.DisplayAdvanceButton();
+				}
+
 				p.OnTurn();
 			}
 		}

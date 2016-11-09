@@ -50,7 +50,7 @@ namespace SpaceRace.World.Buildings
 		/// Called when the building is built
 		/// </summary>
 		/// <returns>Resources provided once the building is completed</returns>
-		public ResourceBox OnBuild ()
+		public virtual ResourceBox OnBuild ()
 		{
 			return ResourceBox.EMPTY();
 		}

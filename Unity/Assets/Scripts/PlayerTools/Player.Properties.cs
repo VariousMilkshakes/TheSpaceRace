@@ -1,4 +1,5 @@
-﻿using SpaceRace.World.Buildings;
+﻿using SpaceRace.World;
+using SpaceRace.World.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace SpaceRace.PlayerTools
 		private Inventory inventory;
 
 		private List<Building> playerBuildings;
+
+		public bool ReadyToAdvance = false;
+		public WorldStates Age = WorldStates.Roman;
 
 		public Inventory Inventory
 		{
@@ -31,6 +35,11 @@ namespace SpaceRace.PlayerTools
 
 		public void OnTurn()
 		{
+			if (inventory.CheckResource(Resources.Faith) == 100)
+			{
+				ReadyToAdvance = true;
+			}
+
 			foreach (Building building in playerBuildings)
 			{
 				Resources requiredRes = building.Input.Type;
