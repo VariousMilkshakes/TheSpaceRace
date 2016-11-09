@@ -10,8 +10,7 @@ using UE = UnityEngine;
 
 namespace SpaceRace.World.Buildings
 {
-	partial class Building<T>
-		where T : Building<T>, new()
+	public partial class Building
 	{
 		protected Dictionary<WorldStates, UE.Sprite> _buildingSprites;
 		protected WorldStates _buildingState;
@@ -31,6 +30,7 @@ namespace SpaceRace.World.Buildings
 
 		public Building(Type t)
 		{
+			_buildingSprites = new Dictionary<WorldStates, UE.Sprite>();
 			useConfig(checkForConfig(t));
 			_buildingState = WorldStates.All;
 		}

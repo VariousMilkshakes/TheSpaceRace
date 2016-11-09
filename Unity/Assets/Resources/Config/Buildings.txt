@@ -14,3 +14,5 @@ Res.OnBuild.count=1
 Sprite.All=Buildings/Grass_With_House
 [LumberYard]
 Sprite.All=Buildings/Grass_With_LumberYard
+[Monument]
+Sprite.All=Buildings/Grass_With_Monument

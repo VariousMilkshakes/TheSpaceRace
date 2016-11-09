@@ -9,12 +9,19 @@ using SpaceRace;
 
 namespace SpaceRace.World.Buildings
 {
-	abstract partial class Building<T> : TurnObject
-		where T : Building<T>, new()
+	public abstract partial class Building : TurnObject
 	{
-		public static T BUILD(Player builder)
+		/// <summary>
+		/// Attempt for player to create instance of building
+		/// </summary>
+		/// <typeparam name="T">Type of building to create</typeparam>
+		/// <param name="builder">Player building building</param>
+		/// <returns>New instance of building</returns>
+		/// <throws>Buidling Exception if player has insufficient resources</throws>
+		public static T BUILD<T>(Player builder) where T : Building, new()
 		{
-			T newBuilding = new T();
+			UnityEngine.Debug.Log(typeof(T).Name);
+			T newBuilding = (T)Activator.CreateInstance(typeof(T), null);
 			Inventory builderInv = builder.Inventory;
 
 			// Check if player can afford to spend resources
@@ -43,7 +50,7 @@ namespace SpaceRace.World.Buildings
 		/// Called when the building is built
 		/// </summary>
 		/// <returns>Resources provided once the building is completed</returns>
-		public ResourceBox OnBuild ()
+		public virtual ResourceBox OnBuild ()
 		{
 			return ResourceBox.EMPTY();
 		}
@@ -52,7 +59,18 @@ namespace SpaceRace.World.Buildings
 		/// Called each game turn
 		/// </summary>
 		/// <returns>Resource provided on tick</returns>
-		public abstract void OnTurn();
+		public virtual void OnTurn()
+		{
+			Output.Empty();
+
+			/// If the building gets insufficient input resources
+			/// then the output is left empty
+			if (Input.IsFull())
+			{
+				Output.Fill(Output.Cap);
+				Input.Empty();
+			}
+		}
 
 		/// <summary>
 		/// Called each time building is upgraded

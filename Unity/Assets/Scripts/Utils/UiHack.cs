@@ -6,6 +6,7 @@ using SpaceRace;
 using SpaceRace.PlayerTools;
 
 using UnityEngine.UI;
+using SpaceRace.World.Buildings;
 
 namespace SpaceRace.Utils
 {
@@ -14,15 +15,21 @@ namespace SpaceRace.Utils
 
 		public GameObject BuildingMenuItem;
 		public GameObject Canvas;
+		public GameObject AdvanceAge;
+		public GameObject AdvanceAgeNotice;
+		
+		private Player currentPlayer;
 
 		private List<GameObject> activeUIItems;
-
-		public Player currentPlayer;
 
 		#region ResourceTrackers
 		public GameObject WoodTracker;
 		public GameObject PopTracker;
 		public GameObject MoneyTracker;
+
+		private Text woodValue;
+		private Text popValue;
+		private Text moneyValue;
 		#endregion
 
 
@@ -32,23 +39,44 @@ namespace SpaceRace.Utils
 			activeUIItems = new List<GameObject>();
 			//Text currentText = WoodTracker.GetComponent<Text>();
 			//currentText.text = "" + currentPlayer.Inventory.CheckResource(PlayerTools.Resources.Wood);
-			Text currentText = MoneyTracker.GetComponent<Text>();
-			currentText.text = "0";
-			currentText = PopTracker.GetComponent<Text>();
-			currentText.text = "10";
+			moneyValue = MoneyTracker.GetComponent<Text>();
+			popValue = PopTracker.GetComponent<Text>();
+			woodValue = WoodTracker.GetComponent<Text>();
+			AdvanceAge.SetActive(false);
 		}
 
-		// Update is called once per frame
-		void Update()
+		/// <summary>
+		/// Called everytime player resources change
+		/// </summary>
+		public void ResourceUpdate()
 		{
+			Inventory inv = currentPlayer.Inventory;
+			moneyValue.text = "Money: " + inv.CheckResource(PlayerTools.Resources.Money);
+			popValue.text = "Population: " + inv.CheckResource(PlayerTools.Resources.Population);
+			woodValue.text = "Wood: " + inv.CheckResource(PlayerTools.Resources.Wood);
 		}
 
+		public void BindPlayer (Player targetPlayer)
+		{
+			currentPlayer = targetPlayer;
+			currentPlayer.Inventory.AddListener(delegate
+			{
+				ResourceUpdate();
+			});
+		}
+
+		/// <summary>
+		/// Display menu of buildings available on the tile
+		/// </summary>
+		/// <param name="targetTile"></param>
 		public void DisplayBuildings (Tile targetTile)
 		{
 			clearBuildingMenu();
 
-			int xPos = 40;
-			int yPos = 40;
+			if (targetTile.type == 1 || targetTile.Building != null) return;
+
+			int xPos = 200;
+			int yPos = 50;
 			int xSpacing = 10;
 
 			int buttonSize = 64;
@@ -57,9 +85,12 @@ namespace SpaceRace.Utils
 			{
 				GameObject menuItem = Instantiate(BuildingMenuItem, new Vector3(xPos, yPos), BuildingMenuItem.transform.rotation) as GameObject;
 				Button menuButton = menuItem.GetComponent<Button>();
+
+				Type targetBuilding = building;
 				menuButton.onClick.AddListener(delegate
 				{
-					targetTile.Build(building);
+					targetTile.Build(targetBuilding, currentPlayer);
+					clearBuildingMenu();
 				});
 
 				/// Set sprite for building button
@@ -83,6 +114,18 @@ namespace SpaceRace.Utils
 
 				activeUIItems.Add(menuItem);
 			}
+		}
+
+		public void DisplayAdvanceButton ()
+		{
+			AdvanceAge.SetActive(true);
+		}
+
+		public void AdvancePlayer ()
+		{
+			GameObject notice = Instantiate(AdvanceAgeNotice, new Vector3(100, 100), Canvas.transform.rotation) as GameObject;
+			notice.transform.SetParent(Canvas.transform);
+			currentPlayer.Age = World.WorldStates.Viking;
 		}
 
 		private void clearBuildingMenu ()

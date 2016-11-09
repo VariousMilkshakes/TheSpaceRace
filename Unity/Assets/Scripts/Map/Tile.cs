@@ -5,6 +5,8 @@ using System.IO;
 using SpaceRace.World.Buildings;
 using SpaceRace.World.Buildings.Collection;
 using System;
+using SpaceRace.PlayerTools;
+using SpaceRace.World;
 
 public class Tile: MonoBehaviour{
 	/*
@@ -28,7 +30,11 @@ public class Tile: MonoBehaviour{
 	/*
 	* The building on this tile.
 	*/
-	private Building<House> building;
+	public Building Building
+	{
+		get { return building; }
+	}
+	private Building building;
 
 	/*
 	* Corrisponds to whether the Tile is selected or not.
@@ -50,6 +56,14 @@ public class Tile: MonoBehaviour{
 
 	int x;
 	int y;
+
+	public int score;
+
+	public WorldStates State
+	{
+		set { tileState = value; }
+	}
+	private WorldStates tileState;
 
 	/*
 	* Constructor.
@@ -87,6 +101,14 @@ public class Tile: MonoBehaviour{
 		SetTileSprite (this.type);
 		building = null;
 		this.buildingSprite = buildingSprite;
+	}
+
+	public int GetX(){
+		return x;
+	}
+
+	public int GetY(){
+		return y;
 	}
 
 	/*
@@ -172,9 +194,27 @@ public class Tile: MonoBehaviour{
 		sr.sprite = spriteArray [type];
 	}
 
-	public void Build(Type buildingType)
+	public void Build (Type buildingType, Player builder)
 	{
-		Debug.Log("Building " + buildingType.ToString());
+		var buildMethod = typeof(Building).GetMethod("BUILD");
+		var genericBuildMethod = buildMethod.MakeGenericMethod(buildingType);
+
+		Building newBuilding;
+
+		try
+		{
+			newBuilding = genericBuildMethod.Invoke(null, new object[] { builder }) as Building;
+		}
+		catch (Exception)
+		{
+			Debug.Log("Not enough resources");
+			return;
+		}
+
+		builder.TrackBuilding(newBuilding);
+		building = newBuilding;
+		sr.sprite = building.ActiveSprite;
+		builder.Inventory.AddResource(building.OnBuild());
 	}
 
 }

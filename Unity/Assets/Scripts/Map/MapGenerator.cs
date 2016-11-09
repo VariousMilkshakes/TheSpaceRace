@@ -74,8 +74,11 @@ public class MapGenerator : MonoBehaviour {
 		randomSeed = false;
 		this.seed = seed;
 	}
+		
+	public int[,] getGridPos() {
+		return gridPos;
+	}
 
-	//returns array of tiles on the map
 	public List<Tile> getTiles() {
 		return tiles;
 	}
@@ -87,6 +90,14 @@ public class MapGenerator : MonoBehaviour {
 		tiles = new List<Tile> ();
 		GenerateMap ();
 		SetUpMap ();
+	}
+
+	public Tile GetTile(int x, int y){
+		foreach (Tile t in tiles) {
+			if (t.GetX () == x && t.GetY () == y) {
+				return t;
+			}
+		} throw new NoTileException ("No such Tile");
 	}
 
 	/*
