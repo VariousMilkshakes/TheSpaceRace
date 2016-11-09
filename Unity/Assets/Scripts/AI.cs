@@ -55,22 +55,34 @@ public class AI : TurnObject {
 		turnFinished = false;
 		actionsTaken = 0;
 		while (actionsTaken < 3) {
-			surveyArea (SpaceRace.PlayerTools.Resources.Free);
-			if (turn == 0) { /*after hack: how should turns be handled?*/
-				//placeTownHall ();
-			}
+			//surveyArea (SpaceRace.PlayerTools.Resources.Free);
+	//		if (turn == 0) { /*after hack: how should turns be handled?*/			not needed for hack
+	//			placeTownHall ();
+//			}
 			/*after hack: sort out looping so player doesn't place duplicate buildings if they aren't useful for progression*/
 
-			Tile placeHouseTile = surveyArea (SpaceRace.PlayerTools.Resources.Free); //survey for blank land
-			placeBuilding (placeHouseTile, "House"); //place house
-			Tile placeLumberTile = surveyArea (SpaceRace.PlayerTools.Resources.Wood); //survey for wood
-			placeBuilding (placeLumberTile, "LumberYard"); //place lumber yard
+		//	Tile placeHouseTile = surveyArea (SpaceRace.PlayerTools.Resources.Free); //survey for blank land
+//			placeBuilding (mapGen.GetTile(5,5), "House"); //place house
+			if (turn == 0) {
+				mapGen.GetTile (1, 1).Build (Game.LOOK_FOR_BUILDING ("House"), playerAI);
+				actionsTaken++;
+			}
+			if (turn == 1) {
+				mapGen.GetTile (2, 3).Build (Game.LOOK_FOR_BUILDING ("House"), playerAI);
+				actionsTaken++;
+			}
+			if (turn == 2) {
+				mapGen.GetTile (6, 6).Build (Game.LOOK_FOR_BUILDING ("House"), playerAI);
+				actionsTaken++;
+			}
+		//	Tile placeLumberTile = surveyArea (SpaceRace.PlayerTools.Resources.Wood); //survey for wood
+		//	placeBuilding (placeLumberTile, "LumberYard"); //place lumber yard
 		}
 		turnFinished = true;
-		turn++;
+	//	turn++;
 	}
 
-	private void placeTownHall () {
+/*	private void placeTownHall () {
 		//iterate through tiles available to find area with surrounding resources
 		for (int col = 0; col < mapTilesAvailable.GetLength (0); col++) {
 			for (int row = 0; row < mapTilesAvailable.GetLength (1); row++) {
@@ -97,23 +109,23 @@ public class AI : TurnObject {
 					}
 				}
 				if (mapGen.GetTile (col, row).score == highScore) {
-					placeBuilding (mapGen.GetTile (col, row), "townHall"); 
+					placeBuilding (mapGen.GetTile (col, row), "TownHall"); 
 				}
 			}
 		}
 		actionsTaken++;
 	}
 
-
+*/
 
 	/*Surveys tiles avilable to place a building
 	 * Returns the tile to place the building on*/
-	private Tile surveyArea (SpaceRace.PlayerTools.Resources toFind) {
+/*	private Tile surveyArea (SpaceRace.PlayerTools.Resources toFind) {
 		Tile placeOn = null;
 		for (int col=0; col<mapTilesAvailable.GetLength(0); col++){
 			for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
 				//tile in that position, not cityTilesAvaiable
-				if (mapGen.GetTile(col,row).type.Equals(0)){ /// Tile does not yet use resource types
+				if (mapGen.GetTile(col,row).type.Equals(toFind)){ /// Tile does not yet use resource types
 					placeOn = mapGen.GetTile(col,row);
 					return placeOn;
 				}
@@ -121,16 +133,16 @@ public class AI : TurnObject {
 		}
 		return placeOn;
 	}
-
+*/
 	//place chosen building on specific tile
-	private void placeBuilding (Tile tile, string buildingToPlace) {
-		if (tile != null) {
+/*	private void placeBuilding (Tile tile, string buildingToPlace) {
+	//	if (tile != null) {
 			Type building = Game.LOOK_FOR_BUILDING (buildingToPlace);
 			tile.Build (building, playerAI);
 			actionsTaken++;
-		}
+	//	}
 	}
-
+*/
 
 
 	/**************************************************************************************************************ignore*/
