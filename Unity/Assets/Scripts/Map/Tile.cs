@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
-using World.Buildings;
-using World.Buildings.Collection;
+
+using SpaceRace.World.Buildings;
+using SpaceRace.World.Buildings.Collection;
+using System;
+using SpaceRace.PlayerTools;
+using SpaceRace.World;
 
 public class Tile: MonoBehaviour{
 	/*
@@ -26,7 +30,11 @@ public class Tile: MonoBehaviour{
 	/*
 	* The building on this tile.
 	*/
-	private Building<House> building;
+	public Building Building
+	{
+		get { return building; }
+	}
+	private Building building;
 
 	/*
 	* Corrisponds to whether the Tile is selected or not.
@@ -46,6 +54,17 @@ public class Tile: MonoBehaviour{
 	*/
 	public int type;
 
+	int x;
+	int y;
+
+	public int score;
+
+	public WorldStates State
+	{
+		set { tileState = value; }
+	}
+	private WorldStates tileState;
+
 	/*
 	* Constructor.
 	* 		Not realy a constructor but acts as one.
@@ -61,12 +80,14 @@ public class Tile: MonoBehaviour{
 	* Sets bx2D as a new BoxCollider2D component of this Tile. Also sets bx2D's isTrigger and enabled values to 'true'.
 	* Sets the sprite that sr renders to the type of tile that this is.
 	*/
-	public void NewTile(int type, Sprite[] sprites, Sprite hover, Sprite selected, Sprite buildingSprite){
+	public void NewTile(int type, Sprite[] sprites, Sprite hover, Sprite selected, Sprite buildingSprite, int x, int y){
 		spriteArray = sprites;
 		hoverSprite = hover;
 		selectedSprite = selected;
 		this.type = type;
 		sr = gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
+		this.x = x;
+		this.y = y;
 
 		highlighter = new GameObject ("Highliter");
 		highlighter.transform.SetParent (this.gameObject.transform);
@@ -80,6 +101,14 @@ public class Tile: MonoBehaviour{
 		SetTileSprite (this.type);
 		building = null;
 		this.buildingSprite = buildingSprite;
+	}
+
+	public int GetX(){
+		return x;
+	}
+
+	public int GetY(){
+		return y;
 	}
 
 	/*
@@ -124,6 +153,16 @@ public class Tile: MonoBehaviour{
 			tisr.sprite = buildingSprite;
 		}
 
+		try
+		{
+			GameObject ui = GameObject.Find("TempUIHandler");
+			SpaceRace.Utils.UiHack uih = ui.GetComponent<SpaceRace.Utils.UiHack>();
+			uih.DisplayBuildings(this);
+		}catch
+		{
+			Debug.Log("Could not find");
+		}
+
 	}
 
 	/*
@@ -153,6 +192,29 @@ public class Tile: MonoBehaviour{
 	*/
 	void SetTileSprite(int type){
 		sr.sprite = spriteArray [type];
+	}
+
+	public void Build (Type buildingType, Player builder)
+	{
+		var buildMethod = typeof(Building).GetMethod("BUILD");
+		var genericBuildMethod = buildMethod.MakeGenericMethod(buildingType);
+
+		Building newBuilding;
+
+		try
+		{
+			newBuilding = genericBuildMethod.Invoke(null, new object[] { builder }) as Building;
+		}
+		catch (Exception)
+		{
+			Debug.Log("Not enough resources");
+			return;
+		}
+
+		builder.TrackBuilding(newBuilding);
+		building = newBuilding;
+		sr.sprite = building.ActiveSprite;
+		builder.Inventory.AddResource(building.OnBuild());
 	}
 
 }

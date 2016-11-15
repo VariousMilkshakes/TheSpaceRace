@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-namespace PlayerTools
+namespace SpaceRace.PlayerTools
 {
 	/// <summary>
 	/// Keeps track of players resources
 	/// </summary>
 	[System.Serializable]
-	class Inventory
+	public class Inventory
 	{
 
 		/// <summary>
 		/// Contains the players resource count
 		/// </summary>
 		private Dictionary<Resources, int> resources;
+
+		private Action resourceUpdateEvent;
 
 		public Inventory()
 		{
@@ -46,10 +49,16 @@ namespace PlayerTools
 			if (CheckResource(requirements.Type) >= requirements.Quantity)
 			{
 				resources[requirements.Type] -= requirements.Quantity;
+				resourceUpdateEvent.Invoke();
 				return true;
 			}
 
 			return false;
+		}
+
+		public void AddResource(ResourceBox input)
+		{
+			AddResource(input.Type, input.Quantity);
 		}
 
 		/// <summary>
@@ -63,9 +72,22 @@ namespace PlayerTools
 			{
 				resources[targetResource] += quantity;
 			}
+			else
+			{
+				// If resource does not yet exist create new key
+				resources.Add(targetResource, quantity);
+			}
 
-			// If resource does not yet exist create new key
-			resources.Add(targetResource, quantity);
+			if (resourceUpdateEvent != null) resourceUpdateEvent.Invoke();
+		}
+
+		/// <summary>
+		/// Add listener to call event each time an inventory value is changed
+		/// </summary>
+		/// <param name="Listener">Event to call</param>
+		public void AddListener (Action Listener)
+		{
+			resourceUpdateEvent = Listener;
 		}
 	}
 }

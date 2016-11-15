@@ -1,4 +1,4 @@
-﻿namespace World
+﻿namespace SpaceRace.World
 {
 	/// <summary>
 	/// Used to easly apply states to the world, tiles and buildings

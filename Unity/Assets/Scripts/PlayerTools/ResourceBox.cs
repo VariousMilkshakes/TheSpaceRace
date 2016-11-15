@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PlayerTools
+namespace SpaceRace.PlayerTools
 {
 
 	/// <summary>
 	/// Datatype for transferring resources
 	/// </summary>
-	struct ResourceBox
+	public struct ResourceBox
 	{
 		/// <summary>
 		/// Used for returning an empty resource box
@@ -28,20 +28,35 @@ namespace PlayerTools
 		{
 			get { return _q; }
 		}
+		public int Cap
+		{
+			get { return _c; }
+			set { _c = value; }
+		}
 
 		private Resources _t;
 		private int _q;
+		private int _c;
 
 		public ResourceBox (Resources typeOfResource)
 		{
 			_t = typeOfResource;
 			_q = 0;
+			_c = -1;
 		}
 
 		public ResourceBox (Resources typeOfResource, int volumeOfResource)
 		{
 			_t = typeOfResource;
 			_q = volumeOfResource;
+			_c = -1;
+		}
+
+		public ResourceBox(Resources typeOfResource, int volumeOfResource, int volumeCap)
+		{
+			_t = typeOfResource;
+			_q = volumeOfResource;
+			_c = volumeCap;
 		}
 
 		/// <summary>
@@ -51,6 +66,24 @@ namespace PlayerTools
 		public void IncreaseQuantity (int volume)
 		{
 			_q += volume;
+		}
+
+		/// <summary>
+		/// Max out resource box to capacity
+		/// </summary>
+		/// <param name="volume">The amount of resource that is trying to fit in the box</param>
+		/// <returns>The quantity of resource used to fill box</returns>
+		public int Fill (int volume)
+		{
+			if (_c == -1 || (volume + _q) <= _c)
+			{
+				IncreaseQuantity(volume);
+				return volume;
+			}
+
+			int dif = _c - _q;
+			_q = _c;
+			return dif;
 		}
 
 		/// <summary>
@@ -68,6 +101,17 @@ namespace PlayerTools
 
 			IncreaseQuantity(volume);
 			return true;
+		}
+
+		public bool IsFull ()
+		{
+			if (_q == _c) return true;
+			return false;
+		}
+
+		public void Empty ()
+		{
+			_q = 0;
 		}
 	}
 }

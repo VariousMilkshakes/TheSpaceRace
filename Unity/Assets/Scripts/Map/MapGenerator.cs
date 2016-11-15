@@ -28,7 +28,7 @@ public class MapGenerator : MonoBehaviour {
 	* The percentage of the map covered in water before smoothing and processing.
 	*/
 	[Range(0, 100)]
-	public int waterPercentage;
+	public float waterPercentage;
 
 	/*
 	* The array of possible sprites that a Tile can be passed to each Tile in the SetUpMap method.
@@ -56,50 +56,31 @@ public class MapGenerator : MonoBehaviour {
 	* Setters
 	*/
 	//width
-	public void SetMapWidth(string width){
-		int newCols = 0;
-		if (Int32.TryParse (width, out newCols)) {
-			if (newCols >= 1 && newCols <= 100) {
-				columns = newCols;
-			} else {
-				Debug.Log ("The value for witdth must be between 1 and 100.");
-			}
-		} else {
-			Debug.Log ("The value for width must be an Integer between 1 and 100.");
-		}
+	public void SetMapWidth(float width){
+		columns = (int)width;
 	}
 
 	//height
-	public void SetMapHeight(string height){
-		int newRows = 0;
-		if (Int32.TryParse (height, out newRows)) {
-			if (newRows >= 1 && newRows <= 100) {
-				rows = newRows;
-			} else {
-				Debug.Log ("The value for height must be between 1 and 100.");
-			}
-		} else {
-			Debug.Log ("The value for height must be an Integer between 1 and 100.");
-		}
+	public void SetMapHeight(float height){
+		rows = (int)height;
 	}
 
-	public void SetMapWaterPercentage(string water){
-		int newWater = -1;
-		if (Int32.TryParse (water, out newWater)) {
-			if (newWater >= 0 && newWater <= 100) {
-				waterPercentage = newWater;
-			} else {
-				Debug.Log ("The value for waterPercentage must be between 0 and 100.");
-			}
-		} else {
-			Debug.Log ("The value for waterPercentage must be an Integer between 0 and 100.");
-		}
+	public void SetMapWaterPercentage(float water){
+		waterPercentage = water;
 	}
 
 	//seed
 	public void SetMapSeed(string seed){
 		randomSeed = false;
 		this.seed = seed;
+	}
+		
+	public int[,] getGridPos() {
+		return gridPos;
+	}
+
+	public List<Tile> getTiles() {
+		return tiles;
 	}
 
 	/*
@@ -109,6 +90,14 @@ public class MapGenerator : MonoBehaviour {
 		tiles = new List<Tile> ();
 		GenerateMap ();
 		SetUpMap ();
+	}
+
+	public Tile GetTile(int x, int y){
+		foreach (Tile t in tiles) {
+			if (t.GetX () == x && t.GetY () == y) {
+				return t;
+			}
+		} throw new NoTileException ("No such Tile");
 	}
 
 	/*
@@ -297,7 +286,7 @@ public class MapGenerator : MonoBehaviour {
 					tile.transform.SetParent (GameObject.Find("PlaneManager").transform);
 					tile.AddComponent<Tile>();
 					Tile script = (Tile) tile.GetComponent ("Tile");
-					script.NewTile (gridPos [x, y], sprites, hoverSprite, selectedSprite, buildingSprite);
+					script.NewTile (gridPos [x, y], sprites, hoverSprite, selectedSprite, buildingSprite, x, y);
 					GameObject instance = Instantiate (tile, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 					instance.transform.SetParent (mapHolder);
 					tiles.Add (script);

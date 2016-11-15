@@ -1,100 +1,27 @@
-<<<<<<< HEAD:Unity/Assets/Scripts/World/Buildings/Building.cs
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using UnityEngine;
-
-using PlayerTools;
-
-namespace World.Buildings
-{
-	abstract class Building<T>
-		where T : Building<T>, new()
-	{
-
-		public static T BUILD(Player builder)
-		{
-			T newBuilding = new T();
-			Inventory builderInv = builder.Inventory;
-
-			// Check if player can afford to spend resources
-			if (builderInv.SpendResource(newBuilding.BuildRequirements()))
-			{
-				return newBuilding;
-			}
-
-			// Throw alert to UI to be displayed to user
-			throw new BuildingException("Not enough resources", typeof(T));
-		}
-
-		/*
-		* The SpriteRenderer of building to replace tile sprite
-		*/
-		/*private*/public SpriteRenderer sr = new SpriteRenderer ();
-
-		/// <summary>
-		/// The number of resources contained within building
-		/// </summary>
-		public int ResourceCount
-		{
-			get; set;
-		}
-
-		/// <summary>
-		/// Resources required for a player to build
-		/// </summary>
-		/// <returns>Required resources</returns>
-		public abstract ResourceBox BuildRequirements();
-
-		/// <summary>
-		/// Called when the building is built
-		/// </summary>
-		/// <returns>Resources provided once the building is completed</returns>
-		public ResourceBox OnBuild ()
-		{
-			return ResourceBox.EMPTY();
-		}
-
-		/// <summary>
-		/// Called each game 'tick'
-		/// </summary>
-		/// <returns>Resource provided on tick</returns>
-		public ResourceBox OnTick ()
-		{
-			return ResourceBox.EMPTY();
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		public ResourceBox OnUpgrade ()
-		{
-			return ResourceBox.EMPTY();
-		}
-
-	}
-}
-=======
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using PlayerTools;
+using SpaceRace.PlayerTools;
 using SpaceRace;
 
-namespace World.Buildings
+namespace SpaceRace.World.Buildings
 {
-	abstract partial class Building<T> : TurnObject
-		where T : Building<T>, new()
+	public abstract partial class Building : TurnObject
 	{
-		public static T BUILD(Player builder)
+		/// <summary>
+		/// Attempt for player to create instance of building
+		/// </summary>
+		/// <typeparam name="T">Type of building to create</typeparam>
+		/// <param name="builder">Player building building</param>
+		/// <returns>New instance of building</returns>
+		/// <throws>Buidling Exception if player has insufficient resources</throws>
+		public static T BUILD<T>(Player builder) where T : Building, new()
 		{
-			T newBuilding = new T();
+			UnityEngine.Debug.Log(typeof(T).Name);
+			T newBuilding = (T)Activator.CreateInstance(typeof(T), null);
 			Inventory builderInv = builder.Inventory;
 
 			// Check if player can afford to spend resources
@@ -123,7 +50,7 @@ namespace World.Buildings
 		/// Called when the building is built
 		/// </summary>
 		/// <returns>Resources provided once the building is completed</returns>
-		public ResourceBox OnBuild ()
+		public virtual ResourceBox OnBuild ()
 		{
 			return ResourceBox.EMPTY();
 		}
@@ -132,7 +59,18 @@ namespace World.Buildings
 		/// Called each game turn
 		/// </summary>
 		/// <returns>Resource provided on tick</returns>
-		public abstract void OnTurn();
+		public virtual void OnTurn()
+		{
+			Output.Empty();
+
+			/// If the building gets insufficient input resources
+			/// then the output is left empty
+			if (Input.IsFull())
+			{
+				Output.Fill(Output.Cap);
+				Input.Empty();
+			}
+		}
 
 		/// <summary>
 		/// Called each time building is upgraded
@@ -145,4 +83,3 @@ namespace World.Buildings
 
 	}
 }
->>>>>>> refs/remotes/origin/dev:Unity/Assets/Scripts/World/Buildings/Building.Events.cs

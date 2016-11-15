@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using PlayerTools;
-using Utils;
+using SpaceRace.PlayerTools;
+using SpaceRace.Utils;
 
 using UE = UnityEngine;
 
-namespace World.Buildings
+namespace SpaceRace.World.Buildings
 {
-	partial class Building<T>
-		where T : Building<T>, new()
+	public partial class Building
 	{
 		protected Dictionary<WorldStates, UE.Sprite> _buildingSprites;
 		protected WorldStates _buildingState;
@@ -31,6 +30,7 @@ namespace World.Buildings
 
 		public Building(Type t)
 		{
+			_buildingSprites = new Dictionary<WorldStates, UE.Sprite>();
 			useConfig(checkForConfig(t));
 			_buildingState = WorldStates.All;
 		}
