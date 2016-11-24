@@ -53,7 +53,7 @@ namespace SpaceRace.World.Buildings.Collection
 			List<Tile> toSearch = mapGen.tiles;
 			Tile toReturn = null;
 			for(int i = 0; i<toSearch.Count; i++){
-				if(toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour == player.Color){
+				if(toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour().Equals(player.Color)){
 					toReturn = toSearch [i];
 				}
 			}
@@ -63,24 +63,31 @@ namespace SpaceRace.World.Buildings.Collection
 		/*set tiles surrounding town hall to the player's colour*/
 		private void setCityTiles(){
 			Tile townHallPos = findTownHall ();
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY + 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY + 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY));
-			cityTiles.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY + 1));
-			foreach(Tile tile in townHallPos){
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY()));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() + 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() - 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() + 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() - 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY()));
+			cityTiles.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() + 1));
+			foreach(Tile tile in cityTiles){
 				tile.ApplyPlayerColor (player.Color);
 			}
 		}
 
 		private void expandCityBoundary(){
-			/*TODO: make list of tiles surrounding the city area*/
-			List<Tile> border = null;
 			System.Random rnd = new System.Random ();
-			Tile expandTo = rnd.Next (border.Count);
+			/*TODO: make list of tiles surrounding the city area*/
+
+			//lists of x coordinates and a list of y coordinates of border tiles
+			List<int> expandX = null;
+			List<int> expandY = null;
+
+			int expandToX = rnd.Next (expandX.Count);
+			int expandToY = rnd.Next (expandY.Count);
+
+			Tile expandTo = mapGen.GetTile(expandToX, expandToY);
 			expandTo.ApplyPlayerColor (player.Color);
 		}
 
