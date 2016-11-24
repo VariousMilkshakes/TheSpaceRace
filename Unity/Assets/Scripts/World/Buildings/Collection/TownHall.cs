@@ -11,6 +11,7 @@ namespace SpaceRace.World.Buildings.Collection
 	{
 		MapGenerator mapGen;
 		Player player;
+		List<Tile> cityTiles;
 
 
 		public TownHall () : base (typeof(TownHall))
@@ -20,7 +21,6 @@ namespace SpaceRace.World.Buildings.Collection
 			mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
 				.GetComponent<MapGenerator>();
 			
-
 			/// Set sprite for building
 			try
 			{
@@ -63,18 +63,29 @@ namespace SpaceRace.World.Buildings.Collection
 		/*set tiles surrounding town hall to the player's colour*/
 		private void setCityTiles(){
 			Tile townHallPos = findTownHall ();
-			mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY - 1).ApplyPlayerColor (player.Color);
-			mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY).ApplyPlayerColor (player.Color);
-			mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY + 1).ApplyPlayerColor (player.Color);
-			mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY - 1).ApplyPlayerColor (player.Color);
-			mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY + 1).ApplyPlayerColor (player.Color);
-			mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY - 1).ApplyPlayerColor (player.Color);
-			mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY).ApplyPlayerColor (player.Color);
-			mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY + 1).ApplyPlayerColor (player.Color);
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY - 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY + 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY - 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY + 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY - 1));
+			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY));
+			cityTiles.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY + 1));
+			foreach(Tile tile in townHallPos){
+				tile.ApplyPlayerColor (player.Color);
+			}
 		}
 
 		private void expandCityBoundary(){
+			/*TODO: make list of tiles surrounding the city area*/
+			List<Tile> border = null;
+			System.Random rnd = new System.Random ();
+			Tile expandTo = rnd.Next (border.Count);
+			expandTo.ApplyPlayerColor (player.Color);
 		}
+
+		/*TODO: make tiles outside of city boundary unselectable*/
+
 	}
 }
 
