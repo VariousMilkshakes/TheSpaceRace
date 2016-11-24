@@ -17,6 +17,7 @@ namespace SpaceRace.Utils
 		public GameObject Canvas;
 		public GameObject AdvanceAge;
 		public GameObject AdvanceAgeNotice;
+		public GameObject TurnPlayerTracker;
 		
 		private Player currentPlayer;
 
@@ -56,13 +57,23 @@ namespace SpaceRace.Utils
 			woodValue.text = "Wood: " + inv.CheckResource(PlayerTools.Resources.Wood);
 		}
 
+
+		/// <summary>
+		/// At the start of the turn bind to the current player
+		/// </summary>
+		/// <param name="targetPlayer">Player to bind to</param>
 		public void BindPlayer (Player targetPlayer)
 		{
 			currentPlayer = targetPlayer;
-			currentPlayer.Inventory.AddListener(delegate
-			{
-				ResourceUpdate();
-			});
+			currentPlayer.Inventory.AddListener(ResourceUpdate);
+		}
+
+		/// <summary>
+		/// Un bind from previous player in order to bind to new player
+		/// </summary>
+		public void UnBindPlayer ()
+		{
+			currentPlayer.Inventory.ClearListeners();
 		}
 
 		/// <summary>
@@ -89,7 +100,11 @@ namespace SpaceRace.Utils
 				Type targetBuilding = building;
 				menuButton.onClick.AddListener(delegate
 				{
-					targetTile.Build(targetBuilding, currentPlayer);
+					var builder = currentPlayer;
+					
+					if (targetTile.Build(targetBuilding, builder))
+						targetTile.ApplyPlayerColor(builder.Color);
+
 					clearBuildingMenu();
 				});
 
@@ -136,6 +151,15 @@ namespace SpaceRace.Utils
 			}
 
 			activeUIItems.Clear();
+		}
+
+		public void SetTurn (int turn, Player activePlayer)
+		{
+			UnBindPlayer();
+			BindPlayer(activePlayer);
+
+			Text display = TurnPlayerTracker.GetComponent<Text>();
+			display.text = "Turn " + turn + " Player " + currentPlayer.PlayerName;
 		}
 	}
 }

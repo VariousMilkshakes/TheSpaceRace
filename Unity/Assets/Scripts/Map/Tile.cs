@@ -194,7 +194,7 @@ public class Tile: MonoBehaviour{
 		sr.sprite = spriteArray [type];
 	}
 
-	public void Build (Type buildingType, Player builder)
+	public bool Build (Type buildingType, Player builder)
 	{
 		var buildMethod = typeof(Building).GetMethod("BUILD");
 		var genericBuildMethod = buildMethod.MakeGenericMethod(buildingType);
@@ -208,13 +208,20 @@ public class Tile: MonoBehaviour{
 		catch (Exception)
 		{
 			Debug.Log("Not enough resources");
-			return;
+			return false;
 		}
 
 		builder.TrackBuilding(newBuilding);
 		building = newBuilding;
 		sr.sprite = building.ActiveSprite;
 		builder.Inventory.AddResource(building.OnBuild());
+
+		return true;
+	}
+
+	public void ApplyPlayerColor(Color playerColor)
+	{
+		sr.color = playerColor;
 	}
 
 }

@@ -42,40 +42,73 @@ namespace SpaceRace
 			return null;
 		}
 
-		public GameObject UIHandlerObject;
+		public GameObject UiHandlerObject;
 
-		private List<TurnObject> activePlayers;
+		private List<Player> activePlayers;
 		private UiHack uiHandler;
+		private Player activePlayer;
+		private bool running;
+
+		private int turn = 0;
 
 		void Start()
 		{
-			Player player1 = new Player();
+			running = true;
 
-			activePlayers = new List<TurnObject>()
+			Player player1 = new Player();
+			Player player2 = new Player();
+			player1.PlayerName = "Jim";
+			player1.Color = Color.magenta;
+			player2.PlayerName = "Jack";
+			player2.Color = Color.cyan;
+
+			activePlayers = new List<Player>()
 			{
 				player1,
-				new AI(new Player())
+				player2
 			};
 
-			uiHandler = UIHandlerObject.GetComponent<UiHack>();
+			uiHandler = UiHandlerObject.GetComponent<UiHack>();
 			uiHandler.BindPlayer(player1);
 			uiHandler.ResourceUpdate();
 
-			NewTurn();
+			StartCoroutine("NewTurn");
 		}
 
-		public void NewTurn ()
+		public System.Collections.IEnumerator NewTurn()
 		{
-			foreach (TurnObject p in activePlayers)
+			turn++;
+
+			foreach (Player p in activePlayers)
 			{
-				if (p.GetType().Name == "Player")
+				activePlayer = p;
+				newPhase();
+
+				while (!activePlayer.TurnComplete)
 				{
-					Player player = p as Player;
-					if (player.ReadyToAdvance) uiHandler.DisplayAdvanceButton();
+					yield return new WaitForSeconds(.1f);
 				}
 
-				p.OnTurn();
+				activePlayer.TurnComplete = false;
 			}
+
+			if (running)
+			{
+				StartCoroutine("NewTurn");
+			}
+		}
+
+		private void newPhase ()
+		{
+			uiHandler.SetTurn(turn, activePlayer);
+			if (activePlayer.ReadyToAdvance) uiHandler.DisplayAdvanceButton();
+
+			activePlayer.OnTurn();
+		}
+
+		public void CompleteTurn ()
+		{
+			activePlayer.TurnComplete = true;
 		}
 	}
 }

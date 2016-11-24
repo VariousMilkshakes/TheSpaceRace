@@ -89,5 +89,10 @@ namespace SpaceRace.PlayerTools
 		{
 			resourceUpdateEvent = Listener;
 		}
+
+		public void ClearListeners ()
+		{
+			resourceUpdateEvent = null;
+		}
 	}
 }

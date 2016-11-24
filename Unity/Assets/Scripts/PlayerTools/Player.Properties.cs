@@ -1,9 +1,12 @@
-﻿using SpaceRace.World;
-using SpaceRace.World.Buildings;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using UE = UnityEngine;
+
+using SpaceRace.World;
+using SpaceRace.World.Buildings;
 
 namespace SpaceRace.PlayerTools
 {
@@ -15,7 +18,11 @@ namespace SpaceRace.PlayerTools
 
 		private List<Building> playerBuildings;
 
+		public string PlayerName;
+		public UE.Color Color;
+
 		public bool ReadyToAdvance = false;
+		public bool TurnComplete = false;
 		public WorldStates Age = WorldStates.Roman;
 
 		public Inventory Inventory
