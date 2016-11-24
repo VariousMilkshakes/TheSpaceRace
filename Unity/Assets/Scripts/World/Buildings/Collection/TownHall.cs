@@ -12,7 +12,8 @@ namespace SpaceRace.World.Buildings.Collection
 		MapGenerator mapGen;
 		Player player;
 
-		public TownHall ()
+
+		public TownHall () : base (typeof(TownHall))
 		{
 			Sprite sprite = null;
 			setCityTiles ();
@@ -50,18 +51,26 @@ namespace SpaceRace.World.Buildings.Collection
 		/*find position of this player's town hall*/
 		private Tile findTownHall(){
 			List<Tile> toSearch = mapGen.tiles;
+			Tile toReturn = null;
 			for(int i = 0; i<toSearch.Count; i++){
-				if(toSearch[i].Building == TownHall /*&& tile belongs to this player*/){
-					return toSearch [i];
+				if(toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour == player.Color){
+					toReturn = toSearch [i];
 				}
 			}
+			return toReturn;
 		}
 
 		/*set tiles surrounding town hall to the player's colour*/
 		private void setCityTiles(){
 			Tile townHallPos = findTownHall ();
-
-
+			mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY - 1).ApplyPlayerColor (player.Color);
+			mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY).ApplyPlayerColor (player.Color);
+			mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY + 1).ApplyPlayerColor (player.Color);
+			mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY - 1).ApplyPlayerColor (player.Color);
+			mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY + 1).ApplyPlayerColor (player.Color);
+			mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY - 1).ApplyPlayerColor (player.Color);
+			mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY).ApplyPlayerColor (player.Color);
+			mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY + 1).ApplyPlayerColor (player.Color);
 		}
 
 		private void expandCityBoundary(){
