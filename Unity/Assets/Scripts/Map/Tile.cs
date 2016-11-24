@@ -214,7 +214,6 @@ public class Tile: MonoBehaviour{
 		builder.TrackBuilding(newBuilding);
 		building = newBuilding;
 		sr.sprite = building.ActiveSprite;
-		sr.sortingOrder = 1;
 		builder.Inventory.AddResource(building.OnBuild());
 	}
 
