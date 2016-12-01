@@ -4,6 +4,8 @@ using SpaceRace.PlayerTools;
 using UnityEngine;
 using SpaceRace.Utils;
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace SpaceRace.World.Buildings.Collection
 {
@@ -80,15 +82,12 @@ namespace SpaceRace.World.Buildings.Collection
 
 		private void expandCityBoundary(){
 			System.Random rnd = new System.Random ();
-			/*TODO: make list of tiles surrounding the city area*/
 
-			//lists of x coordinates and a list of y coordinates of border tiles
-			List<int> expandX = null;
-			List<int> expandY = null;
+			//list of border tiles
+			List<Tile> expand = null;
 
 			//find border tiles
 			List<Tile> borderTiles = null;
-
 			int maxXCoord = findMaxXY (cityTiles, "tile.GetX()");
 			int maxYCoord = findMaxXY (cityTiles, "tile.GetY()");
 			int minXCoord = findMinXY (cityTiles, "tile.GetX()");
@@ -96,15 +95,15 @@ namespace SpaceRace.World.Buildings.Collection
 			foreach (Tile tile in cityTiles) {
 				//add all tiles with these values to expandX/expandY
 				if (tile.GetX () == maxXCoord || tile.GetX () == minXCoord || tile.GetY () == maxYCoord || tile.GetY () == minYCoord) {
-					cityTiles.Add (tile);
+					expand.Add (tile);
 				}
 			}
 
-			int expandToX = rnd.Next (expandX.Count);
-			int expandToY = rnd.Next (expandY.Count);
-
-			Tile expandTo = mapGen.GetTile(expandToX, expandToY);
+			//choose random tile from 'expand' to expand to
+			int expandToIndex = rnd.Next (expand.Count);
+			Tile expandTo = expand.ElementAt (expandToIndex);
 			expandTo.ApplyPlayerColor (player.Color);
+			Tile expandToMap = mapGen.GetTile (expandTo.GetX (), expandTo.GetY ());	
 		}
 
 		//Find maximum X/Y coordinate of a tile
