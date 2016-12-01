@@ -23,13 +23,14 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		public TownHall () : base (typeof(TownHall))
 		{
-			Sprite sprite = null;
-			player = new Player ();
-			cityTiles = null;
-			setCityTiles ();
-			findTownHall ();
 			mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
 				.GetComponent<MapGenerator>();
+			Sprite sprite = null;
+			player = new Player ();
+			cityTiles = new List<Tile>();
+			setCityTiles ();
+			findTownHall ();
+
 			
 			/// Set sprite for building
 			try
@@ -43,6 +44,7 @@ namespace SpaceRace.World.Buildings.Collection
 				Debug.Log(e);
 			}
 			_buildingSprites.Add(WorldStates.All, sprite);
+
 		}
 		/// <summary>
 		/// Resources required for a player to build a town hall
@@ -50,15 +52,15 @@ namespace SpaceRace.World.Buildings.Collection
 		/// <returns>Required resources</returns>
 		public override SpaceRace.PlayerTools.ResourceBox BuildRequirements()
 		{
-			return new SpaceRace.PlayerTools.ResourceBox(PlayerTools.Resources.None);
+			return new SpaceRace.PlayerTools.ResourceBox(PlayerTools.Resources.Money, 10);
 		}
 
 		public override void OnTurn()
 		{
 			base.OnTurn ();
-	//	int population = PlayerTools.Inventory.CheckResource (PlayerTools.Resources.Population);
 			///Trigger city expansion if population has increased by 5
-			int population = 10;
+//**fix**  	int population = PlayerTools.Inventory.CheckResource (PlayerTools.Resources.Population);
+			int population = 10; /*test*/
 			if (population % 5 == 0) {
 				expandCityBoundary ();
 			}
@@ -69,10 +71,10 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		/// <returns>The town hall.</returns>
 		private Tile findTownHall(){
-			List<Tile> toSearch = mapGen.tiles;
+			List<Tile> toSearch = mapGen.getTiles();
 			Tile toReturn = null;
 			for(int i = 0; i<toSearch.Count; i++){
-				if(toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour().Equals(player.Color)){
+				if(toSearch[i] != null && toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour().Equals(player.Color)){
 					toReturn = toSearch [i];
 				}
 			}
@@ -84,6 +86,9 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		private void setCityTiles(){
 			Tile townHallPos = findTownHall ();
+			if (townHallPos == null) {
+				return;
+			}
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY()));
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() + 1));
@@ -102,10 +107,10 @@ namespace SpaceRace.World.Buildings.Collection
 		/// and setting this to be long to the player
 		/// </summary>
 
-		//*****change to expand to one OUTSIDE the boundary, currently selects tile the player already owns********************
+		//change to expand to one OUTSIDE the boundary, currently selects tile the player already owns
 		private void expandCityBoundary(){
 			System.Random rnd = new System.Random ();
-
+//**fix
 			//find border tiles
 			List<Tile> borderTiles = null;
 			int maxXCoord = findMaxX (cityTiles);

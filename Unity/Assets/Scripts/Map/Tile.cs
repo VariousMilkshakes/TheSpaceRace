@@ -205,9 +205,9 @@ public class Tile: MonoBehaviour{
 		{
 			newBuilding = genericBuildMethod.Invoke(null, new object[] { builder }) as Building;
 		}
-		catch (Exception)
+		catch (Exception e)
 		{
-			Debug.Log("Not enough resources");
+			Debug.Log(e);
 			return false;
 		}
 
