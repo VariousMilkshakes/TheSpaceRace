@@ -22,6 +22,7 @@ namespace SpaceRace.World.Buildings.Collection
 			player = new Player ();
 			cityTiles = null;
 			setCityTiles ();
+			findTownHall ();
 			mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
 				.GetComponent<MapGenerator>();
 			
@@ -49,7 +50,12 @@ namespace SpaceRace.World.Buildings.Collection
 
 		public override void OnTurn()
 		{
-			base.OnTurn();
+			base.OnTurn ();
+			//check population and expand if neccessary
+			int population = SpaceRace.PlayerTools.Inventory.CheckResource (10);
+			if (population % 5 == 0) {
+				expandCityBoundary ();
+			}
 		}
 
 		/*find position of this player's town hall*/
