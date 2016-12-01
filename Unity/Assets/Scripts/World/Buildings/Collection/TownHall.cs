@@ -9,13 +9,18 @@ using System.Linq;
 
 namespace SpaceRace.World.Buildings.Collection
 {
+	/// <summary>
+	/// Town hall. Responsible for setting and expanding the city boundary.
+	/// </summary>
 	public class TownHall : Building
 	{
 		MapGenerator mapGen;
 		Player player;
 		List<Tile> cityTiles;
 
-
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
+		/// </summary>
 		public TownHall () : base (typeof(TownHall))
 		{
 			Sprite sprite = null;
@@ -38,27 +43,31 @@ namespace SpaceRace.World.Buildings.Collection
 				Debug.Log(e);
 			}
 			_buildingSprites.Add(WorldStates.All, sprite);
-
-			//Input = new PT.ResourceBox(PT.Resources.Free, 0, 0);
-			//Output = new PT.ResourceBox(PT.Resources.Money, 0, 10);
 		}
-
+		/// <summary>
+		/// Resources required for a player to build a town hall
+		/// </summary>
+		/// <returns>Required resources</returns>
 		public override SpaceRace.PlayerTools.ResourceBox BuildRequirements()
 		{
-			return new SpaceRace.PlayerTools.ResourceBox(SpaceRace.PlayerTools.Resources.None);
+			return new SpaceRace.PlayerTools.ResourceBox(PlayerTools.Resources.None);
 		}
 
 		public override void OnTurn()
 		{
 			base.OnTurn ();
-			//check population and expand if neccessary
-			int population = SpaceRace.PlayerTools.Inventory.CheckResource (10);
+	//	int population = PlayerTools.Inventory.CheckResource (PlayerTools.Resources.Population);
+			///Trigger city expansion if population has increased by 5
+			int population = 10;
 			if (population % 5 == 0) {
 				expandCityBoundary ();
 			}
 		}
-
-		/*find position of this player's town hall*/
+			
+		/// <summary>
+		/// Finds the position of this player's Town Hall
+		/// </summary>
+		/// <returns>The town hall.</returns>
 		private Tile findTownHall(){
 			List<Tile> toSearch = mapGen.tiles;
 			Tile toReturn = null;
@@ -69,8 +78,10 @@ namespace SpaceRace.World.Buildings.Collection
 			}
 			return toReturn;
 		}
-
-		/*set tiles surrounding town hall to the player's colour*/
+			
+		/// <summary>
+		/// Sets the city tiles by changing these to this player's colour.
+		/// </summary>
 		private void setCityTiles(){
 			Tile townHallPos = findTownHall ();
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
@@ -86,6 +97,12 @@ namespace SpaceRace.World.Buildings.Collection
 			}
 		}
 
+		/// <summary>
+		/// Expands the city boundary by randomly selecting one of the tiles bordering the city boundary 
+		/// and setting this to be long to the player
+		/// </summary>
+
+		//*****change to expand to one OUTSIDE the boundary, currently selects tile the player already owns********************
 		private void expandCityBoundary(){
 			System.Random rnd = new System.Random ();
 
@@ -102,79 +119,84 @@ namespace SpaceRace.World.Buildings.Collection
 				}
 			}
 
-			//choose random tile from 'expand' to expand to
+			//choose random tile from 'borderTiles' to expand to
 			int expandToIndex = rnd.Next (borderTiles.Count);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
 			expandTo.ApplyPlayerColor (player.Color);
 			Tile expandToMap = mapGen.GetTile (expandTo.GetX (), expandTo.GetY ());	
 		}
-
-		//Find maximum X/Y coordinate of a tile
+			
+		/// <summary>
+		/// Finds the maximum x coordinate of a tile inside the city boundary.
+		/// </summary>
+		/// <returns>The maximum x coordinate int</returns>
+		/// <param name="list">List.</param>
 		private int findMaxX(List<Tile> list){ 
-			if (list.Count == 0)
-			{
+			if (list.Count == 0){
 				throw new InvalidOperationException("Error: empty list");
 			}
 			int max = int.MinValue;
-			foreach (Tile tile in list)
-			{
-				if (tile.GetX() > max)
-				{
+			foreach (Tile tile in list){
+				if (tile.GetX() > max){
 					max = tile.GetX();
 				}
 			}
 			return max;
 		}
 
+		/// <summary>
+		/// Finds the maximum y coordinate of a tile inside the city boundary.
+		/// </summary>
+		/// <returns>The maximum y coordinate int.</returns>
+		/// <param name="list">List.</param>
 		private int findMaxY(List<Tile> list){ 
-			if (list.Count == 0)
-			{
+			if (list.Count == 0){
 				throw new InvalidOperationException("Error: empty list");
 			}
 			int max = int.MinValue;
-			foreach (Tile tile in list)
-			{
-				if (tile.GetY() > max)
-				{
+			foreach (Tile tile in list){
+				if (tile.GetY() > max){
 					max = tile.GetY();
 				}
 			}
 			return max;
 		}
 
-		//find minimum X/Y coordinate of a tile
+		/// <summary>
+		/// Finds the minimum x coordinate of a tile inside the city boundary.
+		/// </summary>
+		/// <returns>The minimum x coordinate int.</returns>
+		/// <param name="list">List.</param>
 		private int findMinX(List<Tile> list){
-			if (list.Count == 0)
-			{
+			if (list.Count == 0){
 				throw new InvalidOperationException("Error: empty list");
 			}
 			int min = int.MaxValue;
-			foreach (Tile tile in list)
-			{
-				if (tile.GetX() < min)
-				{
+			foreach (Tile tile in list){
+				if (tile.GetX() < min){
 					min = tile.GetX();
 				}
 			}
 			return min;
 		}
 
+		/// <summary>
+		/// Finds the minimum y coordinate of a tile inside the city boundary.
+		/// </summary>
+		/// <returns>The minimum y coordinate int.</returns>
+		/// <param name="list">List.</param>
 		private int findMinY(List<Tile> list){
-			if (list.Count == 0)
-			{
+			if (list.Count == 0){
 				throw new InvalidOperationException("Error: empty list");
 			}
 			int min = int.MaxValue;
-			foreach (Tile tile in list)
-			{
-				if (tile.GetY() < min)
-				{
+			foreach (Tile tile in list){
+				if (tile.GetY() < min){
 					min = tile.GetY();
 				}
 			}
 			return min;
 		}
-
 
 		/*TODO: make tiles outside of city boundary unselectable*/
 
