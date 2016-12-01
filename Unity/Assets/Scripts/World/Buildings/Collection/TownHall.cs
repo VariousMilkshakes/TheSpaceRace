@@ -17,6 +17,8 @@ namespace SpaceRace.World.Buildings.Collection
 		public TownHall () : base (typeof(TownHall))
 		{
 			Sprite sprite = null;
+			player = new Player ();
+			cityTiles = null;
 			setCityTiles ();
 			mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
 				.GetComponent<MapGenerator>();
@@ -84,6 +86,20 @@ namespace SpaceRace.World.Buildings.Collection
 			List<int> expandX = null;
 			List<int> expandY = null;
 
+			//find border tiles
+			List<Tile> borderTiles = null;
+
+			int maxXCoord = findMaxXY (cityTiles, "tile.GetX()");
+			int maxYCoord = findMaxXY (cityTiles, "tile.GetY()");
+			int minXCoord = findMinXY (cityTiles, "tile.GetX()");
+			int minYCoord = findMinXY (cityTiles, "tile.GetX()");
+			foreach (Tile tile in cityTiles) {
+				//add all tiles with these values to expandX/expandY
+				if (tile.GetX () == maxXCoord || tile.GetX () == minXCoord || tile.GetY () == maxYCoord || tile.GetY () == minYCoord) {
+					cityTiles.Add (tile);
+				}
+			}
+
 			int expandToX = rnd.Next (expandX.Count);
 			int expandToY = rnd.Next (expandY.Count);
 
@@ -91,8 +107,45 @@ namespace SpaceRace.World.Buildings.Collection
 			expandTo.ApplyPlayerColor (player.Color);
 		}
 
+		//Find maximum X/Y coordinate of a tile
+		private int findMaxXY(List<Tile> list, String XYCoord){ /*change to get rid of findMaxY*/
+			if (list.Count == 0)
+			{
+				throw new InvalidOperationException("Error: empty list");
+			}
+			int max = int.MinValue;
+			foreach (Tile tile in list)
+			{
+				if (tile.GetX() /*XYCoord*/ > max)
+				{
+					max = tile.GetX();
+				}
+			}
+			return max;
+		}
+
+		//find minimum X/Y coordinate of a tile
+		private int findMinXY(List<Tile> list, String XYCoord){
+			if (list.Count == 0)
+			{
+				throw new InvalidOperationException("Error: empty list");
+			}
+			int min = int.MaxValue;
+			foreach (Tile tile in list)
+			{
+				if (tile.GetY() /*XYCoord*/ < min)
+				{
+					min = tile.GetY();
+				}
+			}
+			return min;
+		}
+
+
 		/*TODO: make tiles outside of city boundary unselectable*/
 
 	}
 }
+
+				
 
