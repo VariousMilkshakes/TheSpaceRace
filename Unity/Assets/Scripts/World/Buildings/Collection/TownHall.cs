@@ -83,31 +83,28 @@ namespace SpaceRace.World.Buildings.Collection
 		private void expandCityBoundary(){
 			System.Random rnd = new System.Random ();
 
-			//list of border tiles
-			List<Tile> expand = null;
-
 			//find border tiles
 			List<Tile> borderTiles = null;
-			int maxXCoord = findMaxXY (cityTiles, "tile.GetX()");
-			int maxYCoord = findMaxXY (cityTiles, "tile.GetY()");
-			int minXCoord = findMinXY (cityTiles, "tile.GetX()");
-			int minYCoord = findMinXY (cityTiles, "tile.GetX()");
+			int maxXCoord = findMaxX (cityTiles);
+			int maxYCoord = findMaxY (cityTiles);
+			int minXCoord = findMinX (cityTiles);
+			int minYCoord = findMinY (cityTiles);
 			foreach (Tile tile in cityTiles) {
 				//add all tiles with these values to expandX/expandY
 				if (tile.GetX () == maxXCoord || tile.GetX () == minXCoord || tile.GetY () == maxYCoord || tile.GetY () == minYCoord) {
-					expand.Add (tile);
+					borderTiles.Add (tile);
 				}
 			}
 
 			//choose random tile from 'expand' to expand to
-			int expandToIndex = rnd.Next (expand.Count);
-			Tile expandTo = expand.ElementAt (expandToIndex);
+			int expandToIndex = rnd.Next (borderTiles.Count);
+			Tile expandTo = borderTiles.ElementAt (expandToIndex);
 			expandTo.ApplyPlayerColor (player.Color);
 			Tile expandToMap = mapGen.GetTile (expandTo.GetX (), expandTo.GetY ());	
 		}
 
 		//Find maximum X/Y coordinate of a tile
-		private int findMaxXY(List<Tile> list, String XYCoord){ /*change to get rid of findMaxY*/
+		private int findMaxX(List<Tile> list){ 
 			if (list.Count == 0)
 			{
 				throw new InvalidOperationException("Error: empty list");
@@ -115,7 +112,7 @@ namespace SpaceRace.World.Buildings.Collection
 			int max = int.MinValue;
 			foreach (Tile tile in list)
 			{
-				if (tile.GetX() /*XYCoord*/ > max)
+				if (tile.GetX() > max)
 				{
 					max = tile.GetX();
 				}
@@ -123,8 +120,24 @@ namespace SpaceRace.World.Buildings.Collection
 			return max;
 		}
 
+		private int findMaxY(List<Tile> list){ 
+			if (list.Count == 0)
+			{
+				throw new InvalidOperationException("Error: empty list");
+			}
+			int max = int.MinValue;
+			foreach (Tile tile in list)
+			{
+				if (tile.GetY() > max)
+				{
+					max = tile.GetY();
+				}
+			}
+			return max;
+		}
+
 		//find minimum X/Y coordinate of a tile
-		private int findMinXY(List<Tile> list, String XYCoord){
+		private int findMinX(List<Tile> list){
 			if (list.Count == 0)
 			{
 				throw new InvalidOperationException("Error: empty list");
@@ -132,7 +145,23 @@ namespace SpaceRace.World.Buildings.Collection
 			int min = int.MaxValue;
 			foreach (Tile tile in list)
 			{
-				if (tile.GetY() /*XYCoord*/ < min)
+				if (tile.GetX() < min)
+				{
+					min = tile.GetX();
+				}
+			}
+			return min;
+		}
+
+		private int findMinY(List<Tile> list){
+			if (list.Count == 0)
+			{
+				throw new InvalidOperationException("Error: empty list");
+			}
+			int min = int.MaxValue;
+			foreach (Tile tile in list)
+			{
+				if (tile.GetY() < min)
 				{
 					min = tile.GetY();
 				}
