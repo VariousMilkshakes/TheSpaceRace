@@ -4,7 +4,7 @@ using SpaceRace.PlayerTools;
 using UnityEngine;
 using SpaceRace.Utils;
 using System.Collections.Generic;
-
+/*
 namespace SpaceRace.World.Buildings.Collection
 {
 	public class TownHall : Building
@@ -47,17 +47,17 @@ namespace SpaceRace.World.Buildings.Collection
 			base.OnTurn();
 		}
 
-		/*find position of this player's town hall*/
+		/*find position of this player's town hall*//*
 		private Tile findTownHall(){
 			List<Tile> toSearch = mapGen.tiles;
 			for(int i = 0; i<toSearch.Count; i++){
-				if(toSearch[i].Building == TownHall /*&& tile belongs to this player*/){
+				if(toSearch[i].Building == TownHall /*&& tile belongs to this player*//*){
 					return toSearch [i];
 				}
 			}
-		}
+		}*/
 
-		/*set tiles surrounding town hall to the player's colour*/
+		/*set tiles surrounding town hall to the player's colour*//*
 		private void setCityTiles(){
 			Tile townHallPos = findTownHall ();
 
@@ -67,5 +67,5 @@ namespace SpaceRace.World.Buildings.Collection
 		private void expandCityBoundary(){
 		}
 	}
-}
+}*/
 
