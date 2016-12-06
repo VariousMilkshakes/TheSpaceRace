@@ -17,6 +17,7 @@ namespace SpaceRace.World.Buildings.Collection
 		private MapGenerator mapGen;
 		private List<Tile> cityTiles;
 		private Player currentPlayer;
+		private List<Tile> mapTiles;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
@@ -28,6 +29,7 @@ namespace SpaceRace.World.Buildings.Collection
 			Sprite sprite = null;
 			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
 			currentPlayer = GameObject.Find("GameManager").GetComponent<Game>().GetActivePlayer ();
+			mapTiles = mapGen.getTiles ();
 
 			/// Set sprite for building
 			try {
@@ -52,32 +54,33 @@ namespace SpaceRace.World.Buildings.Collection
 
 		public override void OnTurn ()
 		{
+			int turn = 0;
 			base.OnTurn ();
-			setCityTiles ();
+			if (turn != 1) {
+				setCityTiles ();
+			}
 			///Trigger city expansion if population has increased by 5
 //**fix**  	int population = PlayerTools.Inventory.CheckResource (PlayerTools.Resources.Population);
 			//	int population = 10; /*test*/
 			/*	if (population % 5 == 0) {
 				expandCityBoundary ();
 			}*/
+			turn++;
 		}
 
 		/// <summary>
 		/// Finds the position of this player's Town Hall
 		/// </summary>
 		/// <returns>The town hall.</returns>
-		private Tile findTownHall ()
-		{
-			/*		List<Tile> toSearch = mapGen.getTiles();
+		private Tile findTownHall (){
 			Tile toReturn = null;
-			for(int i = 0; i<toSearch.Count; i++){
-				if(toSearch[i] != null && toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour().Equals(currentPlayer.Color)){
-					toReturn = toSearch [i];
+			for(int i = 0; i<mapTiles.Count; i++){
+				if(mapTiles.ElementAt(i) != null && mapTiles.ElementAt(i).Building.GetType().Equals("TownHall")){	//null pointer
+					toReturn = mapTiles [i];
 				}
 			}
+			return toReturn;
 
-			return toReturn;*/
-			return null;
 		}
 
 		/// <summary>
@@ -85,24 +88,23 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		private void setCityTiles ()
 		{
-			/*Tile townHallPos = findTownHall ();
-			if (townHallPos == null) {
-				return;
+			Tile townHallPos = /*findTownHall ();*/ mapGen.GetTile (6, 6);
+			List<Tile> surrounding = new List<Tile> ();
+			surrounding.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
+			surrounding.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY()));
+			surrounding.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() + 1));
+			surrounding.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() - 1));
+			surrounding.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() + 1));
+			surrounding.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() - 1));
+			surrounding.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY()));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() + 1));
+
+			foreach(Tile tile in surrounding){
+				tile.ApplyPlayerColor (currentPlayer.Color);
+				cityTiles.Add (tile);
 			}
-			/*	cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY()));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() + 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() + 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY()));
-			cityTiles.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() + 1));
-			foreach(Tile tile in cityTiles){
-				tile.ApplyPlayerColor (player.Color);
-			}*/
-			Tile tile = mapGen.GetTile (1,1); //test
-			cityTiles.Add (tile);
-			tile.ApplyPlayerColor (currentPlayer.Color);
+		//	Tile tile = mapGen.GetTile (1,1); //test
+
 
 
 		}
