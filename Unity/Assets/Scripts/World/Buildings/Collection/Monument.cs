@@ -11,7 +11,7 @@ namespace SpaceRace.World.Buildings.Collection
 	class Monument : Building
 	{
 
-		public Monument () : base (typeof(House))
+		public Monument (PT.Player builder) : base (typeof(House), builder)
 		{
 			Sprite sprite = null;
 
