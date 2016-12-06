@@ -110,5 +110,9 @@ namespace SpaceRace
 		{
 			activePlayer.TurnComplete = true;
 		}
+
+		public Player GetActivePlayer(){
+			return activePlayer;
+		}
 	}
 }

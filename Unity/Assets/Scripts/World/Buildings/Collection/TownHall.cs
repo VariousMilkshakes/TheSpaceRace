@@ -6,7 +6,7 @@ using SpaceRace.Utils;
 using System.Collections.Generic;
 using System.Linq;
 
-
+//once everything works, refactor so that Player.Properties looks after tiles that the player owns
 namespace SpaceRace.World.Buildings.Collection
 {
 	/// <summary>
@@ -15,8 +15,8 @@ namespace SpaceRace.World.Buildings.Collection
 	public class TownHall : Building
 	{
 		private MapGenerator mapGen;
-		private Player currentPlayer;
 		private List<Tile> cityTiles;
+		private Player currentPlayer;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
@@ -26,9 +26,9 @@ namespace SpaceRace.World.Buildings.Collection
 			mapGen = GameObject.FindGameObjectWithTag ("PlaneManager")
 				.GetComponent<MapGenerator> ();
 			Sprite sprite = null;
-			cityTiles = new List<Tile> ();
+			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
+			currentPlayer = GameObject.Find("GameManager").GetComponent<Game>().GetActivePlayer ();
 
-			setCityTiles ();			
 			/// Set sprite for building
 			try {
 				Config buildingConfigs = GameRules.CONFIG_REPO ["Buildings"];
@@ -47,7 +47,7 @@ namespace SpaceRace.World.Buildings.Collection
 		/// <returns>Required resources</returns>
 		public override SpaceRace.PlayerTools.ResourceBox BuildRequirements ()
 		{
-			return new SpaceRace.PlayerTools.ResourceBox (PlayerTools.Resources.Money, 10);
+			return new SpaceRace.PlayerTools.ResourceBox (PlayerTools.Resources.Money, 0);
 		}
 
 		public override void OnTurn ()
@@ -85,7 +85,7 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		private void setCityTiles ()
 		{
-			Tile townHallPos = findTownHall ();
+			/*Tile townHallPos = findTownHall ();
 			if (townHallPos == null) {
 				return;
 			}
@@ -100,9 +100,10 @@ namespace SpaceRace.World.Buildings.Collection
 			foreach(Tile tile in cityTiles){
 				tile.ApplyPlayerColor (player.Color);
 			}*/
-			Tile tile = mapGen.GetTile (1, 1);
+			Tile tile = mapGen.GetTile (1,1); //test
 			cityTiles.Add (tile);
 			tile.ApplyPlayerColor (currentPlayer.Color);
+
 
 		}
 
@@ -133,7 +134,7 @@ namespace SpaceRace.World.Buildings.Collection
 			int expandToIndex = rnd.Next (borderTiles.Count);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
 			expandTo.ApplyPlayerColor (currentPlayer.Color);
-			Tile expandToMap = mapGen.GetTile (expandTo.GetX (), expandTo.GetY ());	
+			cityTiles.Add (expandTo);	
 		}
 
 		/// <summary>

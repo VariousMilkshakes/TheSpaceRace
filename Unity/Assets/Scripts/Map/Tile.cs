@@ -59,6 +59,8 @@ public class Tile: MonoBehaviour{
 
 	public int score;
 
+	private int currentPlayer;
+
 	public WorldStates State
 	{
 		set { tileState = value; }

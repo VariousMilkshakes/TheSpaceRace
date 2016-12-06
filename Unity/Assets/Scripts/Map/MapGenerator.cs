@@ -94,7 +94,7 @@ public class MapGenerator : MonoBehaviour {
 
 	public Tile GetTile(int x, int y){
 		foreach (Tile t in tiles) {
-			if (t.GetX () == x && t.GetY () == y) {
+			if (t.transform.position.x == x && t.transform.position.y == y) {
 				return t;
 			}
 		} throw new NoTileException ("No such Tile");
@@ -289,15 +289,21 @@ public class MapGenerator : MonoBehaviour {
 					script.NewTile (gridPos [x, y], sprites, hoverSprite, selectedSprite, buildingSprite, x, y);
 					GameObject instance = Instantiate (tile, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 					instance.transform.SetParent (mapHolder);
-					tiles.Add (script);
 				}
 			}
 		}
+
+		Component[] actualTiles = mapHolder.GetComponentsInChildren<Tile> ();
+		foreach (Component tile in actualTiles) {
+			tiles.Add ((Tile)tile);
+		}
+
 		GameObject planeManager = GameObject.FindGameObjectWithTag ("PlaneManager");
 		Component[] oldTiles = planeManager.GetComponentsInChildren<Tile> ();
 		foreach(Tile t in oldTiles){
 			Destroy (t.gameObject);
 		}
+			
 	}
 
 	/*

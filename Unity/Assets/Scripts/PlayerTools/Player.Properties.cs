@@ -17,6 +17,7 @@ namespace SpaceRace.PlayerTools
 		private Inventory inventory;
 
 		private List<Building> playerBuildings;
+		private List<Tile> playerTiles;
 
 		public string PlayerName;
 		public UE.Color Color;
@@ -33,6 +34,7 @@ namespace SpaceRace.PlayerTools
 		public Player ()
 		{
 			playerBuildings = new List<Building>();
+			playerTiles = new List<Tile> ();
 
 			inventory = new Inventory();
 			inventory.AddResource(Resources.Wood, 10);
@@ -71,6 +73,26 @@ namespace SpaceRace.PlayerTools
 		public void TrackBuilding (Building newBuilding)
 		{
 			playerBuildings.Add(newBuilding);
+		}
+
+		/// <summary>
+		/// Tracks the tiles owned by this player
+		/// </summary>
+		/// <param name="newTile">New tile.</param>
+		public void TrackTile(Tile newTile){
+			playerTiles.Add (newTile);
+		}
+
+		/// <summary>
+		/// Gets the buildings owned by this player
+		/// </summary>
+		/// <returns>The player's buildings.</returns>
+		public List<SpaceRace.World.Buildings.Building> GetPlayerBuildings(){
+			return playerBuildings;
+		}
+
+		public List<Tile> GetPlayerTiles(){
+			return playerTiles;
 		}
 	}
 }
