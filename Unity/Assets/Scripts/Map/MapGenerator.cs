@@ -394,10 +394,15 @@ public class MapGenerator : MonoBehaviour {
 					script.NewTile (gridPos [x, y], x, y);
 					GameObject instance = Instantiate (tile, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 					instance.transform.SetParent (mapHolder);
-					tiles.Add (script);
 				}
 			}
 		}
+
+		Component[] actualTiles = mapHolder.GetComponentsInChildren<Tile> ();
+		foreach (Component tile in actualTiles) {
+			tiles.Add ((Tile)tile);
+		}
+
 		GameObject planeManager = GameObject.FindGameObjectWithTag ("PlaneManager");
 		Component[] oldTiles = planeManager.GetComponentsInChildren<Tile> ();
 		foreach(Tile t in oldTiles){
