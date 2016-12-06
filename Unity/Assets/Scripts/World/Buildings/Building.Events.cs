@@ -25,6 +25,7 @@ namespace SpaceRace.World.Buildings
 			Inventory builderInv = builder.Inventory;
 
 			// Check if player can afford to spend resources
+
 			if (builderInv.SpendResource(newBuilding.BuildRequirements()))
 			{
 				return newBuilding;
