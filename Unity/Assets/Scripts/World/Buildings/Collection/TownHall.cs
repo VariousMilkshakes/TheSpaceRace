@@ -26,12 +26,9 @@ namespace SpaceRace.World.Buildings.Collection
 			mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
 				.GetComponent<MapGenerator>();
 			Sprite sprite = null;
-			player = new Player ();
 			cityTiles = new List<Tile>();
-			setCityTiles ();
-			findTownHall ();
 
-			
+			setCityTiles ();			
 			/// Set sprite for building
 			try
 			{
@@ -58,12 +55,13 @@ namespace SpaceRace.World.Buildings.Collection
 		public override void OnTurn()
 		{
 			base.OnTurn ();
+			setCityTiles ();
 			///Trigger city expansion if population has increased by 5
 //**fix**  	int population = PlayerTools.Inventory.CheckResource (PlayerTools.Resources.Population);
-			int population = 10; /*test*/
-			if (population % 5 == 0) {
+		//	int population = 10; /*test*/
+		/*	if (population % 5 == 0) {
 				expandCityBoundary ();
-			}
+			}*/
 		}
 			
 		/// <summary>
@@ -74,7 +72,7 @@ namespace SpaceRace.World.Buildings.Collection
 			List<Tile> toSearch = mapGen.getTiles();
 			Tile toReturn = null;
 			for(int i = 0; i<toSearch.Count; i++){
-				if(toSearch[i] != null && toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour().Equals(player.Color)){
+				if(toSearch[i] != null && toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour().Equals(currentPlayer.Color)){
 					toReturn = toSearch [i];
 				}
 			}
@@ -85,11 +83,11 @@ namespace SpaceRace.World.Buildings.Collection
 		/// Sets the city tiles by changing these to this player's colour.
 		/// </summary>
 		private void setCityTiles(){
-			Tile townHallPos = findTownHall ();
-			if (townHallPos == null) {
-				return;
-			}
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
+		//	Tile townHallPos = findTownHall ();
+		//	if (townHallPos == null) {
+		//		return;
+		//	}
+		/*	cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY()));
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() + 1));
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() - 1));
@@ -99,7 +97,12 @@ namespace SpaceRace.World.Buildings.Collection
 			cityTiles.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() + 1));
 			foreach(Tile tile in cityTiles){
 				tile.ApplyPlayerColor (player.Color);
-			}
+			}*/
+			Tile tile = mapGen.GetTile (1, 1);
+			cityTiles.Add (tile);
+			tile.ApplyPlayerColor (currentPlayer.Color);
+			setUnselectable ();
+
 		}
 
 		/// <summary>
@@ -127,7 +130,7 @@ namespace SpaceRace.World.Buildings.Collection
 			//choose random tile from 'borderTiles' to expand to
 			int expandToIndex = rnd.Next (borderTiles.Count);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
-			expandTo.ApplyPlayerColor (player.Color);
+			expandTo.ApplyPlayerColor (currentPlayer.Color);
 			Tile expandToMap = mapGen.GetTile (expandTo.GetX (), expandTo.GetY ());	
 		}
 			
@@ -202,8 +205,18 @@ namespace SpaceRace.World.Buildings.Collection
 			}
 			return min;
 		}
+			
+		/// <summary>
+		/// Sets tiles outside of the city boundary to be unselectable.
+		/// </summary>
+		private void setUnselectable(){
+			foreach (Tile tile in mapGen.tiles) {
+				if (!cityTiles.Contains (tile)) {
+					tile.enabled = false;
+				}
+			}
+		}
 
-		/*TODO: make tiles outside of city boundary unselectable*/
 
 	}
 }
