@@ -14,9 +14,9 @@ namespace SpaceRace.World.Buildings.Collection
 	/// </summary>
 	public class TownHall : Building
 	{
-		MapGenerator mapGen;
-		Player player;
-		List<Tile> cityTiles;
+		private MapGenerator mapGen;
+		private Player currentPlayer;
+		private List<Tile> cityTiles;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
@@ -69,24 +69,26 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		/// <returns>The town hall.</returns>
 		private Tile findTownHall(){
-			List<Tile> toSearch = mapGen.getTiles();
+	/*		List<Tile> toSearch = mapGen.getTiles();
 			Tile toReturn = null;
 			for(int i = 0; i<toSearch.Count; i++){
 				if(toSearch[i] != null && toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour().Equals(currentPlayer.Color)){
 					toReturn = toSearch [i];
 				}
 			}
-			return toReturn;
+
+			return toReturn;*/
+			return null;
 		}
 			
 		/// <summary>
 		/// Sets the city tiles by changing these to this player's colour.
 		/// </summary>
 		private void setCityTiles(){
-		//	Tile townHallPos = findTownHall ();
-		//	if (townHallPos == null) {
-		//		return;
-		//	}
+			Tile townHallPos = findTownHall ();
+			if (townHallPos == null) {
+				return;
+			}
 		/*	cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY()));
 			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() + 1));
