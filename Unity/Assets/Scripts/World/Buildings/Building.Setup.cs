@@ -16,6 +16,7 @@ namespace SpaceRace.World.Buildings
 		protected WorldStates _buildingState;
 		protected Resources _buildingResource = Resources.None;
 		protected int _buildingResourceCost = 0;
+		protected Player _owner;
 
 		#region ResourceBoxes For Events
 
@@ -28,11 +29,12 @@ namespace SpaceRace.World.Buildings
 
 		#endregion
 
-		public Building(Type t)
+		protected Building(Type t, Player builder)
 		{
 			_buildingSprites = new Dictionary<WorldStates, UE.Sprite>();
 			useConfig(checkForConfig(t));
 			_buildingState = WorldStates.All;
+			_owner = builder;
 		}
 
 		/*

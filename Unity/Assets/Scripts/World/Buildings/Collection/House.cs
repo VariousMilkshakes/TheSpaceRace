@@ -11,7 +11,7 @@ namespace SpaceRace.World.Buildings.Collection
 	class House : Building
 	{
 
-		public House () : base (typeof(House))
+		public House (PT.Player builder) : base (typeof(House), builder)
 		{
 			Sprite sprite = null;
 
