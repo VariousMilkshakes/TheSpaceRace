@@ -4,6 +4,7 @@ using SpaceRace.PlayerTools;
 using UnityEngine;
 using SpaceRace.Utils;
 using System.Collections.Generic;
+
 using System.Linq;
 
 
@@ -21,7 +22,7 @@ namespace SpaceRace.World.Buildings.Collection
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
 		/// </summary>
-		public TownHall () : base (typeof(TownHall))
+		public TownHall (Player builder) : base (typeof(TownHall), builder)
 		{
 			mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
 				.GetComponent<MapGenerator>();
@@ -221,7 +222,5 @@ namespace SpaceRace.World.Buildings.Collection
 
 
 	}
-}*/
-
-				
+}
 

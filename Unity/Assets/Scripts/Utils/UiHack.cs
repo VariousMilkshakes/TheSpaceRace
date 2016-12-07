@@ -49,31 +49,11 @@ namespace SpaceRace.Utils
 		/// <summary>
 		/// Called everytime player resources change
 		/// </summary>
-		public void ResourceUpdate()
+		public void ResourceUpdate(Inventory inv)
 		{
-			Inventory inv = currentPlayer.Inventory;
 			moneyValue.text = "Money: " + inv.CheckResource(PlayerTools.Resources.Money);
 			popValue.text = "Population: " + inv.CheckResource(PlayerTools.Resources.Population);
 			woodValue.text = "Wood: " + inv.CheckResource(PlayerTools.Resources.Wood);
-		}
-
-
-		/// <summary>
-		/// At the start of the turn bind to the current player
-		/// </summary>
-		/// <param name="targetPlayer">Player to bind to</param>
-		public void BindPlayer (Player targetPlayer)
-		{
-			currentPlayer = targetPlayer;
-			currentPlayer.Inventory.AddListener(ResourceUpdate);
-		}
-
-		/// <summary>
-		/// Un bind from previous player in order to bind to new player
-		/// </summary>
-		public void UnBindPlayer ()
-		{
-			currentPlayer.Inventory.ClearListeners();
 		}
 
 		/// <summary>
@@ -97,6 +77,7 @@ namespace SpaceRace.Utils
 				GameObject menuItem = Instantiate(BuildingMenuItem, new Vector3(xPos, yPos), BuildingMenuItem.transform.rotation) as GameObject;
 				Button menuButton = menuItem.GetComponent<Button>();
 
+				// Store in local scope to set inside delegate
 				Type targetBuilding = building;
 				menuButton.onClick.AddListener(delegate
 				{

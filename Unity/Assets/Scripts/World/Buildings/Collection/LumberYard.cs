@@ -11,7 +11,7 @@ namespace SpaceRace.World.Buildings.Collection
 {
 	class LumberYard : Building
 	{
-		public LumberYard() : base(typeof(LumberYard))
+		public LumberYard(PT.Player builder) : base(typeof(LumberYard), builder)
 		{
 			Sprite sprite = null;
 
