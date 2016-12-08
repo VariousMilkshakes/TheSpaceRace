@@ -18,6 +18,10 @@ namespace SpaceRace.World.Buildings.Collection
 		private List<Tile> cityTiles;
 		private Player currentPlayer;
 		private List<Tile> mapTiles;
+		int maxXCoord;
+		int maxYCoord;
+		int minXCoord;
+		int minYCoord;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
@@ -60,7 +64,6 @@ namespace SpaceRace.World.Buildings.Collection
 				setCityTiles ();
 			}
 			///Trigger city expansion if population has increased by 5
-			/**fix*/
 			//	int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
 			int population = 10; /*test*/
 			if (population % 5 == 0) {
@@ -78,7 +81,7 @@ namespace SpaceRace.World.Buildings.Collection
 			Tile toReturn = null;
 			for (int i = 0; i < mapTiles.Count; i++) {
 				if (mapTiles.ElementAt (i) != null && mapTiles.ElementAt (i).Building != null
-				    && mapTiles.ElementAt (i).Building.GetType ().Name.Equals ("TownHall")) {	//null pointer
+				    && mapTiles.ElementAt (i).Building.GetType ().Name.Equals ("TownHall")) {	
 					toReturn = mapTiles [i];
 				}
 			}
@@ -119,28 +122,29 @@ namespace SpaceRace.World.Buildings.Collection
 			System.Random rnd = new System.Random ();
 //**fix
 			//find border tiles
-			List<Tile> borderTiles = new List<Tile> ();
-			int maxXCoord = findMaxX (cityTiles) + 1;
-			int maxYCoord = findMaxY (cityTiles) + 1;
-			int minXCoord = findMinX (cityTiles) - 1;
-			int minYCoord = findMinY (cityTiles) - 1;
-			Debug.Log (maxXCoord);
-			Debug.Log (maxYCoord);
-			Debug.Log (minXCoord);
-			Debug.Log (minYCoord);
+
+			List<Tile> topBorder = new List<Tile> ();
+			List<Tile> bottomBorder = new List<Tile> ();
+			List<Tile> rightBorder = new List<Tile> ();
+			List<Tile> leftBorder = new List<Tile> ();
+			maxXCoord = findMaxX (cityTiles) + 1;
+			maxYCoord = findMaxY (cityTiles) + 1;
+			minXCoord = findMinX (cityTiles) - 1;
+			minYCoord = findMinY (cityTiles) - 1;
+
 			foreach (Tile tile in mapTiles) {
-				//add all tiles with these values to expandX/expandY
-				if (tile.GetX () == maxXCoord && tile.GetY() > minYCoord && tile.GetY() < maxYCoord) {	
-					borderTiles.Add (tile);	
+				//add all tiles surrounding the current city limit to borderTiles
+				if (tile.GetX () == maxXCoord && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {	
+					topBorder.Add (tile);	
 				} else {
-					if (tile.GetX () == minXCoord && tile.GetY() > minYCoord && tile.GetY() < maxYCoord) {
-						borderTiles.Add (tile);
+					if (tile.GetX () == minXCoord && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
+						bottomBorder.Add (tile);
 					} else {
-						if (tile.GetY () == maxYCoord && tile.GetX() > minXCoord && tile.GetX() < maxXCoord) {
-							borderTiles.Add (tile);
+						if (tile.GetY () == maxYCoord && tile.GetX () > minXCoord && tile.GetX () < maxXCoord) {
+							rightBorder.Add (tile);
 						} else {
-							if (tile.GetY () == minYCoord && tile.GetX() > minXCoord && tile.GetX() < maxXCoord) {
-								borderTiles.Add (tile);
+							if (tile.GetY () == minYCoord && tile.GetX () > minXCoord && tile.GetX () < maxXCoord) {
+								leftBorder.Add (tile);
 							}
 						}
 					}
@@ -148,9 +152,16 @@ namespace SpaceRace.World.Buildings.Collection
 			}
 
 			//choose random tile from 'borderTiles' to expand to
-			int expandToIndex = rnd.Next (borderTiles.Count());	
-			Debug.Log (borderTiles.Count);
+			List<Tile> borderTiles = new List<Tile> ();
+			borderTiles.AddRange (topBorder);
+			borderTiles.AddRange (bottomBorder);
+			borderTiles.AddRange (leftBorder);
+			borderTiles.AddRange (rightBorder);
+
+			int borderIndex = borderTiles.Count ();
+			int expandToIndex = rnd.Next (borderIndex);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
+
 			expandTo.ApplyPlayerColor (currentPlayer.Color);
 			cityTiles.Add (expandTo);	
 		}

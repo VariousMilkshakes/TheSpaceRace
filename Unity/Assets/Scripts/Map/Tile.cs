@@ -226,7 +226,7 @@ public class Tile: MonoBehaviour{
 		sr.color = playerColor;
 	}
 
-	public Color getTileColour(){
+	public Color GetTileColour(){
 		return sr.color;
 	}
 
