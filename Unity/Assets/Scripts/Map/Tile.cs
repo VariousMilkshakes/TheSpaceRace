@@ -106,11 +106,11 @@ public class Tile: MonoBehaviour{
 	}
 
 	public int GetX(){
-		return (int)transform.position.x ;
+		return (int)gameObject.transform.position.x ;
 	}
 
 	public int GetY(){
-		return (int)transform.position.y;
+		return (int)gameObject.transform.position.y;
 	}
 
 	/*

@@ -60,11 +60,12 @@ namespace SpaceRace.World.Buildings.Collection
 				setCityTiles ();
 			}
 			///Trigger city expansion if population has increased by 5
-//**fix**  	int population = PlayerTools.Inventory.CheckResource (PlayerTools.Resources.Population);
-			//	int population = 10; /*test*/
-			/*	if (population % 5 == 0) {
+			/**fix*/
+			//	int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
+			int population = 10; /*test*/
+			if (population % 5 == 0) {
 				expandCityBoundary ();
-			}*/
+			}
 			turn++;
 		}
 
@@ -72,10 +73,12 @@ namespace SpaceRace.World.Buildings.Collection
 		/// Finds the position of this player's Town Hall
 		/// </summary>
 		/// <returns>The town hall.</returns>
-		private Tile findTownHall (){
+		private Tile findTownHall ()
+		{
 			Tile toReturn = null;
-			for(int i = 0; i<mapTiles.Count; i++){
-				if(mapTiles.ElementAt(i) != null && mapTiles.ElementAt(i).Building.GetType().Equals("TownHall")){	//null pointer
+			for (int i = 0; i < mapTiles.Count; i++) {
+				if (mapTiles.ElementAt (i) != null && mapTiles.ElementAt (i).Building != null
+				    && mapTiles.ElementAt (i).Building.GetType ().Name.Equals ("TownHall")) {	//null pointer
 					toReturn = mapTiles [i];
 				}
 			}
@@ -88,25 +91,21 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		private void setCityTiles ()
 		{
-			Tile townHallPos = /*findTownHall ();*/ mapGen.GetTile (6, 6);
+			Tile townHallPos = findTownHall ();
 			List<Tile> surrounding = new List<Tile> ();
-			surrounding.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
-			surrounding.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY()));
-			surrounding.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() + 1));
-			surrounding.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() - 1));
-			surrounding.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() + 1));
-			surrounding.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() - 1));
-			surrounding.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY()));
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() + 1));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () - 1));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY ()));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () + 1));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY () - 1));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY () + 1));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () - 1));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY ()));
+			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () + 1));
 
-			foreach(Tile tile in surrounding){
+			foreach (Tile tile in surrounding) {
 				tile.ApplyPlayerColor (currentPlayer.Color);
 				cityTiles.Add (tile);
 			}
-		//	Tile tile = mapGen.GetTile (1,1); //test
-
-
-
 		}
 
 		/// <summary>
@@ -120,20 +119,37 @@ namespace SpaceRace.World.Buildings.Collection
 			System.Random rnd = new System.Random ();
 //**fix
 			//find border tiles
-			List<Tile> borderTiles = null;
-			int maxXCoord = findMaxX (cityTiles);
-			int maxYCoord = findMaxY (cityTiles);
-			int minXCoord = findMinX (cityTiles);
-			int minYCoord = findMinY (cityTiles);
-			foreach (Tile tile in cityTiles) {
+			List<Tile> borderTiles = new List<Tile> ();
+			int maxXCoord = findMaxX (cityTiles) + 1;
+			int maxYCoord = findMaxY (cityTiles) + 1;
+			int minXCoord = findMinX (cityTiles) - 1;
+			int minYCoord = findMinY (cityTiles) - 1;
+			Debug.Log (maxXCoord);
+			Debug.Log (maxYCoord);
+			Debug.Log (minXCoord);
+			Debug.Log (minYCoord);
+			foreach (Tile tile in mapTiles) {
 				//add all tiles with these values to expandX/expandY
-				if (tile.GetX () == maxXCoord || tile.GetX () == minXCoord || tile.GetY () == maxYCoord || tile.GetY () == minYCoord) {
-					borderTiles.Add (tile);
+				if (tile.GetX () == maxXCoord && tile.GetY() > minYCoord && tile.GetY() < maxYCoord) {	
+					borderTiles.Add (tile);	
+				} else {
+					if (tile.GetX () == minXCoord && tile.GetY() > minYCoord && tile.GetY() < maxYCoord) {
+						borderTiles.Add (tile);
+					} else {
+						if (tile.GetY () == maxYCoord && tile.GetX() > minXCoord && tile.GetX() < maxXCoord) {
+							borderTiles.Add (tile);
+						} else {
+							if (tile.GetY () == minYCoord && tile.GetX() > minXCoord && tile.GetX() < maxXCoord) {
+								borderTiles.Add (tile);
+							}
+						}
+					}
 				}
 			}
 
 			//choose random tile from 'borderTiles' to expand to
-			int expandToIndex = rnd.Next (borderTiles.Count);
+			int expandToIndex = rnd.Next (borderTiles.Count());	
+			Debug.Log (borderTiles.Count);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
 			expandTo.ApplyPlayerColor (currentPlayer.Color);
 			cityTiles.Add (expandTo);	
