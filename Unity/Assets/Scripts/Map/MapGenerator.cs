@@ -165,7 +165,7 @@ public class MapGenerator : MonoBehaviour {
 	/// <param name="y">The y coordinate.</param>
 	public Tile GetTile(int x, int y){
 		foreach (Tile t in tiles) {
-			if (t.GetX () == x && t.GetY () == y) {
+			if (t.transform.position.x  == x && t.transform.position.y == y) {
 				return t;
 			}
 		} throw new NoTileException ("No such Tile");
