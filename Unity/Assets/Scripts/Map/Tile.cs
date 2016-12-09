@@ -61,6 +61,12 @@ public class Tile: MonoBehaviour{
 
 	private int currentPlayer;
 
+	/// <summary>
+	/// Is true if tile is owned by a player in the game
+	/// </summary>
+					//TODO: Change to track specific player owning this tile 
+	public bool IsOwned = false;
+
 	public WorldStates State
 	{
 		set { tileState = value; }

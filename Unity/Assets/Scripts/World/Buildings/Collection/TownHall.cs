@@ -32,8 +32,9 @@ namespace SpaceRace.World.Buildings.Collection
 				.GetComponent<MapGenerator> ();
 			Sprite sprite = null;
 			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
-			currentPlayer = GameObject.Find("GameManager").GetComponent<Game>().GetActivePlayer ();
+			currentPlayer = GameObject.Find ("GameManager").GetComponent<Game> ().GetActivePlayer ();
 			mapTiles = mapGen.getTiles ();
+
 
 			/// Set sprite for building
 			try {
