@@ -176,6 +176,26 @@ namespace SpaceRace.World.Buildings.Collection
 		}
 
 		/// <summary>
+		/// Check if all tiles in the specified list are owned
+		/// </summary>
+		/// <returns><c>true</c>, if border is owned, <c>false</c> otherwise.</returns>
+		/// <param name="borderList">Border list, either topBorder, bottomBorder, leftBorder or rightBorder.</param>
+		/// <see cref="expandCityBoundary()"/>
+		private bool isBorderOwned(List<Tile> borderList){
+			int ownedCount = 0;
+			foreach (Tile tile in borderList) {
+				if (tile.IsOwned) {
+					ownedCount++;
+				}
+			}
+			if (ownedCount == borderList.Count ()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Finds the maximum x coordinate of a tile inside the city boundary.
 		/// </summary>
 		/// <returns>The maximum x coordinate int</returns>
