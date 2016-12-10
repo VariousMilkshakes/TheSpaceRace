@@ -75,6 +75,11 @@ public class MapGenerator : MonoBehaviour {
 	/// </summary>
 	int[,] gridPos;
 
+	public enum Types
+	{
+		GRASS, WATER, SAND, MOUNTIAN
+	}
+
 	/// <summary>
 	/// Gets the sprite.
 	/// </summary>
@@ -197,27 +202,31 @@ public class MapGenerator : MonoBehaviour {
 	/// sets the type of that tile to the opposite type.
 	/// </description>
 	void ProcessGrid(){
-		List<List<Coord>> waterRegions = GetRegions (1);
+		List<List<Coord>> waterRegions = GetRegions ((int)Types.WATER);
 		int waterThresholdSize = 20;
 
+		//remove regions of water tiles smaller than 20 tiles in area.
 		foreach (List<Coord> waterRegion in waterRegions) {
 			if(waterRegion.Count < waterThresholdSize){
 				foreach (Coord tile in waterRegion){
-					gridPos [tile.tileX, tile.tileY] = 0;
+					gridPos [tile.tileX, tile.tileY] = (int)Types.GRASS;
 				}
 			}
 		}
 
-		List<List<Coord>> grassRegions = GetRegions (0);
+		List<List<Coord>> grassRegions = GetRegions ((int)Types.GRASS);
 		int grassThresholdSize = 20;
 
+		//remove regions of grass tiles smaller than 20 tiles in area (islands smaller than 20 tiles).
 		foreach (List<Coord> grassRegion in grassRegions) {
 			if(grassRegion.Count < grassThresholdSize){
 				foreach(Coord tile in grassRegion){
-					gridPos [tile.tileX, tile.tileY] = 1;
+					gridPos [tile.tileX, tile.tileY] = (int)Types.WATER;
 				}
 			}
 		}
+
+		//Change all the tiles around water to sand tiles.
 		List<Coord> sandTiles = new List<Coord> ();
 		foreach (List<Coord> grassregion in grassRegions) {
 			foreach (Coord tile in grassregion){
@@ -227,8 +236,57 @@ public class MapGenerator : MonoBehaviour {
 			}
 		}
 		foreach (Coord tile in sandTiles) {
-			gridPos [tile.tileX, tile.tileY] = 2;
+			gridPos [tile.tileX, tile.tileY] = (int)Types.SAND;
+			foreach (List<Coord> grassRegion in grassRegions) {
+				if (grassRegion.Contains (tile)) {
+					grassRegion.Remove (tile);
+				}
+			}
 		}
+
+		//Change a portion of grass tiles into mountain/rocky tiles
+		System.Random r = new System.Random();
+		List<Coord> mountainTiles = new List<Coord> ();
+		foreach (List<Coord> grassRegion in grassRegions) {
+			foreach (Coord tile in grassRegion) {
+				if(r.Next(0,100) < 20){
+					mountainTiles.Add (tile);
+				}
+			}
+		}
+		foreach (Coord tile in mountainTiles) {
+			gridPos [tile.tileX, tile.tileY] = (int)Types.MOUNTIAN;
+			/*foreach (List<Coord> grassRegion in grassRegions) {
+				if (grassRegion.Contains (tile)) {
+					grassRegion.Remove (tile);
+				}
+			}*/
+		}
+		for (int i = 0; i < 5; i++) {
+			foreach (List<Coord> grassRegion in grassRegions) {
+				foreach (Coord tile in grassRegion) {
+					if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)Types.MOUNTIAN) > 4) {
+						gridPos [tile.tileX, tile.tileY] = (int)Types.MOUNTIAN;
+					}
+					if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)Types.MOUNTIAN) < 2) {
+						gridPos [tile.tileX, tile.tileY] = (int)Types.GRASS;
+					}
+				}
+			}
+		}
+
+		List<List<Coord>> mountainRegions = GetRegions ((int)Types.MOUNTIAN);
+		int mountainThresholdSize = 5;
+
+		//remove regions of mountain tiles smaller than 5 tiles in area.
+		foreach (List<Coord> mountainRegion in mountainRegions) {
+			if(mountainRegion.Count < grassThresholdSize){
+				foreach(Coord tile in mountainRegion){
+					gridPos [tile.tileX, tile.tileY] = (int)Types.GRASS;
+				}
+			}
+		}
+		
 	}
 
 	/// <summary>
@@ -339,7 +397,7 @@ public class MapGenerator : MonoBehaviour {
 	void Smooth(){
 		for (int x = 0; x < columns; x++) {
 			for (int y = 0; y < rows; y++) {
-				int adjacentTiles = GetAdjacentWaterCount (x, y);
+				int adjacentTiles = GetAdjacentTilesOfType (x, y, 1);
 				if (adjacentTiles > 4){
 					gridPos [x, y] = 1;
 				}else if (adjacentTiles < 4){
@@ -375,6 +433,29 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Gets the number of the adjacent tiles of type.
+	/// </summary>
+	/// <returns>the number of the adjacent tiles of type.</returns>
+	/// <param name="posX">Position x.</param>
+	/// <param name="posY">Position y.</param>
+	/// <param name="type">Type.</param>
+	int GetAdjacentTilesOfType(int posX, int posY, int type){
+		int adjacentTiles = 0;
+		for (int adjX = posX - 1; adjX <= posX + 1; adjX++) {
+			for (int adjY = posY - 1; adjY <= posY + 1; adjY++) {
+				if (IsInRange(adjX, adjY)){
+					if(adjX != posX || adjY != posY){
+						if(gridPos[adjX, adjY] == type){
+							adjacentTiles += 1;
+						}
+					}
+				}
+			}
+		}
+					return adjacentTiles;
+	}
+
+	/// <summary>
 	/// Sets up map.
 	/// </summary>
 	/// <description>
@@ -391,7 +472,7 @@ public class MapGenerator : MonoBehaviour {
 					tile.transform.SetParent (GameObject.Find("PlaneManager").transform);
 					tile.AddComponent<Tile>();
 					Tile script = (Tile) tile.GetComponent ("Tile");
-					script.NewTile (gridPos [x, y], x, y);
+					script.NewTile (gridPos [x, y]);
 					GameObject instance = Instantiate (tile, new Vector3 (x, y, 0.0f), Quaternion.identity) as GameObject;
 					instance.transform.SetParent (mapHolder);
 				}

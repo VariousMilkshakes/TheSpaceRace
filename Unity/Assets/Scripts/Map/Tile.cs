@@ -129,7 +129,7 @@ public class Tile: MonoBehaviour{
 	/// <param name="x">The x coordinate.</param>
 	/// <param name="y">The y coordinate.</param>
 	/// <see cref="https://docs.unity3d.com/ScriptReference/MonoBehaviour.html"/>
-	public void NewTile(int type, int x, int y){
+	public void NewTile(int type){
 		MapGenerator mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
 		Sprite[] statics = mapGen.GetStaticSprites();
 		hoverSprite = statics[(int)SpriteType.HOVER];
@@ -158,7 +158,7 @@ public class Tile: MonoBehaviour{
 	/// </summary>
 	/// <returns>The x.</returns>
 	public int GetX(){
-		return gameObject.transform.position.x;
+		return (int)gameObject.transform.position.x;
 	}
 
 	/// <summary>
@@ -166,7 +166,7 @@ public class Tile: MonoBehaviour{
 	/// </summary>
 	/// <returns>The y.</returns>
 	public int GetY(){
-		return transform.position.y;
+		return (int)gameObject.transform.position.y;
 	}
 
 	/// <summary>

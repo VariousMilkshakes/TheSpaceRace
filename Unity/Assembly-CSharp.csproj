@@ -67,10 +67,8 @@
      <Compile Include="Assets\Scripts\World\Buildings\Building.Setup.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\BuildingException.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\House.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\LumberYard.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\Monument.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\Quarry.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\TownHall.cs" />
      <Compile Include="Assets\Scripts\World\WorldStates.cs" />
      <None Include="Assets\Resources\Config\Buildings.txt" />
  <Reference Include="UnityEngine.UI">
