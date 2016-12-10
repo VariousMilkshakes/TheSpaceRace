@@ -158,7 +158,7 @@ public class Tile: MonoBehaviour{
 	/// </summary>
 	/// <returns>The x.</returns>
 	public int GetX(){
-		return x;
+		return gameObject.transform.position.x;
 	}
 
 	/// <summary>
@@ -166,7 +166,7 @@ public class Tile: MonoBehaviour{
 	/// </summary>
 	/// <returns>The y.</returns>
 	public int GetY(){
-		return y;
+		return transform.position.y;
 	}
 
 	/// <summary>
