@@ -59,13 +59,24 @@ public class Tile: MonoBehaviour{
 
 	public int score;
 
-	private int currentPlayer;
+
+	private Player Owner = null;
+	/// <summary>
+	/// Return the player who owns this tile
+	/// </summary>
+	public Player GetOwner(){
+		return Owner;
+	}
 
 	/// <summary>
-	/// Is true if tile is owned by a player in the game
+	/// Sets the owner of this tile
 	/// </summary>
-					//TODO: Change to track specific player owning this tile 
-	public bool IsOwned = false;
+	/// <param name="owner">Owner.</param>
+	public void SetOwner(Player owner){
+		this.Owner = owner;
+		this.ApplyPlayerColor (owner.Color);
+	}
+
 
 	public WorldStates State
 	{

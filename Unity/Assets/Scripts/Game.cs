@@ -51,6 +51,10 @@ namespace SpaceRace
 
 		private int turn = 0;
 
+		public Player GetActivePlayer(){
+			return activePlayer;
+		}
+
 		void Start()
 		{
 			running = true;
@@ -110,9 +114,6 @@ namespace SpaceRace
 		{
 			activePlayer.TurnComplete = true;
 		}
-
-		public Player GetActivePlayer(){
-			return activePlayer;
-		}
+			
 	}
 }

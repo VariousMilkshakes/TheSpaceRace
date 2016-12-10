@@ -67,11 +67,11 @@ namespace SpaceRace.World.Buildings.Collection
 
 		public override void OnTurn ()
 		{
-			int turn = 0;
+/**/		int turn = 0;
 			base.OnTurn ();
 			if (turn != 1) {
 				setCityTiles ();
-				maxXCoord = findMaxX (cityTiles);
+/**/			maxXCoord = findMaxX (cityTiles);
 				maxYCoord = findMaxY (cityTiles);
 				minXCoord = findMinX (cityTiles);
 				minYCoord = findMinY (cityTiles);
@@ -81,7 +81,7 @@ namespace SpaceRace.World.Buildings.Collection
 				leftBorder = new List<Tile> ();
 			}
 			///Trigger city expansion if population has increased by 5
-			//	int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
+/**/		//	int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
 			int population = 10; /*test*/
 			if (population % 5 == 0) {
 				expandCityBoundary ();
@@ -123,7 +123,7 @@ namespace SpaceRace.World.Buildings.Collection
 			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () + 1));
 
 			foreach (Tile tile in surrounding) {
-				tile.ApplyPlayerColor (currentPlayer.Color);
+				tile.SetOwner(currentPlayer);
 				cityTiles.Add (tile);
 			}
 		}
@@ -136,24 +136,24 @@ namespace SpaceRace.World.Buildings.Collection
 
 		private void expandCityBoundary ()
 		{
-			System.Random rnd = new System.Random ();
+/**/		System.Random rnd = new System.Random ();
 			foreach (Tile tile in mapTiles) {
 				//add all tiles surrounding the current city limit to borderTiles
 				if (tile.GetY() == maxYCoord+1 && tile.GetX () >= minXCoord-1 && tile.GetX () <= maxXCoord+1) {	
 					topBorder.Add (tile);
-					tile.IsOwned = true;
+					tile.SetOwner (currentPlayer);
 				} else {
 					if (tile.GetY() == minYCoord-1 && tile.GetX () >= minXCoord-1 && tile.GetX () <= maxXCoord+1) {
 						bottomBorder.Add (tile);
-						tile.IsOwned = true;
+						tile.SetOwner (currentPlayer);
 					} else {
 						if (tile.GetX () == maxXCoord+1 && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
 							rightBorder.Add (tile);
-							tile.IsOwned = true;
+							tile.SetOwner (currentPlayer);
 						} else {
 							if (tile.GetX () == minXCoord-1 && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
 								leftBorder.Add (tile);
-								tile.IsOwned = true;
+								tile.SetOwner (currentPlayer);
 							}
 						}
 					}
@@ -171,7 +171,7 @@ namespace SpaceRace.World.Buildings.Collection
 			int expandToIndex = rnd.Next (borderIndex);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
 
-			expandTo.ApplyPlayerColor (currentPlayer.Color);
+			expandTo.SetOwner (currentPlayer);
 			cityTiles.Add (expandTo);	
 		}
 
@@ -184,7 +184,7 @@ namespace SpaceRace.World.Buildings.Collection
 		private bool isBorderOwned(List<Tile> borderList){
 			int ownedCount = 0;
 			foreach (Tile tile in borderList) {
-				if (tile.IsOwned) {
+				if (tile.GetOwner() == currentPlayer) {
 					ownedCount++;
 				}
 			}
@@ -273,6 +273,3 @@ namespace SpaceRace.World.Buildings.Collection
 
 	}
 }
-
-				
-
