@@ -258,9 +258,7 @@ public class Tile: MonoBehaviour{
 			DeselectTile ();
 			selected = true;
 			hisr.sprite = selectedSprite;
-		} else if (selected && type == 0) {
-			tisr.sprite = buildingSprite;
-		}
+		} 
 
 		try
 		{
