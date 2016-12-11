@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+using SpaceRace.PlayerTools;
+
 public class MapGenerator : MonoBehaviour {
 	/// <summary>
 	/// The number of columns (x).
@@ -40,6 +42,11 @@ public class MapGenerator : MonoBehaviour {
 	public Sprite[] sprites;
 
 	/// <summary>
+	/// The resource sprites.
+	/// </summary>
+	public Sprite[] resourceSprites;
+
+	/// <summary>
 	/// The hover sprite.
 	/// </summary>
 	public Sprite hoverSprite;
@@ -64,6 +71,8 @@ public class MapGenerator : MonoBehaviour {
 	/// </summary>
 	private Transform mapHolder;
 
+	private System.Random rnd = new System.Random();
+
 	/// <summary>
 	/// The tiles.
 	/// </summary>
@@ -75,7 +84,7 @@ public class MapGenerator : MonoBehaviour {
 	/// </summary>
 	int[,] gridPos;
 
-	public enum Types
+	public enum TileTypes
 	{
 		GRASS, WATER, SAND, MOUNTIAN
 	}
@@ -87,6 +96,10 @@ public class MapGenerator : MonoBehaviour {
 	/// <param name="type">Type.</param>
 	public Sprite GetSprite(int type){
 		return sprites [type];
+	}
+
+	public Sprite GetResourceSprite(int index){
+		return resourceSprites [index];
 	}
 
 	/// <summary>
@@ -149,6 +162,16 @@ public class MapGenerator : MonoBehaviour {
 		return tiles;
 	}
 
+	public List<Tile> GetTilesWithResource(SpaceRace.PlayerTools.Resources resource){
+		List<Tile> result = new List<Tile> ();
+		foreach (Tile tile in tiles) {
+			if (tile.GetResource().Equals(resource)) {
+				result.Add (tile);
+			}
+		}
+		return result;
+	}
+
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
@@ -160,6 +183,7 @@ public class MapGenerator : MonoBehaviour {
 		tiles = new List<Tile> ();
 		GenerateMap ();
 		SetUpMap ();
+		SetUpResources ();
 	}
 
 	/// <summary>
@@ -184,6 +208,11 @@ public class MapGenerator : MonoBehaviour {
 	/// It is also responsible for instanciateing gridPos.
 	/// Calls Smooth 5 times to ensure smoothest map.
 	/// </description>
+	/*
+		I plan on changing this to make modular 'zones' so that a map contains start zones for players that will have an ensured amount of randomly placed resources 
+		to make it fair for each player and so one player cannot monopolise the market of a basic resource. This would limit the player to place a townHall inside the
+		zone so that they are ensured to have a certain number of starting resources surronding them. after MVP.
+	*/
 	void GenerateMap(){
 		gridPos = new int[columns, rows];
 		RandomiseGrid ();
@@ -198,95 +227,105 @@ public class MapGenerator : MonoBehaviour {
 	/// Processes the grid.
 	/// </summary>
 	/// <description>
-	/// This method uses foreach loops to iterate over each region (see GetRegionTiles) and if that region is smaller thatn the thershold size,
-	/// sets the type of that tile to the opposite type.
+	/// This method removes any regions deemed to be too small as well as creating coasts of sand around water regions and mountains within grass regions.
 	/// </description>
 	void ProcessGrid(){
-		List<List<Coord>> waterRegions = GetRegions ((int)Types.WATER);
-		int waterThresholdSize = 20;
+		int grassThreshold = 20;
+		int waterThreshold = 20;
+		int mountainThreshold = 5;
 
 		//remove regions of water tiles smaller than 20 tiles in area.
-		foreach (List<Coord> waterRegion in waterRegions) {
-			if(waterRegion.Count < waterThresholdSize){
-				foreach (Coord tile in waterRegion){
-					gridPos [tile.tileX, tile.tileY] = (int)Types.GRASS;
-				}
-			}
-		}
-
-		List<List<Coord>> grassRegions = GetRegions ((int)Types.GRASS);
-		int grassThresholdSize = 20;
+		RemoveRegionsOfSize ((int)TileTypes.WATER, (int)TileTypes.GRASS, grassThreshold);
 
 		//remove regions of grass tiles smaller than 20 tiles in area (islands smaller than 20 tiles).
-		foreach (List<Coord> grassRegion in grassRegions) {
-			if(grassRegion.Count < grassThresholdSize){
-				foreach(Coord tile in grassRegion){
-					gridPos [tile.tileX, tile.tileY] = (int)Types.WATER;
+		RemoveRegionsOfSize ((int)TileTypes.GRASS, (int)TileTypes.WATER, waterThreshold);
+
+		CreateCoast ();
+
+		CreateMountains ();
+
+		RemoveRegionsOfSize ((int)TileTypes.MOUNTIAN, (int)TileTypes.GRASS, mountainThreshold);
+
+		int mountainsTooLargeThreshold = 50;
+		List<List<Coord>> regions = GetRegions ((int)TileTypes.MOUNTIAN);
+		foreach (List<Coord> region in regions) {
+			if (region.Count > mountainsTooLargeThreshold) {
+				foreach (Coord tile in region) {
+					gridPos [tile.tileX, tile.tileY] = (int)TileTypes.GRASS;
 				}
 			}
 		}
+	}
 
+	/// <summary>
+	/// Removes the regions (of type) of the given size.
+	/// </summary>
+	/// <description>
+	/// Removes the region of the specified type of tile if it contains fewer than the given threshold tiles by replacing them with the given type of replacement type of tile.
+	/// </description>
+	/// <param name="type">Type.</param>
+	/// <param name="replaceType">Replace type.</param>
+	/// <param name="threshold">Threshold.</param>
+	void RemoveRegionsOfSize(int type, int replaceType, int threshold){
+		List<List<Coord>> regions = GetRegions (type);
+		foreach (List<Coord> region in regions) {
+			if (region.Count < threshold) {
+				foreach (Coord tile in region) {
+					gridPos [tile.tileX, tile.tileY] = replaceType;
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Creates the coast.
+	/// </summary>
+	void CreateCoast(){
 		//Change all the tiles around water to sand tiles.
+		List<List<Coord>> grassRegions = GetRegions((int) TileTypes.GRASS);
+
 		List<Coord> sandTiles = new List<Coord> ();
 		foreach (List<Coord> grassregion in grassRegions) {
 			foreach (Coord tile in grassregion){
-				if (GetAdjacentWaterCount(tile.tileX, tile.tileY) >= 1){
+				if (GetAdjacentTilesOfType(tile.tileX, tile.tileY, (int)TileTypes.WATER) >= 1){
 					sandTiles.Add (tile);
+					gridPos [tile.tileX, tile.tileY] = (int)TileTypes.SAND;
 				}
 			}
 		}
-		foreach (Coord tile in sandTiles) {
-			gridPos [tile.tileX, tile.tileY] = (int)Types.SAND;
-			foreach (List<Coord> grassRegion in grassRegions) {
-				if (grassRegion.Contains (tile)) {
-					grassRegion.Remove (tile);
-				}
-			}
-		}
+	}
+
+	/// <summary>
+	/// Creates the mountains.
+	/// </summary>
+	void CreateMountains(){
+		List<List<Coord>> grassRegions = GetRegions((int) TileTypes.GRASS);
 
 		//Change a portion of grass tiles into mountain/rocky tiles
-		System.Random r = new System.Random();
+
 		List<Coord> mountainTiles = new List<Coord> ();
 		foreach (List<Coord> grassRegion in grassRegions) {
 			foreach (Coord tile in grassRegion) {
-				if(r.Next(0,100) < 20){
+				if(rnd.Next(0,100) < 20){
 					mountainTiles.Add (tile);
 				}
 			}
 		}
 		foreach (Coord tile in mountainTiles) {
-			gridPos [tile.tileX, tile.tileY] = (int)Types.MOUNTIAN;
-			/*foreach (List<Coord> grassRegion in grassRegions) {
-				if (grassRegion.Contains (tile)) {
-					grassRegion.Remove (tile);
-				}
-			}*/
+			gridPos [tile.tileX, tile.tileY] = (int)TileTypes.MOUNTIAN;
 		}
 		for (int i = 0; i < 5; i++) {
 			foreach (List<Coord> grassRegion in grassRegions) {
 				foreach (Coord tile in grassRegion) {
-					if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)Types.MOUNTIAN) > 4) {
-						gridPos [tile.tileX, tile.tileY] = (int)Types.MOUNTIAN;
+					if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)TileTypes.MOUNTIAN) > 3) {
+						gridPos [tile.tileX, tile.tileY] = (int)TileTypes.MOUNTIAN;
 					}
-					if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)Types.MOUNTIAN) < 2) {
-						gridPos [tile.tileX, tile.tileY] = (int)Types.GRASS;
+					if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)TileTypes.MOUNTIAN) < 2) {
+						gridPos [tile.tileX, tile.tileY] = (int)TileTypes.GRASS;
 					}
 				}
 			}
 		}
-
-		List<List<Coord>> mountainRegions = GetRegions ((int)Types.MOUNTIAN);
-		int mountainThresholdSize = 5;
-
-		//remove regions of mountain tiles smaller than 5 tiles in area.
-		foreach (List<Coord> mountainRegion in mountainRegions) {
-			if(mountainRegion.Count < grassThresholdSize){
-				foreach(Coord tile in mountainRegion){
-					gridPos [tile.tileX, tile.tileY] = (int)Types.GRASS;
-				}
-			}
-		}
-		
 	}
 
 	/// <summary>
@@ -488,6 +527,66 @@ public class MapGenerator : MonoBehaviour {
 		Component[] oldTiles = planeManager.GetComponentsInChildren<Tile> ();
 		foreach(Tile t in oldTiles){
 			Destroy (t.gameObject);
+		}
+	}
+
+	/// <summary>
+	/// Sets up resources.
+	/// </summary>
+	void SetUpResources(){
+		SetUpResource (SpaceRace.PlayerTools.Resources.Wood, (int)TileTypes.GRASS, 20);
+		SetUpResource (SpaceRace.PlayerTools.Resources.Stone, (int)TileTypes.MOUNTIAN, 5);
+		SetUpResource (SpaceRace.PlayerTools.Resources.Iron, (int)TileTypes.MOUNTIAN, 5);
+
+		//Sets any remaining grass Tiles to have straw on them for farms to gather (and convert to food?)
+		List<List<Coord>> grassRegions = GetRegions ((int)TileTypes.GRASS);
+		foreach (List<Coord> region in grassRegions) {
+			foreach (Coord tile in region) {
+				Tile t = GetTile (tile.tileX, tile.tileY);
+				if (t.GetResource () == SpaceRace.PlayerTools.Resources.None) {
+					t.addResource (SpaceRace.PlayerTools.Resources.Straw);
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Sets up a resource.
+	/// </summary>
+	/// <param name="resource">Resource.</param>
+	/// <param name="baseTileType">Base tile type.</param>
+	/// <param name="minimum">Minimum.</param>
+	void SetUpResource(SpaceRace.PlayerTools.Resources resource, int baseTileType, int minimum){
+		List<List<Coord>> grassRegions = GetRegions (baseTileType);
+
+		foreach (List<Coord> grassRegion in grassRegions) {
+			foreach (Coord tile in grassRegion) {
+				if(rnd.Next(0, 100) < minimum){
+					GetTile(tile.tileX, tile.tileY).addResource(resource);
+				}
+			}
+		}
+		EnsureResourceExists (resource, minimum, baseTileType);
+	}
+
+	/// <summary>
+	/// Ensures at least the minimum amount of the resource exists.
+	/// </summary>
+	/// <param name="resource">Resource.</param>
+	/// <param name="amount">Amount.</param>
+	/// <param name="baseTileType">Base tile type.</param>
+	void EnsureResourceExists(SpaceRace.PlayerTools.Resources resource, int amount, int baseTileType){
+
+		if (GetTilesWithResource (resource).Count < amount) {
+			List<List<Coord>> regions = GetRegions (baseTileType);
+			foreach (List<Coord> region in regions) {
+				for (int i = amount/regions.Count; i > 0; i--) {
+					int rndIndex = rnd.Next (0, region.Count);
+					GetTile (region [rndIndex].tileX, region [rndIndex].tileY).addResource (resource);
+					region.Remove (region [rndIndex]);
+					region.TrimExcess ();
+				}
+			}
 		}
 	}
 

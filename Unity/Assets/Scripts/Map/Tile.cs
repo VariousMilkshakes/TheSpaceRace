@@ -19,6 +19,19 @@ public class Tile: MonoBehaviour{
 	[HideInInspector]
 	public SpriteRenderer sr;
 
+	[HideInInspector]
+	public SpriteRenderer rsr;
+
+	/// <summary>
+	/// The initial resource of this tile.
+	/// </summary>
+	public SpaceRace.PlayerTools.Resources resource = SpaceRace.PlayerTools.Resources.None;
+
+	/// <summary>
+	/// The resource box.
+	/// </summary>
+	public ResourceBox reBox;
+
 	/// <summary>
 	/// The highlight sr.
 	/// </summary>
@@ -81,19 +94,9 @@ public class Tile: MonoBehaviour{
 	public Sprite buildingSprite;
 
 	/// <summary>
-	/// The type of Tile that this is. (Currently grass(0) or water(1))
+	/// The type of Tile that this is. (Currently grass(0), water(1), sand(2), mountain(3))
 	/// </summary>
 	public int type;
-
-	/// <summary>
-	/// The x position.
-	/// </summary>
-	int x;
-
-	/// <summary>
-	/// The y position.
-	/// </summary>
-	int y;
 
 	/// <summary>
 	/// The score.
@@ -136,8 +139,6 @@ public class Tile: MonoBehaviour{
 		selectedSprite = statics[(int)SpriteType.SELECTED];
 		this.type = type;
 		sr = gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
-		this.x = x;
-		this.y = y;
 
 		highlighter = new GameObject ("Highliter");
 		highlighter.transform.SetParent (this.gameObject.transform);
@@ -145,12 +146,22 @@ public class Tile: MonoBehaviour{
 		hsr.sortingOrder = 1;
 		hsr.sprite = null;
 
+		reBox = ResourceBox.EMPTY ();
+
 		bx2D = gameObject.AddComponent (typeof(BoxCollider2D)) as BoxCollider2D;
 		bx2D.isTrigger = true;
 		bx2D.enabled = true;
 		SetTileSprite (this.type);
 		building = null;
 		buildingSprite = statics[(int)SpriteType.BUILDING];
+	}
+
+	void Update(){
+		if (GetResourceBox().Quantity == 0){
+			reBox = ResourceBox.EMPTY ();
+			resource = SpaceRace.PlayerTools.Resources.Free;
+			SetTileSprite (type);
+		}
 	}
 
 	/// <summary>
@@ -167,6 +178,36 @@ public class Tile: MonoBehaviour{
 	/// <returns>The y.</returns>
 	public int GetY(){
 		return (int)gameObject.transform.position.y;
+	}
+
+	/// <summary>
+	/// Gets the resource.
+	/// </summary>
+	/// <returns>The resource.</returns>
+	public SpaceRace.PlayerTools.Resources GetResource(){
+		return resource;
+	}
+
+	/// <summary>
+	/// Gets the resource box.
+	/// </summary>
+	/// <returns>The resource box.</returns>
+	public ResourceBox GetResourceBox(){
+		return reBox;
+	}
+
+	/// <summary>
+	/// Adds the resource.
+	/// </summary>
+	/// <param name="resouce">Resource.</param>
+	public void addResource(SpaceRace.PlayerTools.Resources resource){
+		int offset = 2; // 2 becuase the first two entries in resource are none and free and as such don't require a sprite.
+		if ((int)this.resource < offset) {
+			this.resource = resource;
+			MapGenerator mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
+			sr.sprite = mapGen.GetResourceSprite ((int)resource - offset);
+			reBox = new ResourceBox (resource, 10, 10);
+		}
 	}
 
 	/// <summary>
@@ -248,7 +289,6 @@ public class Tile: MonoBehaviour{
 					if (t.selected) {
 						t.selected = false;
 						Component[] sptren = t.GetComponentsInChildren<SpriteRenderer> ();
-						//SpriteRenderer tisr = (SpriteRenderer)sptren [0];
 						SpriteRenderer hisr = (SpriteRenderer)sptren [1];
 						hisr.sprite = null;
 					}
