@@ -60,21 +60,22 @@ public class Tile: MonoBehaviour{
 	public int score;
 
 
-	private Player Owner = null;
-	/// <summary>
-	/// Return the player who owns this tile
-	/// </summary>
-	public Player GetOwner(){
-		return Owner;
-	}
+	private Player owner;
 
 	/// <summary>
 	/// Sets the owner of this tile
 	/// </summary>
 	/// <param name="owner">Owner.</param>
 	public void SetOwner(Player owner){
-		this.Owner = owner;
+		this.owner = owner;	
 		this.ApplyPlayerColor (owner.Color);
+	}
+
+	/// <summary>
+	/// Return the player who owns this tile
+	/// </summary>
+	public Player GetOwner(){
+		return owner;
 	}
 
 

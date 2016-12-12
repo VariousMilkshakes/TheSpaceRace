@@ -30,6 +30,8 @@ namespace SpaceRace.World.Buildings.Collection
 		private List<Tile> bottomBorder;
 		private List<Tile> rightBorder;
 		private List<Tile> leftBorder;
+		private List<Tile> borderTiles;
+		int tilesOwned;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
@@ -42,7 +44,12 @@ namespace SpaceRace.World.Buildings.Collection
 			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
 			currentPlayer = GameObject.Find ("GameManager").GetComponent<Game> ().GetActivePlayer ();
 			mapTiles = mapGen.getTiles ();
+			borderTiles = new List<Tile> ();
 
+			topBorder = new List<Tile> ();
+			bottomBorder = new List<Tile> ();
+			rightBorder = new List<Tile> ();
+			leftBorder = new List<Tile> ();
 
 			/// Set sprite for building
 			try {
@@ -67,23 +74,30 @@ namespace SpaceRace.World.Buildings.Collection
 
 		public override void OnTurn ()
 		{
-/**/		int turn = 0;
+
+			int turn = 0;/*delete me*/
 			base.OnTurn ();
-			if (turn != 1) {
+			if (turn /*Player.Turn*/ == 1) {
 				setCityTiles ();
-/**/			maxXCoord = findMaxX (cityTiles);
+				Tile townHallPos = findTownHall ();
+				maxXCoord = townHallPos.GetX () + 1;
+				maxYCoord = townHallPos.GetY () + 1;
+				minXCoord = townHallPos.GetX () - 1;
+				minYCoord = townHallPos.GetY () - 1;
+
+			}
+			if (turn /*Player.Turn*/ != 1) {
+				setCityTiles ();
+				maxXCoord = findMaxX (cityTiles);
 				maxYCoord = findMaxY (cityTiles);
 				minXCoord = findMinX (cityTiles);
 				minYCoord = findMinY (cityTiles);
-				topBorder = new List<Tile> ();
-				bottomBorder = new List<Tile> ();
-				rightBorder = new List<Tile> ();
-				leftBorder = new List<Tile> ();
+
 			}
-			///Trigger city expansion if population has increased by 5
-/**/		//	int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
+			///Trigger city expansion if population has increased by 2
+			//	int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
 			int population = 10; /*test*/
-			if (population % 5 == 0) {
+			if (population % 2 == 0) {
 				expandCityBoundary ();
 			}
 			turn++;
@@ -98,7 +112,8 @@ namespace SpaceRace.World.Buildings.Collection
 			Tile toReturn = null;
 			for (int i = 0; i < mapTiles.Count; i++) {
 				if (mapTiles.ElementAt (i) != null && mapTiles.ElementAt (i).Building != null
-				    && mapTiles.ElementAt (i).Building.GetType ().Name.Equals ("TownHall")) {	
+				    && mapTiles.ElementAt (i).Building.GetType ().Name.Equals ("TownHall")
+				    && mapTiles.ElementAt (i).GetOwner () == currentPlayer) {	
 					toReturn = mapTiles [i];
 				}
 			}
@@ -123,7 +138,7 @@ namespace SpaceRace.World.Buildings.Collection
 			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () + 1));
 
 			foreach (Tile tile in surrounding) {
-				tile.SetOwner(currentPlayer);
+				tile.SetOwner (currentPlayer);
 				cityTiles.Add (tile);
 			}
 		}
@@ -136,64 +151,55 @@ namespace SpaceRace.World.Buildings.Collection
 
 		private void expandCityBoundary ()
 		{
-/**/		System.Random rnd = new System.Random ();
-			foreach (Tile tile in mapTiles) {
-				//add all tiles surrounding the current city limit to borderTiles
-				if (tile.GetY() == maxYCoord+1 && tile.GetX () >= minXCoord-1 && tile.GetX () <= maxXCoord+1) {	
-					topBorder.Add (tile);
-					tile.SetOwner (currentPlayer);
-				} else {
-					if (tile.GetY() == minYCoord-1 && tile.GetX () >= minXCoord-1 && tile.GetX () <= maxXCoord+1) {
-						bottomBorder.Add (tile);
-						tile.SetOwner (currentPlayer);
-					} else {
-						if (tile.GetX () == maxXCoord+1 && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
-							rightBorder.Add (tile);
-							tile.SetOwner (currentPlayer);
+			System.Random rnd = new System.Random ();
+			tilesOwned = 0;
+			foreach (Tile tile in cityTiles) {
+				if (tile.GetOwner ().PlayerName != null) {
+					if (tile.GetOwner ().PlayerName == currentPlayer.PlayerName) {
+						tilesOwned++;
+					}
+				}
+				Debug.Log (tilesOwned);
+			}
+			if (tilesOwned >= borderTiles.Count ()) {
+				foreach (Tile tile in mapTiles) {
+					if (tile.GetOwner () == null) {
+						//add all tiles surrounding the current city limit to borderTiles
+						if (tile.GetY () == maxYCoord + 1 && tile.GetX () >= minXCoord - 1 && tile.GetX () <= maxXCoord + 1) {	
+							topBorder.Add (tile);
 						} else {
-							if (tile.GetX () == minXCoord-1 && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
-								leftBorder.Add (tile);
-								tile.SetOwner (currentPlayer);
+							if (tile.GetY () == minYCoord - 1 && tile.GetX () >= minXCoord - 1 && tile.GetX () <= maxXCoord + 1) {
+								bottomBorder.Add (tile);
+
+							} else {
+								if (tile.GetX () == maxXCoord + 1 && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
+									rightBorder.Add (tile);
+
+								} else {
+									if (tile.GetX () == minXCoord - 1 && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
+										leftBorder.Add (tile);
+
+									}
+								}
 							}
 						}
 					}
 				}
+				//Add tiles in each border to borderTiles
+				borderTiles.AddRange (topBorder);
+				borderTiles.AddRange (bottomBorder);
+				borderTiles.AddRange (leftBorder);
+				borderTiles.AddRange (rightBorder);
 			}
 
-			//choose random tile from 'borderTiles' to expand to
-			List<Tile> borderTiles = new List<Tile> ();
-			borderTiles.AddRange (topBorder);
-			borderTiles.AddRange (bottomBorder);
-			borderTiles.AddRange (leftBorder);
-			borderTiles.AddRange (rightBorder);
 
 			int borderIndex = borderTiles.Count ();
 			int expandToIndex = rnd.Next (borderIndex);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
-
 			expandTo.SetOwner (currentPlayer);
 			cityTiles.Add (expandTo);	
 		}
 
-		/// <summary>
-		/// Check if all tiles in the specified list are owned
-		/// </summary>
-		/// <returns><c>true</c>, if border is owned, <c>false</c> otherwise.</returns>
-		/// <param name="borderList">Border list, either topBorder, bottomBorder, leftBorder or rightBorder.</param>
-		/// <see cref="expandCityBoundary()"/>
-		private bool isBorderOwned(List<Tile> borderList){
-			int ownedCount = 0;
-			foreach (Tile tile in borderList) {
-				if (tile.GetOwner() == currentPlayer) {
-					ownedCount++;
-				}
-			}
-			if (ownedCount == borderList.Count ()) {
-				return true;
-			} else {
-				return false;
-			}
-		}
 
 		/// <summary>
 		/// Finds the maximum x coordinate of a tile inside the city boundary.
