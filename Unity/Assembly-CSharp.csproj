@@ -67,7 +67,11 @@
      <Compile Include="Assets\Scripts\World\Buildings\BuildingException.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\House.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\LumberYard.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Monument.cs" />
      <Compile Include="Assets\Scripts\World\WorldStates.cs" />
+     <Compile Include="Assets\_Scenes\GameOptions.cs" />
+     <Compile Include="Assets\_Scenes\ManageMultiplayer.cs" />
+     <Compile Include="Assets\_Scenes\OptionManager.cs" />
      <None Include="Assets\Resources\Config\Buildings.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
