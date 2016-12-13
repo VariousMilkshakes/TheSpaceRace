@@ -44,8 +44,8 @@ namespace SpaceRace.World.Buildings.Collection
 			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
 			currentPlayer = GameObject.Find ("GameManager").GetComponent<Game> ().GetActivePlayer ();
 			mapTiles = mapGen.getTiles ();
-			borderTiles = new List<Tile> ();
 
+			borderTiles = new List<Tile> ();
 			topBorder = new List<Tile> ();
 			bottomBorder = new List<Tile> ();
 			rightBorder = new List<Tile> ();
@@ -75,9 +75,9 @@ namespace SpaceRace.World.Buildings.Collection
 		public override void OnTurn ()
 		{
 
-			int turn = 0;/*delete me*/
+			int turn = 1;/*delete me*/
 			base.OnTurn ();
-			if (turn /*Player.Turn*/ == 1) {
+			if (turn /*use me Player.Turn*/ == 1) {
 				setCityTiles ();
 				Tile townHallPos = findTownHall ();
 				maxXCoord = townHallPos.GetX () + 1;
@@ -86,7 +86,7 @@ namespace SpaceRace.World.Buildings.Collection
 				minYCoord = townHallPos.GetY () - 1;
 
 			}
-			if (turn /*Player.Turn*/ != 1) {
+			else {
 				setCityTiles ();
 				maxXCoord = findMaxX (cityTiles);
 				maxYCoord = findMaxY (cityTiles);
@@ -127,17 +127,17 @@ namespace SpaceRace.World.Buildings.Collection
 		private void setCityTiles ()
 		{
 			Tile townHallPos = findTownHall ();
-			List<Tile> surrounding = new List<Tile> ();
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () - 1));
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY ()));
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () + 1));
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY () - 1));
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY () + 1));
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () - 1));
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY ()));
-			surrounding.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () + 1));
+			List<Tile> surroundingTH = new List<Tile> ();
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () - 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY ()));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () + 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY () - 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY () + 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () - 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY ()));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () + 1));
 
-			foreach (Tile tile in surrounding) {
+			foreach (Tile tile in surroundingTH) {
 				tile.SetOwner (currentPlayer);
 				cityTiles.Add (tile);
 			}
@@ -159,24 +159,25 @@ namespace SpaceRace.World.Buildings.Collection
 						tilesOwned++;
 					}
 				}
-				Debug.Log (tilesOwned);
 			}
-			if (tilesOwned >= borderTiles.Count ()) {
+			Debug.Log ("Tiles owned: " + tilesOwned + ", " + "borderTiles.Count(): " + borderTiles.Count ());
+			int i = 0;
+			if (tilesOwned >= borderTiles.Count () && i==0) {
 				foreach (Tile tile in mapTiles) {
 					if (tile.GetOwner () == null) {
 						//add all tiles surrounding the current city limit to borderTiles
-						if (tile.GetY () == maxYCoord + 1 && tile.GetX () >= minXCoord - 1 && tile.GetX () <= maxXCoord + 1) {	
+						if (tile.GetY () == maxYCoord + 1 && tile.GetX () >= minXCoord && tile.GetX () - 1 <= maxXCoord + 1) {	
 							topBorder.Add (tile);
 						} else {
 							if (tile.GetY () == minYCoord - 1 && tile.GetX () >= minXCoord - 1 && tile.GetX () <= maxXCoord + 1) {
 								bottomBorder.Add (tile);
 
 							} else {
-								if (tile.GetX () == maxXCoord + 1 && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
+								if (tile.GetX () == maxXCoord + 1 && tile.GetY () > minYCoord - 1 && tile.GetY () < maxYCoord + 1) {
 									rightBorder.Add (tile);
 
 								} else {
-									if (tile.GetX () == minXCoord - 1 && tile.GetY () > minYCoord && tile.GetY () < maxYCoord) {
+									if (tile.GetX () == minXCoord - 1 && tile.GetY () > minYCoord - 1 && tile.GetY () < maxYCoord + 1) {
 										leftBorder.Add (tile);
 
 									}
@@ -190,6 +191,7 @@ namespace SpaceRace.World.Buildings.Collection
 				borderTiles.AddRange (bottomBorder);
 				borderTiles.AddRange (leftBorder);
 				borderTiles.AddRange (rightBorder);
+				i++;
 			}
 
 
@@ -197,7 +199,8 @@ namespace SpaceRace.World.Buildings.Collection
 			int expandToIndex = rnd.Next (borderIndex);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
 			expandTo.SetOwner (currentPlayer);
-			cityTiles.Add (expandTo);	
+			cityTiles.Add (expandTo);
+			tilesOwned++;
 		}
 
 
