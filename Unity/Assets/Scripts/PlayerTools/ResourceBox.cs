@@ -17,10 +17,10 @@ namespace SpaceRace.PlayerTools
 		/// <returns>Empty resource box</returns>
 		public static ResourceBox EMPTY ()
 		{
-			return new ResourceBox(Resources.None, 0);
+			return new ResourceBox(Resource.None, 0);
 		}
 
-		public Resources Type
+		public Resource Type
 		{
 			get { return _t; }
 		}
@@ -34,25 +34,25 @@ namespace SpaceRace.PlayerTools
 			set { _c = value; }
 		}
 
-		private Resources _t;
+		private Resource _t;
 		private int _q;
 		private int _c;
 
-		public ResourceBox (Resources typeOfResource)
+		public ResourceBox (Resource typeOfResource)
 		{
 			_t = typeOfResource;
 			_q = 0;
 			_c = -1;
 		}
 
-		public ResourceBox (Resources typeOfResource, int volumeOfResource)
+		public ResourceBox (Resource typeOfResource, int volumeOfResource)
 		{
 			_t = typeOfResource;
 			_q = volumeOfResource;
 			_c = -1;
 		}
 
-		public ResourceBox(Resources typeOfResource, int volumeOfResource, int volumeCap)
+		public ResourceBox(Resource typeOfResource, int volumeOfResource, int volumeCap)
 		{
 			_t = typeOfResource;
 			_q = volumeOfResource;

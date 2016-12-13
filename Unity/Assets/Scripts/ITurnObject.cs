@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SpaceRace
 {
-	interface TurnObject
+	interface ITurnObject
 	{
 		void OnTurn();
 	}
