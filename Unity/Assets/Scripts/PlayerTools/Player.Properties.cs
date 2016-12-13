@@ -19,7 +19,7 @@ namespace SpaceRace.PlayerTools
 		private List<Building> playerBuildings;
 		private List<Tile> playerTiles;
 
-		public string PlayerName;
+		public String PlayerName;
 		public UE.Color Color;
 
 		public bool ReadyToAdvance = false;
