@@ -53,6 +53,7 @@ namespace SpaceRace
 
 		void Start()
 		{
+		    new GameRules();
 			running = true;
 
 			Player player1 = new Player();

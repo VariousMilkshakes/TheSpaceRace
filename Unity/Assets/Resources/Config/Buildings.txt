@@ -20,6 +20,7 @@ Res.RequireWorker=false
 Sprite.All=Buildings/Grass_With_House
 Tiles=Grass
 Age=Roman
+RequireTownHall=true
 
 [LumberYard]
 Res.BuildRequirements.type=Money
@@ -32,8 +33,9 @@ Res.OnTurnOutput.type=Wood
 Res.OnTurnOutput.count=30
 Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_LumberYard
-Tiles=Grass,Forest
+Tiles=Forest
 Age=Roman
+RequireTownHall=false
 
 [Monument]
 Res.BuildRequirements.type=Money
@@ -48,6 +50,7 @@ Res.RequireWorker=false
 Sprite.All=Buildings/Grass_With_Monument
 Tiles=Grass
 Age=Roman
+RequireTownHall=true
 
 [TownHall]
 Res.BuildRequirements.type=Money
@@ -61,6 +64,7 @@ Res.OnTurnOutput.count=0
 Sprite.All=Buildings/Grass_With_TownHall
 Tiles=Grass
 Age=Roman
+RequireTownHall=false
 
 [Quarry]
 Res.BuildRequirements.type=Wood
@@ -75,6 +79,7 @@ Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_Quarry
 Tiles=Grass,Mountain
 Age=Roman
+RequireTownHall=false
 
 [Temple]
 Res.BuildRequirements.type=Stone
@@ -90,6 +95,7 @@ Sprite.All=Buildings/Grass_With_Temple
 Tiles=Grass
 Age=Roman
 Upgrade.To=Church
+RequireTownHall=true
 
 [Field]
 Res.BuildRequirements.type=Wood
@@ -104,6 +110,7 @@ Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_Field
 Tiles=Grass
 Age=Roman
+RequireTownHall=false
 
 [Plaza]
 Res.BuildRequirements.type=Stone
@@ -118,6 +125,7 @@ Res.RequireWorker=false
 Sprite.All=Buildings/Grass_With_Plaza
 Tiles=Grass
 Age=Roman
+RequireTownHall=true
 
 [Colosseum]
 Res.BuildRequirements.type=Stone
@@ -132,6 +140,7 @@ Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_Colosseum
 Tiles=Grass
 Age=Roman
+RequireTownHall=true
 
 [Bakery]
 Res.BuildRequirements.type=Wood
@@ -146,6 +155,7 @@ Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_Bakery
 Tiles=Grass
 Age=Roman
+RequireTownHall=true
 
 [Church]
 Res.BuildRequirements.type=Stone
@@ -160,6 +170,7 @@ Res.RequireWorker=false
 Sprite.All=Buildings/Grass_With_Church
 Tiles=Grass
 Age=MiddleAges
+RequireTownHall=true
 
 [Well]
 Res.BuildRequirements.type=Stone
@@ -174,6 +185,7 @@ Res.RequireWorker=false
 Sprite.All=Buildings/Grass_With_Well
 Tiles=Grass
 Age=MiddleAges
+RequireTownHall=true
 
 [Farm]
 Res.BuildRequirements.type=Wood
@@ -188,6 +200,7 @@ Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_Farm
 Tiles=Grass
 Age=MiddleAges
+RequireTownHall=false
 
 [FishingDock]
 Res.BuildRequirements.type=Wood
@@ -202,3 +215,4 @@ Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_FishingDock
 Tiles=Grass
 Age=MiddleAges
+RequireTownHall=false

@@ -11,6 +11,8 @@ namespace SpaceRace.World.Buildings
 {
 	public abstract partial class Building : ITurnObject
 	{
+        //Bug: Buildings not using resources
+
 		/// <summary>
 		/// Attempt for player to create instance of building
 		/// </summary>
@@ -35,11 +37,11 @@ namespace SpaceRace.World.Buildings
 			throw new BuildingException("Not enough resources", typeof(T));
 		}
 
-		/// <summary>
-		/// Resources required for a player to build
-		/// </summary>
-		/// <returns>Required resources</returns>
-		public abstract ResourceBox BuildRequirements();
+	    /// <summary>
+	    /// Resources required for a player to build
+	    /// </summary>
+	    /// <returns>Required resources</returns>
+	    public abstract ResourceBox BuildRequirements ();
 
 		/// <summary>
 		/// Input and output resources from building
@@ -64,8 +66,8 @@ namespace SpaceRace.World.Buildings
 		{
 			Output.Empty();
 
-			/// If the building gets insufficient input resources
-			/// then the output is left empty
+			// If the building gets insufficient input resources
+			// then the output is left empty
 			if (Input.IsFull())
 			{
 				Output.Fill(Output.Cap);

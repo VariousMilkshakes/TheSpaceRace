@@ -81,10 +81,10 @@ namespace SpaceRace.World.Buildings.Collection
 		/// Resources required for a player to build a town hall
 		/// </summary>
 		/// <returns>Required resources</returns>
-		public override SpaceRace.PlayerTools.ResourceBox BuildRequirements ()
+		public override ResourceBox BuildRequirements ()
 		{
-			return new SpaceRace.PlayerTools.ResourceBox (Resource.Money, 0);
-		}
+			return GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(BUILDING_NAME, BUILDING_REQUIREMENTS, true);
+        }
 
 		public override ResourceBox OnBuild ()
 		{

@@ -48,9 +48,7 @@ namespace SpaceRace.PlayerTools
 			playerTiles = new List<Tile> ();
 
             inventory = new Inventory();
-			inventory.AddResource(Resource.Wood, 10);
-			inventory.AddResource(Resource.Population, 0);
-			inventory.AddResource(Resource.Money, 100);
+			GameRules.SETUP_INVENTORY(inventory);
 
             playerUI = new UIController(this);
         }

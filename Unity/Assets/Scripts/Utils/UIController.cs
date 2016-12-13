@@ -87,7 +87,7 @@ namespace Assets.Scripts.Utils
 
 			return Game.BUILDING_REPO
 				.Where(building =>
-					GameRules.CHECK_BUILDING_TILE(building, selectedTile.Type) &&
+					GameRules.CHECK_BUILDING_TILE(building, selectedTile, owner) &&
 					GameRules.CHECK_PLAYER_BUILDING_LEVEL(building, owner.Age))
 				.ToList();
 		}

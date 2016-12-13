@@ -5,22 +5,62 @@ using System.Reflection;
 using System.Linq;
 using System;
 using SpaceRace;
+using SpaceRace.PlayerTools;
 using SpaceRace.Utils;
 using SpaceRace.World;
 using SpaceRace.World.Buildings;
 
-public class GameRules : MonoBehaviour {
+public class GameRules {
 
-	public static readonly Dictionary<string, Config> CONFIG_REPO = Config.LOAD();
+    private static Dictionary<string, Config> config_repo;
+
+    public static Dictionary<string, Config> CONFIG_REPO
+    {
+        get { return config_repo; }
+        private set { config_repo = value; }
+    }
+
+    public GameRules ()
+    {
+        CONFIG_REPO = Config.LOAD();
+    }
 
 	#region Building Validation
 
-	public static bool CHECK_BUILDING_TILE(Type buildingType, String tileType)
+    /// <summary>
+    /// Checks that the tile being built on is valid for that building.
+    /// Checking:
+    ///     terrain
+    ///     ownership
+    ///     if it is connected to townhall
+    /// </summary>
+    /// <param name="buildingType">Building to build</param>
+    /// <param name="tile">Tile selected by user</param>
+    /// <param name="builder">Player building</param>
+    /// <returns>Valid = True/False</returns>
+	public static bool CHECK_BUILDING_TILE(Type buildingType, Tile tile, Player builder)
 	{
-		Config buildingConfig = GameRules.CONFIG_REPO["Buildings"];
-		string[] acceptedTiles = buildingConfig.LookForProperty(buildingType.Name, "Tiles").Value.Split(',');
+		Config buildingConfig = CONFIG_REPO["Buildings"];
+		string[] acceptedTiles = buildingConfig.LookForProperty(buildingType.Name, Building.VALID_TILES)
+                                               .Value
+                                               .Split(',');
 
-		return acceptedTiles.Contains(tileType);
+	    if (!acceptedTiles.Contains(tile.Type)) return false;
+
+        // TODO: use generic to convert config to datatype
+	    string boolString = buildingConfig.LookForProperty(buildingType.Name, Building.TOWNHALL_CONNECTION)
+	                                      .Value;
+	    bool needsTownHall = false;
+	    if (!bool.TryParse(boolString, out needsTownHall) && !needsTownHall) return false;
+
+	    if (tile.GetOwner() == null) {
+	        if (!needsTownHall) return true;
+	        return false;
+	    }
+
+	    if (tile.GetOwner() != builder.PlayerName) return false;
+
+	    return true;
 	}
 
 	public static bool CHECK_PLAYER_BUILDING_LEVEL(Type buildingType, WorldStates playerLevel)
@@ -29,7 +69,7 @@ public class GameRules : MonoBehaviour {
 
 		try
 		{
-			Config buildingConfig = GameRules.CONFIG_REPO["Buildings"];
+			Config buildingConfig = CONFIG_REPO["Buildings"];
 			var property = buildingConfig.LookForProperty(buildingType.Name, "Age");
 
 			buildingLevel = (int)Enum.Parse(typeof(WorldStates), property.Value);
@@ -49,7 +89,7 @@ public class GameRules : MonoBehaviour {
 
 	public static List<Type> GET_BUILDING_UPGRADES_FOR(Type upgradableBuilding)
 	{
-		Config buildingsConfig = GameRules.CONFIG_REPO["Buildings"];
+		Config buildingsConfig = CONFIG_REPO["Buildings"];
 		string[] upgrades = buildingsConfig.LookForProperty(upgradableBuilding.Name, "Upgrade.To").Value.Split(',');
 
 		return Game.BUILDING_REPO
@@ -57,6 +97,21 @@ public class GameRules : MonoBehaviour {
 			.ToList();
 	}
 
-	#endregion
+    #endregion
+
+    #region Starting Resources
+
+    private const int wood = 10;
+    private const int pop = 1;
+    private const int money = 600;
+
+    public static void SETUP_INVENTORY (Inventory newInventory)
+    {
+        newInventory.AddResource(Resource.Wood, wood);
+        newInventory.AddResource(Resource.Population, pop);
+        newInventory.AddResource(Resource.Money, money);
+    }
+
+    #endregion
 
 }

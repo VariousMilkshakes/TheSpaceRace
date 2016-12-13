@@ -66,7 +66,7 @@ namespace SpaceRace.Utils
 			}
 		}
 
-	    public ResourceBox GetPropertyResourceBox (string configHeader, string propKey)
+	    public ResourceBox GetPropertyResourceBox (string configHeader, string propKey, bool fill = false)
 	    {
 	        const string typeSubfix = ".type";
 	        const string countSubfix = ".count";
@@ -81,7 +81,9 @@ namespace SpaceRace.Utils
                 Debug.Log("Error in config file: " + configHeader +
                     ": invalid count: " + propKey);
 
-            return new ResourceBox((Resource)type, 0, count);
+            ResourceBox newBox = new ResourceBox((Resource)type, 0, count);
+	        if (fill) newBox.Fill(newBox.Cap);
+            return newBox;
 	    }
 
 		private List<string> cleanLines (List<string> rawLines)

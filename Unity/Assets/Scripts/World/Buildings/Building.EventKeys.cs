@@ -20,8 +20,10 @@ namespace SpaceRace.World.Buildings
         public const string REQUIRES_WORKER = "Res.RequireWorker";
         public const string BUILDING_AGE = "Age";
         public const string VALID_TILES = "Tiles";
+	    public const string TOWNHALL_CONNECTION = "RequireTownHall";
 
-	    public static string SPRITE (WorldStates state)
+
+        public static string SPRITE (WorldStates state)
 	    {
 	        string stateName = Enum.GetName(typeof(WorldStates), state);
 
