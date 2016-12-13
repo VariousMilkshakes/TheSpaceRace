@@ -65,7 +65,7 @@ namespace Assets.Scripts.Utils
 			
 		}
 
-		private void 
+		private void a(){}
 
 	}
 }

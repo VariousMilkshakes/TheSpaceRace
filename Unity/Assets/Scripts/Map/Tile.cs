@@ -19,6 +19,19 @@ public class Tile: MonoBehaviour{
 	[HideInInspector]
 	public SpriteRenderer sr;
 
+	[HideInInspector]
+	public SpriteRenderer rsr;
+
+	/// <summary>
+	/// The initial resource of this tile.
+	/// </summary>
+	public SpaceRace.PlayerTools.Resources resource = SpaceRace.PlayerTools.Resources.None;
+
+	/// <summary>
+	/// The resource box.
+	/// </summary>
+	public ResourceBox reBox;
+
 	/// <summary>
 	/// The highlight sr.
 	/// </summary>
@@ -81,19 +94,9 @@ public class Tile: MonoBehaviour{
 	public Sprite buildingSprite;
 
 	/// <summary>
-	/// The type of Tile that this is. (Currently grass(0) or water(1))
+	/// The type of Tile that this is. (Currently grass(0), water(1), sand(2), mountain(3))
 	/// </summary>
 	public int type;
-
-	/// <summary>
-	/// The x position.
-	/// </summary>
-	int x;
-
-	/// <summary>
-	/// The y position.
-	/// </summary>
-	int y;
 
 	/// <summary>
 	/// The score.
@@ -129,21 +132,21 @@ public class Tile: MonoBehaviour{
 	/// <param name="x">The x coordinate.</param>
 	/// <param name="y">The y coordinate.</param>
 	/// <see cref="https://docs.unity3d.com/ScriptReference/MonoBehaviour.html"/>
-	public void NewTile(int type, int x, int y){
+	public void NewTile(int type){
 		MapGenerator mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
 		Sprite[] statics = mapGen.GetStaticSprites();
 		hoverSprite = statics[(int)SpriteType.HOVER];
 		selectedSprite = statics[(int)SpriteType.SELECTED];
 		this.type = type;
 		sr = gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
-		this.x = x;
-		this.y = y;
 
 		highlighter = new GameObject ("Highliter");
 		highlighter.transform.SetParent (this.gameObject.transform);
 		hsr = highlighter.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
 		hsr.sortingOrder = 1;
 		hsr.sprite = null;
+
+		reBox = ResourceBox.EMPTY ();
 
 		bx2D = gameObject.AddComponent (typeof(BoxCollider2D)) as BoxCollider2D;
 		bx2D.isTrigger = true;
@@ -153,12 +156,20 @@ public class Tile: MonoBehaviour{
 		buildingSprite = statics[(int)SpriteType.BUILDING];
 	}
 
+	void Update(){
+		if (GetResourceBox().Quantity == 0){
+			reBox = ResourceBox.EMPTY ();
+			resource = SpaceRace.PlayerTools.Resources.Free;
+			SetTileSprite (type);
+		}
+	}
+
 	/// <summary>
 	/// Gets the x.
 	/// </summary>
 	/// <returns>The x.</returns>
 	public int GetX(){
-		return x;
+		return (int)gameObject.transform.position.x;
 	}
 
 	/// <summary>
@@ -166,9 +177,39 @@ public class Tile: MonoBehaviour{
 	/// </summary>
 	/// <returns>The y.</returns>
 	public int GetY(){
-		return y;
+		return (int)gameObject.transform.position.y;
 	}
-		
+
+	/// <summary>
+	/// Gets the resource.
+	/// </summary>
+	/// <returns>The resource.</returns>
+	public SpaceRace.PlayerTools.Resources GetResource(){
+		return resource;
+	}
+
+	/// <summary>
+	/// Gets the resource box.
+	/// </summary>
+	/// <returns>The resource box.</returns>
+	public ResourceBox GetResourceBox(){
+		return reBox;
+	}
+
+	/// <summary>
+	/// Adds the resource.
+	/// </summary>
+	/// <param name="resouce">Resource.</param>
+	public void addResource(SpaceRace.PlayerTools.Resources resource){
+		int offset = 2; // 2 becuase the first two entries in resource are none and free and as such don't require a sprite.
+		if ((int)this.resource < offset) {
+			this.resource = resource;
+			MapGenerator mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
+			sr.sprite = mapGen.GetResourceSprite ((int)resource - offset);
+			reBox = new ResourceBox (resource, 10, 10);
+		}
+	}
+
 	/// <summary>
 	/// Raises the mouse enter event.
 	/// </summary>
@@ -183,7 +224,7 @@ public class Tile: MonoBehaviour{
 			hisr.sprite = hoverSprite;
 		}
 	}
-		
+
 	/// <summary>
 	/// Raises the mouse exit event.
 	/// </summary>
@@ -198,7 +239,7 @@ public class Tile: MonoBehaviour{
 			hisr.sprite = null;
 		}
 	}
-		
+
 
 	/// <summary>
 	/// Raises the mouse down event.
@@ -209,7 +250,7 @@ public class Tile: MonoBehaviour{
 	/// </description>
 	/// <see cref="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnMouseDown.html"/>
 	void OnMouseDown(){
-		
+
 		Component[] sprtren = this.gameObject.GetComponentsInChildren <SpriteRenderer> ();
 		SpriteRenderer tisr = (SpriteRenderer)sprtren [0];
 		SpriteRenderer hisr = (SpriteRenderer)sprtren [1];
@@ -217,9 +258,7 @@ public class Tile: MonoBehaviour{
 			DeselectTile ();
 			selected = true;
 			hisr.sprite = selectedSprite;
-		} else if (selected && type == 0) {
-			tisr.sprite = buildingSprite;
-		}
+		} 
 
 		try
 		{
@@ -232,7 +271,7 @@ public class Tile: MonoBehaviour{
 		}
 
 	}
-		
+
 	/// <summary>
 	/// Deselects the tile.
 	/// </summary>
@@ -248,7 +287,6 @@ public class Tile: MonoBehaviour{
 					if (t.selected) {
 						t.selected = false;
 						Component[] sptren = t.GetComponentsInChildren<SpriteRenderer> ();
-						//SpriteRenderer tisr = (SpriteRenderer)sptren [0];
 						SpriteRenderer hisr = (SpriteRenderer)sptren [1];
 						hisr.sprite = null;
 					}
@@ -256,7 +294,7 @@ public class Tile: MonoBehaviour{
 			}
 		} 
 	}
-		
+
 	/// <summary>
 	/// Sets the tile sprite.
 	/// </summary>
@@ -286,9 +324,9 @@ public class Tile: MonoBehaviour{
 		{
 			newBuilding = genericBuildMethod.Invoke(null, new object[] { builder }) as Building;
 		}
-		catch (Exception e)
+		catch (Exception)
 		{
-			Debug.Log(e);
+			Debug.Log("Not enough resources");
 			return false;
 		}
 
@@ -307,10 +345,6 @@ public class Tile: MonoBehaviour{
 	public void ApplyPlayerColor(Color playerColor)
 	{
 		sr.color = playerColor;
-	}
-
-	public Color getTileColour(){
-		return sr.color;
 	}
 
 }
