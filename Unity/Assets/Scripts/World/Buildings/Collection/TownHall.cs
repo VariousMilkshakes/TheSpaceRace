@@ -17,6 +17,7 @@ namespace SpaceRace.World.Buildings.Collection
 	/// Town hall. Responsible for setting and expanding the city boundary.
 	/// </summary>
 	public class TownHall : Building
+
 	{
 		private MapGenerator mapGen;
 		private List<Tile> cityTiles;
@@ -34,22 +35,29 @@ namespace SpaceRace.World.Buildings.Collection
 		int tilesOwned;
 		String playerName;
 		UnityEngine.Color playerColour;
-		int turn;/*delete me*/
+		public const string BUILDING_NAME = "TownHall";
+
+		/// <summary>
+		/// Load sprites as singletons associated with worldstates
+		/// Means that a sprite is only loaded once
+		/// </summary>
+		private static Dictionary<WorldStates, Sprite> loaded_sprites = new Dictionary<WorldStates, Sprite>();
+
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
 		/// </summary>
-		public TownHall (Player builder) : base (typeof(TownHall), builder)
+		public TownHall (Player builder, Tile pos)
+			: base (typeof(TownHall), builder, pos, loaded_sprites)
 		{
 			Sprite sprite = null;
 			mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent<MapGenerator> ();
-			currentPlayer = GameObject.Find ("GameManager").GetComponent<Game> ().GetActivePlayer();
-			playerName = GameObject.Find ("GameManager").GetComponent<Game> ().GetActivePlayerName ();
-			playerColour = currentPlayer.Color;
+			playerName = _owner.PlayerName;
+			playerColour = _owner.Color;
 
 			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
-			mapTiles = mapGen.getTiles ();
-			turn = 1;/*delete me*/
+			mapTiles = mapGen.GetTiles ();
+		
 
 			/// Each border of tiles surrounding the city boundary 
 			topBorder = new List<Tile> ();
@@ -59,16 +67,14 @@ namespace SpaceRace.World.Buildings.Collection
 			/// Total tiles surrounding the city boundary, consists of topBorder, bottomBorder, rightBorder and leftBorder
 			borderTiles = new List<Tile> ();
 
-			/// Set sprite for building
-			try {
-				Config buildingConfigs = GameRules.CONFIG_REPO ["Buildings"];
-				string spritePath = buildingConfigs.LookForProperty ("TownHall", "Sprite.All").Value;
-				sprite = UnityEngine.Resources.Load (spritePath, typeof(Sprite)) as Sprite;
-			} catch (Exception e) {
-				Debug.Log (e);
-			}
-			_buildingSprites.Add (WorldStates.All, sprite);
+		}
 
+		/// <summary>
+		/// Gets the active sprite.
+		/// </summary>
+		/// <returns>The active sprite.</returns>
+		public override Sprite GetActiveSprite(){
+			return loaded_sprites [_buildingState];
 		}
 
 		/// <summary>
@@ -83,7 +89,7 @@ namespace SpaceRace.World.Buildings.Collection
 		public override ResourceBox OnBuild ()
 		{
 			setCityTiles ();
-			Tile townHallPos = findTownHall ();
+			Tile townHallPos = _position;
 			maxXCoord = townHallPos.GetX () + 1;
 			maxYCoord = townHallPos.GetY () + 1;
 			minXCoord = townHallPos.GetX () - 1;
@@ -93,8 +99,6 @@ namespace SpaceRace.World.Buildings.Collection
 
 		public override void OnTurn ()
 		{
-
-			turn = 1;
 			base.OnTurn ();
 			/// Initially, only tiles owned by the current user are those directly surrounding the town hall
 
@@ -112,34 +116,16 @@ namespace SpaceRace.World.Buildings.Collection
 			if (population % 2 == 0) {
 				expandCityBoundary ();
 			}
-			turn++;
-		}
-
-		/// <summary>
-		/// Finds the position of this player's Town Hall
-		/// </summary>
-		/// <returns>The town hall.</returns>
-		private Tile findTownHall ()
-		{
-			Tile toReturn = null;
-			for (int i = 0; i < mapTiles.Count; i++) {
-				Tile target = (Tile)mapTiles [i];
-				if (target != null && target.Building != null && target.GetOwner() != null
-					&& target.Building.GetType ().Name.Equals ("TownHall")
-					&& target.GetOwner ().Equals(playerName)) {	
-					toReturn = target;
-				}
-			}
-			return toReturn;
 
 		}
+
 
 		/// <summary>
 		/// Sets the city tiles by changing these to this player's colour.
 		/// </summary>
 		private void setCityTiles ()
 		{
-			Tile townHallPos = findTownHall ();
+			Tile townHallPos = _position;
 			List<Tile> surroundingTH = new List<Tile> ();
 			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () - 1));
 			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY ()));
