@@ -103,6 +103,26 @@ public class Tile: MonoBehaviour{
 	/// </summary>
 	public int score;
 
+
+	private String owner;
+
+	/// <summary>
+	/// Sets the owner of this tile
+	/// </summary>
+	/// <param name="owner">Owner.</param>
+	public void SetOwner(String owner, Color colour){
+		this.owner = owner;	
+		this.ApplyPlayerColor (colour);
+	}
+
+	/// <summary>
+	/// Return the player who owns this tile
+	/// </summary>
+	public String GetOwner(){
+		return owner;
+	}
+
+
 	/// <summary>
 	/// Sets the state.
 	/// </summary>
@@ -345,6 +365,10 @@ public class Tile: MonoBehaviour{
 	public void ApplyPlayerColor(Color playerColor)
 	{
 		sr.color = playerColor;
+	}
+
+	public Color GetTileColour(){
+		return sr.color;
 	}
 
 }

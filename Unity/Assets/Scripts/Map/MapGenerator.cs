@@ -528,6 +528,7 @@ public class MapGenerator : MonoBehaviour {
 		foreach(Tile t in oldTiles){
 			Destroy (t.gameObject);
 		}
+			
 	}
 
 	/// <summary>

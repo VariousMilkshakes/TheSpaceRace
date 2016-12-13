@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+//TODO:
+//once everything works, refactor so that Player.Properties looks after tiles that the player owns
+//set max/min x/y when initial city tiles are set. Only change the max/min when border lists are all owned
 
 namespace SpaceRace.World.Buildings.Collection
 {
@@ -16,96 +19,159 @@ namespace SpaceRace.World.Buildings.Collection
 	public class TownHall : Building
 	{
 		private MapGenerator mapGen;
-		private Player currentPlayer;
 		private List<Tile> cityTiles;
+		private Player currentPlayer;
+		private List<Tile> mapTiles;
+		private int maxXCoord;
+		private int maxYCoord;
+		private int minXCoord;
+		private int minYCoord;
+		private List<Tile> topBorder;
+		private List<Tile> bottomBorder;
+		private List<Tile> rightBorder;
+		private List<Tile> leftBorder;
+		private List<Tile> borderTiles;
+		int tilesOwned;
+		String playerName;
+		UnityEngine.Color playerColour;
+		int turn;/*delete me*/
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpaceRace.World.Buildings.Collection.TownHall"/> class.
 		/// </summary>
 		public TownHall (Player builder) : base (typeof(TownHall), builder)
 		{
-			mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
-				.GetComponent<MapGenerator>();
 			Sprite sprite = null;
-			cityTiles = new List<Tile>();
+			mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent<MapGenerator> ();
+			currentPlayer = GameObject.Find ("GameManager").GetComponent<Game> ().GetActivePlayer();
+			playerName = GameObject.Find ("GameManager").GetComponent<Game> ().GetActivePlayerName ();
+			playerColour = currentPlayer.Color;
 
-			setCityTiles ();			
+			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
+			mapTiles = mapGen.getTiles ();
+			turn = 1;/*delete me*/
+
+			/// Each border of tiles surrounding the city boundary 
+			topBorder = new List<Tile> ();
+			bottomBorder = new List<Tile> ();
+			rightBorder = new List<Tile> ();
+			leftBorder = new List<Tile> ();
+			/// Total tiles surrounding the city boundary, consists of topBorder, bottomBorder, rightBorder and leftBorder
+			borderTiles = new List<Tile> ();
+
 			/// Set sprite for building
-			try
-			{
-				Config buildingConfigs = GameRules.CONFIG_REPO["Buildings"];
-				string spritePath = buildingConfigs.LookForProperty("TownHall", "Sprite.All").Value;
-				sprite = UnityEngine.Resources.Load(spritePath, typeof(Sprite)) as Sprite;
+			try {
+				Config buildingConfigs = GameRules.CONFIG_REPO ["Buildings"];
+				string spritePath = buildingConfigs.LookForProperty ("TownHall", "Sprite.All").Value;
+				sprite = UnityEngine.Resources.Load (spritePath, typeof(Sprite)) as Sprite;
+			} catch (Exception e) {
+				Debug.Log (e);
 			}
-			catch (Exception e)
-			{
-				Debug.Log(e);
-			}
-			_buildingSprites.Add(WorldStates.All, sprite);
+			_buildingSprites.Add (WorldStates.All, sprite);
 
 		}
+
 		/// <summary>
 		/// Resources required for a player to build a town hall
 		/// </summary>
 		/// <returns>Required resources</returns>
-		public override SpaceRace.PlayerTools.ResourceBox BuildRequirements()
+		public override SpaceRace.PlayerTools.ResourceBox BuildRequirements ()
 		{
-			return new SpaceRace.PlayerTools.ResourceBox(PlayerTools.Resources.Money, 10);
+			return new SpaceRace.PlayerTools.ResourceBox (PlayerTools.Resources.Money, 0);
 		}
 
-		public override void OnTurn()
+		public override ResourceBox OnBuild ()
 		{
-			base.OnTurn ();
 			setCityTiles ();
-			///Trigger city expansion if population has increased by 5
-//**fix**  	int population = PlayerTools.Inventory.CheckResource (PlayerTools.Resources.Population);
-		//	int population = 10; /*test*/
-		/*	if (population % 5 == 0) {
-				expandCityBoundary ();
-			}*/
+			Tile townHallPos = findTownHall ();
+			maxXCoord = townHallPos.GetX () + 1;
+			maxYCoord = townHallPos.GetY () + 1;
+			minXCoord = townHallPos.GetX () - 1;
+			minYCoord = townHallPos.GetY () - 1;
+			return base.OnBuild ();
 		}
-			
+
+		public override void OnTurn ()
+		{
+
+			turn = 1;
+			base.OnTurn ();
+			/// Initially, only tiles owned by the current user are those directly surrounding the town hall
+
+				/// After first turn, the maximum X and Y coordinates are dependent on the current city tiles
+				setCityTiles ();
+				maxXCoord = findMaxX (cityTiles);
+				maxYCoord = findMaxY (cityTiles);
+				minXCoord = findMinX (cityTiles);
+				minYCoord = findMinY (cityTiles);
+
+
+			///Trigger city expansion if population has increased by 2
+			//	use me int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
+			int population = 10; /*test, delete me*/
+			if (population % 2 == 0) {
+				expandCityBoundary ();
+			}
+			turn++;
+		}
+
 		/// <summary>
 		/// Finds the position of this player's Town Hall
 		/// </summary>
 		/// <returns>The town hall.</returns>
-		private Tile findTownHall(){
-	/*		List<Tile> toSearch = mapGen.getTiles();
+		private Tile findTownHall ()
+		{
 			Tile toReturn = null;
-			for(int i = 0; i<toSearch.Count; i++){
-				if(toSearch[i] != null && toSearch[i].Building.Equals("TownHall") && toSearch[i].getTileColour().Equals(currentPlayer.Color)){
-					toReturn = toSearch [i];
+			for (int i = 0; i < mapTiles.Count; i++) {
+				Tile target = (Tile)mapTiles [i];
+				if (target != null && target.Building != null && target.GetOwner() != null
+					&& target.Building.GetType ().Name.Equals ("TownHall")
+					&& target.GetOwner ().Equals(playerName)) {	
+					toReturn = target;
 				}
 			}
+			return toReturn;
 
-			return toReturn;*/
-			return null;
 		}
-			
+
 		/// <summary>
 		/// Sets the city tiles by changing these to this player's colour.
 		/// </summary>
-		private void setCityTiles(){
+		private void setCityTiles ()
+		{
 			Tile townHallPos = findTownHall ();
-			if (townHallPos == null) {
-				return;
+			List<Tile> surroundingTH = new List<Tile> ();
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () - 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY ()));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY () + 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY () - 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY () + 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () - 1));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY ()));
+			surroundingTH.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY () + 1));
+			surroundingTH.Add(mapGen.GetTile(townHallPos.GetX(), townHallPos.GetY()));
+			foreach (Tile tile in surroundingTH) {
+				tile.SetOwner (playerName, playerColour);
+				cityTiles.Add (tile);
 			}
-		/*	cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY()));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () - 1, townHallPos.GetY() + 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX (), townHallPos.GetY() + 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() - 1));
-			cityTiles.Add(mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY()));
-			cityTiles.Add (mapGen.GetTile (townHallPos.GetX () + 1, townHallPos.GetY() + 1));
-			foreach(Tile tile in cityTiles){
-				tile.ApplyPlayerColor (player.Color);
-			}*/
-			Tile tile = mapGen.GetTile (1, 1);
-			cityTiles.Add (tile);
-			tile.ApplyPlayerColor (currentPlayer.Color);
-			setUnselectable ();
+		}
 
+		/// <summary>
+		/// Calculates the number of tiles on the map owned by the current player
+		/// </summary>
+		/// <returns>The number of tiles owned.</returns>
+		private int setTilesOwned ()
+		{
+			tilesOwned = 0;
+			foreach (Tile tile in cityTiles) {
+				if (tile.GetOwner ()!= null) {
+					if (tile.GetOwner ().Equals(playerName)) {
+						tilesOwned++;
+					}
+				}
+			}
+			Debug.Log ("Tiles owned: " + tilesOwned + ", " + "borderTiles.Count(): " + borderTiles.Count ());
+			return tilesOwned;
 		}
 
 		/// <summary>
@@ -113,43 +179,68 @@ namespace SpaceRace.World.Buildings.Collection
 		/// and setting this to be long to the player
 		/// </summary>
 
-		//change to expand to one OUTSIDE the boundary, currently selects tile the player already owns
-		private void expandCityBoundary(){
+		private void expandCityBoundary ()
+		{
 			System.Random rnd = new System.Random ();
-//**fix
-			//find border tiles
-			List<Tile> borderTiles = null;
-			int maxXCoord = findMaxX (cityTiles);
-			int maxYCoord = findMaxY (cityTiles);
-			int minXCoord = findMinX (cityTiles);
-			int minYCoord = findMinY (cityTiles);
-			foreach (Tile tile in cityTiles) {
-				//add all tiles with these values to expandX/expandY
-				if (tile.GetX () == maxXCoord || tile.GetX () == minXCoord || tile.GetY () == maxYCoord || tile.GetY () == minYCoord) {
-					borderTiles.Add (tile);
+			setTilesOwned ();
+
+			int i = 0;
+			if (tilesOwned >= borderTiles.Count () && i == 0) {
+				foreach (Tile tile in mapTiles) {
+					if (tile.GetOwner () == null) {
+						//add all tiles surrounding the current city limit to borderTiles
+						if (tile.GetY () == maxYCoord + 1 && tile.GetX () >= minXCoord && tile.GetX () - 1 <= maxXCoord + 1) {	
+							topBorder.Add (tile);
+						} else {
+							if (tile.GetY () == minYCoord - 1 && tile.GetX () >= minXCoord - 1 && tile.GetX () <= maxXCoord + 1) {
+								bottomBorder.Add (tile);
+
+							} else {
+								if (tile.GetX () == maxXCoord + 1 && tile.GetY () > minYCoord - 1 && tile.GetY () < maxYCoord + 1) {
+									rightBorder.Add (tile);
+
+								} else {
+									if (tile.GetX () == minXCoord - 1 && tile.GetY () > minYCoord - 1 && tile.GetY () < maxYCoord + 1) {
+										leftBorder.Add (tile);
+
+									}
+								}
+							}
+						}
+					}
 				}
+				//Add tiles in each border to borderTiles
+				borderTiles.AddRange (topBorder);
+				borderTiles.AddRange (bottomBorder);
+				borderTiles.AddRange (leftBorder);
+				borderTiles.AddRange (rightBorder);
+				i++;
 			}
 
-			//choose random tile from 'borderTiles' to expand to
-			int expandToIndex = rnd.Next (borderTiles.Count);
+
+			int borderIndex = borderTiles.Count ();
+			int expandToIndex = rnd.Next (borderIndex);
 			Tile expandTo = borderTiles.ElementAt (expandToIndex);
-			expandTo.ApplyPlayerColor (currentPlayer.Color);
-			Tile expandToMap = mapGen.GetTile (expandTo.GetX (), expandTo.GetY ());	
+			expandTo.SetOwner (playerName, playerColour);
+			cityTiles.Add (expandTo);
+			tilesOwned++;
 		}
-			
+
+
 		/// <summary>
 		/// Finds the maximum x coordinate of a tile inside the city boundary.
 		/// </summary>
 		/// <returns>The maximum x coordinate int</returns>
 		/// <param name="list">List.</param>
-		private int findMaxX(List<Tile> list){ 
-			if (list.Count == 0){
-				throw new InvalidOperationException("Error: empty list");
+		private int findMaxX (List<Tile> list)
+		{ 
+			if (list.Count == 0) {
+				throw new InvalidOperationException ("Error: empty list");
 			}
 			int max = int.MinValue;
-			foreach (Tile tile in list){
-				if (tile.GetX() > max){
-					max = tile.GetX();
+			foreach (Tile tile in list) {
+				if (tile.GetX () > max) {
+					max = tile.GetX ();
 				}
 			}
 			return max;
@@ -160,14 +251,15 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		/// <returns>The maximum y coordinate int.</returns>
 		/// <param name="list">List.</param>
-		private int findMaxY(List<Tile> list){ 
-			if (list.Count == 0){
-				throw new InvalidOperationException("Error: empty list");
+		private int findMaxY (List<Tile> list)
+		{ 
+			if (list.Count == 0) {
+				throw new InvalidOperationException ("Error: empty list");
 			}
 			int max = int.MinValue;
-			foreach (Tile tile in list){
-				if (tile.GetY() > max){
-					max = tile.GetY();
+			foreach (Tile tile in list) {
+				if (tile.GetY () > max) {
+					max = tile.GetY ();
 				}
 			}
 			return max;
@@ -178,14 +270,15 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		/// <returns>The minimum x coordinate int.</returns>
 		/// <param name="list">List.</param>
-		private int findMinX(List<Tile> list){
-			if (list.Count == 0){
-				throw new InvalidOperationException("Error: empty list");
+		private int findMinX (List<Tile> list)
+		{
+			if (list.Count == 0) {
+				throw new InvalidOperationException ("Error: empty list");
 			}
 			int min = int.MaxValue;
-			foreach (Tile tile in list){
-				if (tile.GetX() < min){
-					min = tile.GetX();
+			foreach (Tile tile in list) {
+				if (tile.GetX () < min) {
+					min = tile.GetX ();
 				}
 			}
 			return min;
@@ -196,31 +289,19 @@ namespace SpaceRace.World.Buildings.Collection
 		/// </summary>
 		/// <returns>The minimum y coordinate int.</returns>
 		/// <param name="list">List.</param>
-		private int findMinY(List<Tile> list){
-			if (list.Count == 0){
-				throw new InvalidOperationException("Error: empty list");
+		private int findMinY (List<Tile> list)
+		{
+			if (list.Count == 0) {
+				throw new InvalidOperationException ("Error: empty list");
 			}
 			int min = int.MaxValue;
-			foreach (Tile tile in list){
-				if (tile.GetY() < min){
-					min = tile.GetY();
+			foreach (Tile tile in list) {
+				if (tile.GetY () < min) {
+					min = tile.GetY ();
 				}
 			}
 			return min;
 		}
-			
-		/// <summary>
-		/// Sets tiles outside of the city boundary to be unselectable.
-		/// </summary>
-		private void setUnselectable(){
-			foreach (Tile tile in mapGen.tiles) {
-				if (!cityTiles.Contains (tile)) {
-					tile.enabled = false;
-				}
-			}
-		}
-
 
 	}
 }
-
