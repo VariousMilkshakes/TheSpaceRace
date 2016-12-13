@@ -26,7 +26,7 @@ public class Tile: MonoBehaviour{
 	/// <summary>
 	/// The initial resource of this tile.
 	/// </summary>
-	public SpaceRace.PlayerTools.Resources resource = SpaceRace.PlayerTools.Resources.None;
+	public Resource resource = Resource.None;
 
 	/// <summary>
 	/// The resource box.
@@ -182,7 +182,7 @@ public class Tile: MonoBehaviour{
 	void Update(){
 		if (GetResourceBox().Quantity == 0){
 			reBox = ResourceBox.EMPTY ();
-			resource = SpaceRace.PlayerTools.Resources.Free;
+			resource = Resource.Free;
 			SetTileSprite (type);
 		}
 	}
@@ -207,7 +207,7 @@ public class Tile: MonoBehaviour{
 	/// Gets the resource.
 	/// </summary>
 	/// <returns>The resource.</returns>
-	public SpaceRace.PlayerTools.Resources GetResource(){
+	public Resource GetResource(){
 		return resource;
 	}
 
@@ -223,7 +223,7 @@ public class Tile: MonoBehaviour{
 	/// Adds the resource.
 	/// </summary>
 	/// <param name="resouce">Resource.</param>
-	public void addResource(SpaceRace.PlayerTools.Resources resource){
+	public void addResource(Resource resource){
 		int offset = 2; // 2 becuase the first two entries in resource are none and free and as such don't require a sprite.
 		if ((int)this.resource < offset) {
 			this.resource = resource;

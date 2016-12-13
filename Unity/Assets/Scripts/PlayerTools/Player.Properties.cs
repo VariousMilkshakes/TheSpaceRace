@@ -22,8 +22,6 @@ namespace SpaceRace.PlayerTools
 
 		public string PlayerName;
 		public Color Color;
-		public String PlayerName;
-		public UE.Color Color;
 
 		public bool ReadyToAdvance = false;
 		public bool TurnComplete = false;

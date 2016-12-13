@@ -77,7 +77,7 @@ namespace SpaceRace.World.Buildings.Collection
 		/// <returns>Required resources</returns>
 		public override SpaceRace.PlayerTools.ResourceBox BuildRequirements ()
 		{
-			return new SpaceRace.PlayerTools.ResourceBox (PlayerTools.Resources.Money, 0);
+			return new SpaceRace.PlayerTools.ResourceBox (Resource.Money, 0);
 		}
 
 		public override ResourceBox OnBuild ()

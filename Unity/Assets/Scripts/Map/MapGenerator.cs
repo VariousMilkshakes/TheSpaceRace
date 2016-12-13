@@ -162,7 +162,7 @@ public class MapGenerator : MonoBehaviour {
 		return tiles;
 	}
 
-	public List<Tile> GetTilesWithResource(SpaceRace.PlayerTools.Resources resource){
+	public List<Tile> GetTilesWithResource(Resource resource){
 		List<Tile> result = new List<Tile> ();
 		foreach (Tile tile in tiles) {
 			if (tile.GetResource().Equals(resource)) {
@@ -535,17 +535,17 @@ public class MapGenerator : MonoBehaviour {
 	/// Sets up resources.
 	/// </summary>
 	void SetUpResources(){
-		SetUpResource (SpaceRace.PlayerTools.Resources.Wood, (int)TileTypes.GRASS, 20);
-		SetUpResource (SpaceRace.PlayerTools.Resources.Stone, (int)TileTypes.MOUNTIAN, 5);
-		SetUpResource (SpaceRace.PlayerTools.Resources.Iron, (int)TileTypes.MOUNTIAN, 5);
+		SetUpResource (Resource.Wood, (int)TileTypes.GRASS, 20);
+		SetUpResource (Resource.Stone, (int)TileTypes.MOUNTIAN, 5);
+		SetUpResource (Resource.Iron, (int)TileTypes.MOUNTIAN, 5);
 
 		//Sets any remaining grass Tiles to have straw on them for farms to gather (and convert to food?)
 		List<List<Coord>> grassRegions = GetRegions ((int)TileTypes.GRASS);
 		foreach (List<Coord> region in grassRegions) {
 			foreach (Coord tile in region) {
 				Tile t = GetTile (tile.tileX, tile.tileY);
-				if (t.GetResource () == SpaceRace.PlayerTools.Resources.None) {
-					t.addResource (SpaceRace.PlayerTools.Resources.Straw);
+				if (t.GetResource () == Resource.None) {
+					t.addResource (Resource.Straw);
 				}
 			}
 		}
@@ -557,7 +557,7 @@ public class MapGenerator : MonoBehaviour {
 	/// <param name="resource">Resource.</param>
 	/// <param name="baseTileType">Base tile type.</param>
 	/// <param name="minimum">Minimum.</param>
-	void SetUpResource(SpaceRace.PlayerTools.Resources resource, int baseTileType, int minimum){
+	void SetUpResource(Resource resource, int baseTileType, int minimum){
 		List<List<Coord>> grassRegions = GetRegions (baseTileType);
 
 		foreach (List<Coord> grassRegion in grassRegions) {
@@ -576,7 +576,7 @@ public class MapGenerator : MonoBehaviour {
 	/// <param name="resource">Resource.</param>
 	/// <param name="amount">Amount.</param>
 	/// <param name="baseTileType">Base tile type.</param>
-	void EnsureResourceExists(SpaceRace.PlayerTools.Resources resource, int amount, int baseTileType){
+	void EnsureResourceExists(Resource resource, int amount, int baseTileType){
 
 		if (GetTilesWithResource (resource).Count < amount) {
 			List<List<Coord>> regions = GetRegions (baseTileType);
