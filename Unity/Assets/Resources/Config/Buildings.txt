@@ -18,3 +18,5 @@ Sprite.All=Buildings/Grass_With_LumberYard
 Sprite.All=Buildings/Grass_With_Monument
 [TownHall]
 Sprite.All=Buildings/Grass_With_TownHall
+[Quarry]
+Sprite.All=Buildings/Grass_With_Quarry
