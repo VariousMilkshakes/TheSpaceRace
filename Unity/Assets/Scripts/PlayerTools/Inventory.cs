@@ -15,13 +15,13 @@ namespace SpaceRace.PlayerTools
 		/// <summary>
 		/// Contains the players resource count
 		/// </summary>
-		private Dictionary<Resources, int> resources;
+		private Dictionary<Resource, int> resources;
 
-		private Action resourceUpdateEvent;
+		private Action<Resource> resourceUpdateEvent;
 
 		public Inventory()
 		{
-			resources = new Dictionary<Resources, int>();
+			resources = new Dictionary<Resource, int>();
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace SpaceRace.PlayerTools
 		/// </summary>
 		/// <param name="targetResource">Target resource to look up</param>
 		/// <returns>Quantity of resource</returns>
-		public int CheckResource(Resources targetResource)
+		public int CheckResource(Resource targetResource)
 		{
 			if (!resources.ContainsKey(targetResource))
 			{
@@ -49,7 +49,7 @@ namespace SpaceRace.PlayerTools
 			if (CheckResource(requirements.Type) >= requirements.Quantity)
 			{
 				resources[requirements.Type] -= requirements.Quantity;
-				resourceUpdateEvent.Invoke();
+				resourceUpdateEvent.Invoke(requirements.Type);
 				return true;
 			}
 
@@ -66,7 +66,7 @@ namespace SpaceRace.PlayerTools
 		/// </summary>
 		/// <param name="targetResource">Resource to increase</param>
 		/// <param name="quantity">Amount to increase resource by</param>
-		public void AddResource(Resources targetResource, int quantity)
+		public void AddResource(Resource targetResource, int quantity)
 		{
 			if (resources.ContainsKey(targetResource))
 			{
@@ -78,14 +78,14 @@ namespace SpaceRace.PlayerTools
 				resources.Add(targetResource, quantity);
 			}
 
-			if (resourceUpdateEvent != null) resourceUpdateEvent.Invoke();
+			if (resourceUpdateEvent != null) resourceUpdateEvent.Invoke(targetResource);
 		}
 
 		/// <summary>
 		/// Add listener to call event each time an inventory value is changed
 		/// </summary>
 		/// <param name="Listener">Event to call</param>
-		public void AddListener (Action Listener)
+		public void AddListener (Action<Resource> Listener)
 		{
 			resourceUpdateEvent = Listener;
 		}

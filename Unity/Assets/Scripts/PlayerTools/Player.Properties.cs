@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using UE = UnityEngine;
+using Assets.Scripts.Utils;
+using UnityEngine;
 
 using SpaceRace.World;
 using SpaceRace.World.Buildings;
@@ -11,15 +11,16 @@ using SpaceRace.World.Buildings;
 namespace SpaceRace.PlayerTools
 {
 	[System.Serializable]
-	public partial class Player : TurnObject
+	public partial class Player : ITurnObject
 	{
 
 		private Inventory inventory;
-
 		private List<Building> playerBuildings;
+		private UIController playerUI;
+	    private int playerTurn = 1;
 
 		public string PlayerName;
-		public UE.Color Color;
+		public Color Color;
 
 		public bool ReadyToAdvance = false;
 		public bool TurnComplete = false;
@@ -30,28 +31,42 @@ namespace SpaceRace.PlayerTools
 			get { return inventory; }
 		}
 
+		public UIController PlayerUI
+		{
+			get { return playerUI; }
+		}
+
+	    public int Turn
+	    {
+	        get { return playerTurn; }
+	    }
+
 		public Player ()
 		{
 			playerBuildings = new List<Building>();
 
-			inventory = new Inventory();
-			inventory.AddResource(Resources.Wood, 10);
-			inventory.AddResource(Resources.Population, 0);
-			inventory.AddResource(Resources.Money, 100);
-		}
+            inventory = new Inventory();
+			inventory.AddResource(Resource.Wood, 10);
+			inventory.AddResource(Resource.Population, 0);
+			inventory.AddResource(Resource.Money, 100);
+
+            playerUI = new UIController(this);
+        }
 
 		public void OnTurn()
 		{
-			if (inventory.CheckResource(Resources.Faith) == 100)
+            AdvanceTurn();
+
+			if (inventory.CheckResource(Resource.Faith) == 100)
 			{
 				ReadyToAdvance = true;
 			}
 
 			foreach (Building building in playerBuildings)
 			{
-				Resources requiredRes = building.Input.Type;
+				Resource requiredRes = building.Input.Type;
 
-				if (requiredRes != Resources.None && requiredRes != Resources.Free)
+				if (requiredRes != Resource.None && requiredRes != Resource.Free)
 				{
 					int resInInv = inventory.CheckResource(requiredRes);
 					int resDeposit = building.Input.Fill(resInInv);
@@ -72,5 +87,10 @@ namespace SpaceRace.PlayerTools
 		{
 			playerBuildings.Add(newBuilding);
 		}
+
+	    public void AdvanceTurn ()
+	    {
+	        playerTurn++;
+	    }
 	}
 }

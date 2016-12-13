@@ -42,14 +42,14 @@ namespace SpaceRace
 			return null;
 		}
 
+		private static readonly string new_turn_handler = "newTurn";
+
 		public GameObject UiHandlerObject;
 
 		private List<Player> activePlayers;
 		private UiHack uiHandler;
 		private Player activePlayer;
 		private bool running;
-
-		private int turn = 0;
 
 		void Start()
 		{
@@ -62,23 +62,26 @@ namespace SpaceRace
 			player2.PlayerName = "Jack";
 			player2.Color = Color.cyan;
 
+			uiHandler = UiHandlerObject.GetComponent<UiHack>();
+			uiHandler.BindTo(player1.PlayerUI);
+
 			activePlayers = new List<Player>()
 			{
 				player1,
 				player2
 			};
 
-			uiHandler = UiHandlerObject.GetComponent<UiHack>();
-			uiHandler.BindPlayer(player1);
-			uiHandler.ResourceUpdate();
-
-			StartCoroutine("NewTurn");
+			StartCoroutine(new_turn_handler);
 		}
 
-		public System.Collections.IEnumerator NewTurn()
+		/// <summary>
+		/// Async waits for both players to complete
+		/// phase before moving to next turn
+		/// turn cons
+		/// </summary>
+		/// <returns>Coroutine Enum</returns>
+		private System.Collections.IEnumerator newTurn()
 		{
-			turn++;
-
 			foreach (Player p in activePlayers)
 			{
 				activePlayer = p;
@@ -94,21 +97,29 @@ namespace SpaceRace
 
 			if (running)
 			{
-				StartCoroutine("NewTurn");
+				StartCoroutine(new_turn_handler);
 			}
 		}
 
+		/// <summary>
+		/// Start players phase and bind UI to player
+		/// </summary>
 		private void newPhase ()
 		{
-			uiHandler.SetTurn(turn, activePlayer);
 			if (activePlayer.ReadyToAdvance) uiHandler.DisplayAdvanceButton();
 
+			uiHandler.BindTo(activePlayer.PlayerUI);
 			activePlayer.OnTurn();
 		}
 
+		/// <summary>
+		/// Notifiy Game that current player phase
+		/// has been completed
+		/// </summary>
 		public void CompleteTurn ()
 		{
 			activePlayer.TurnComplete = true;
+			uiHandler.UnbindFrom();
 		}
 	}
 }

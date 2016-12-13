@@ -1,59 +1,138 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-
+using Assets.Scripts.Utils;
 using SpaceRace;
 using SpaceRace.PlayerTools;
 
 using UnityEngine.UI;
 using SpaceRace.World.Buildings;
+using UnityEngine.Rendering;
 
 namespace SpaceRace.Utils
 {
 	public class UiHack : MonoBehaviour
 	{
+		#region Property Flags
+		public const int PROPERTY_RESOURCE_TRACKERS = 01;
+		public const int PROPERTY_CLEAR_BUILDINGS = 02;
+		#endregion
 
-		public GameObject BuildingMenuItem;
-		public GameObject Canvas;
+		public static GameObject BUILDING_ITEM_TEMPLATE
+		{
+			get
+			{
+				return building_item_template;
+			}
+
+			set
+			{
+				building_item_template = building_item_template == null
+					? value
+					: building_item_template;
+			}
+		}
+
+	    public static ErrorHandler ERROR
+	    {
+	        get { return error_handler; }
+	        set
+	        {
+	            error_handler = error_handler == null
+	                ? value
+	                : error_handler;
+	        }
+	    }
+
+		private static GameObject building_item_template;
+        private static ErrorHandler error_handler;
+
+        public GameObject Canvas;
 		public GameObject AdvanceAge;
 		public GameObject AdvanceAgeNotice;
 		public GameObject TurnPlayerTracker;
-		
-		private Player currentPlayer;
+		public GameObject BuildingButtonHolder;
+	    public GameObject ErrorAlert;
 
-		private List<GameObject> activeUIItems;
+		private List<GameObject> activeUiItems;
+	    private UIController controller;
 
 		#region ResourceTrackers
 		public GameObject WoodTracker;
 		public GameObject PopTracker;
 		public GameObject MoneyTracker;
 
-		private Text woodValue;
-		private Text popValue;
-		private Text moneyValue;
+		private Dictionary<Resource, Text> trackers;
 		#endregion
 
 
 		// Use this for initialization
 		void Start()
 		{
-			activeUIItems = new List<GameObject>();
+		    ERROR = ErrorAlert.GetComponent<ErrorHandler>();
+			UiHack.BUILDING_ITEM_TEMPLATE = BuildingButtonHolder;
+			activeUiItems = new List<GameObject>();
 			//Text currentText = WoodTracker.GetComponent<Text>();
-			//currentText.text = "" + currentPlayer.Inventory.CheckResource(PlayerTools.Resources.Wood);
-			moneyValue = MoneyTracker.GetComponent<Text>();
-			popValue = PopTracker.GetComponent<Text>();
-			woodValue = WoodTracker.GetComponent<Text>();
+			//currentText.text = "" + currentPlayer.Inventory.CheckResource(PlayerTools.Resource.Wood);
+
+			trackers = new Dictionary<Resource, Text>();
+			trackers.Add(Resource.Money, MoneyTracker.GetComponent<Text>());
+			trackers.Add(Resource.Population, PopTracker.GetComponent<Text>());
+			trackers.Add(Resource.Wood, WoodTracker.GetComponent<Text>());
+			
 			AdvanceAge.SetActive(false);
+		}
+
+        /// <summary>
+        /// Called at the start of players turn to begin
+        /// tracking player
+        /// </summary>
+        /// <param name="playerController">Current player's UI controller</param>
+		public void BindTo(UIController playerController)
+		{
+			controller = playerController;
+
+			controller.PropertyUpdateEvent.AddListener(updateHandler);
+			controller.ResourceUpdate();
+
+            setPlayer();
+		}
+
+        /// <summary>
+        /// Called at the end of players phase in order to
+        /// switch to next player
+        /// </summary>
+		public void UnbindFrom()
+		{
+			controller.PropertyUpdateEvent.RemoveAllListeners();
+		}
+
+		private void updateHandler(int propertyFlag, object[] updateArgs)
+		{
+			switch (propertyFlag)
+			{
+				case PROPERTY_RESOURCE_TRACKERS:
+					UpdateResource(updateArgs[0], updateArgs[1]);
+					break;
+				case PROPERTY_CLEAR_BUILDINGS:
+					ClearBuildingMenu();
+					break;
+			}
 		}
 
 		/// <summary>
 		/// Called everytime player resources change
 		/// </summary>
-		public void ResourceUpdate(Inventory inv)
+		public void UpdateResource(object updatedResource, object newValue)
 		{
-			moneyValue.text = "Money: " + inv.CheckResource(PlayerTools.Resources.Money);
-			popValue.text = "Population: " + inv.CheckResource(PlayerTools.Resources.Population);
-			woodValue.text = "Wood: " + inv.CheckResource(PlayerTools.Resources.Wood);
+			Resource resource = (Resource) updatedResource;
+			int value = (int) newValue;
+
+			if (!trackers.ContainsKey(resource)) return;
+
+			string current = trackers[resource].text;
+			string label = current.Split(':')[0];
+			trackers[resource].text = label + ": " + value;
 		}
 
 		/// <summary>
@@ -62,53 +141,46 @@ namespace SpaceRace.Utils
 		/// <param name="targetTile"></param>
 		public void DisplayBuildings (Tile targetTile)
 		{
-			clearBuildingMenu();
+			ClearBuildingMenu();
 
-			if (targetTile.type == 1 || targetTile.Building != null) return;
+			if (targetTile.type == 1) return;
 
-			int xPos = 200;
-			int yPos = 50;
-			int xSpacing = 10;
-
-			int buttonSize = 64;
-
-			foreach (Type building in Game.BUILDING_REPO)
+			List<Type> buildingTypes;
+			if (targetTile.Building != null && targetTile.Building.Upgradeable)
 			{
-				GameObject menuItem = Instantiate(BuildingMenuItem, new Vector3(xPos, yPos), BuildingMenuItem.transform.rotation) as GameObject;
-				Button menuButton = menuItem.GetComponent<Button>();
+				buildingTypes = GameRules.GET_BUILDING_UPGRADES_FOR(targetTile.Building.GetType());
+			}
+			else
+			{
+				buildingTypes = controller.GetValidBuildings(targetTile);
+			}
 
-				// Store in local scope to set inside delegate
-				Type targetBuilding = building;
-				menuButton.onClick.AddListener(delegate
-				{
-					var builder = currentPlayer;
-					
-					if (targetTile.Build(targetBuilding, builder))
-						targetTile.ApplyPlayerColor(builder.Color);
-
-					clearBuildingMenu();
-				});
-
-				/// Set sprite for building button
-				try
-				{
-					Config buildingConfigs = GameRules.CONFIG_REPO["Buildings"];
-					string spritePath = buildingConfigs.LookForProperty(building.Name, "Sprite.All").Value;
-					Texture2D rawSprite = UnityEngine.Resources.Load(spritePath, typeof(Texture2D)) as Texture2D;
-					menuButton.image.sprite = Sprite.Create(rawSprite,
-						new Rect(0, 0, buttonSize, buttonSize),
-						new Vector2());
-				}
-				catch (Exception e)
-				{
-					Debug.Log(e);
-				}
-
+		    float panelWidth = 500f;
+		    float startX = Canvas.transform.position.x;
+			float xPos = startX - panelWidth / 2;
+			float yPos = 30;
+			float xSpacing = 10f;
+		    float ySpacing = 30f;
+			int buttonSize = 64;
+			
+			foreach (Type building in buildingTypes)
+			{
+				GameObject menuItem = controller.CreateBuildingButton(building, buttonSize, targetTile);
 				menuItem.transform.SetParent(Canvas.transform);
+				menuItem.transform.position = new Vector3(xPos, yPos);
+                var text = menuItem.transform.GetChild(0);
+			    text.GetComponent<Text>().text = building.Name;
+			    float scale = 0.5f;
+			    menuItem.transform.localScale = new Vector3(scale, scale);
+				activeUiItems.Add(menuItem);
 
-				xPos += buttonSize + xSpacing;
+				xPos += buttonSize * scale + xSpacing;
 
-				activeUIItems.Add(menuItem);
+			    if (xPos + (buttonSize*scale) >= startX + panelWidth / 2)
+			    {
+			        xPos = startX;
+			        yPos += ySpacing + (buttonSize*scale);
+			    }
 			}
 		}
 
@@ -121,26 +193,25 @@ namespace SpaceRace.Utils
 		{
 			GameObject notice = Instantiate(AdvanceAgeNotice, new Vector3(100, 100), Canvas.transform.rotation) as GameObject;
 			notice.transform.SetParent(Canvas.transform);
-			currentPlayer.Age = World.WorldStates.Viking;
+
+			controller.AdvancePlayerAge();
 		}
 
-		private void clearBuildingMenu ()
+		public void ClearBuildingMenu ()
 		{
-			foreach (GameObject uiObject in activeUIItems)
+			foreach (GameObject uiObject in activeUiItems)
 			{
 				Destroy(uiObject.gameObject);
 			}
 
-			activeUIItems.Clear();
+			activeUiItems.Clear();
 		}
 
-		public void SetTurn (int turn, Player activePlayer)
+		private void setPlayer ()
 		{
-			UnBindPlayer();
-			BindPlayer(activePlayer);
-
 			Text display = TurnPlayerTracker.GetComponent<Text>();
-			display.text = "Turn " + turn + " Player " + currentPlayer.PlayerName;
+			display.text = "Turn " + controller.Player.Turn + " Player " +
+                            controller.Player.PlayerName;
 		}
 	}
 }

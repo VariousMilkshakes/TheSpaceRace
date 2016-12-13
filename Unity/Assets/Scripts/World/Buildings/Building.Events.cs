@@ -9,7 +9,7 @@ using SpaceRace;
 
 namespace SpaceRace.World.Buildings
 {
-	public abstract partial class Building : TurnObject
+	public abstract partial class Building : ITurnObject
 	{
 		/// <summary>
 		/// Attempt for player to create instance of building
@@ -18,7 +18,7 @@ namespace SpaceRace.World.Buildings
 		/// <param name="builder">Player building building</param>
 		/// <returns>New instance of building</returns>
 		/// <throws>Buidling Exception if player has insufficient resources</throws>
-		public static T BUILD<T>(Player builder) where T : Building, new()
+		public static T BUILD<T>(Player builder, Tile position) where T : Building, new()
 		{
 			UnityEngine.Debug.Log(typeof(T).Name);
 			T newBuilding = (T) Activator.CreateInstance(typeof(T), new object[] {builder});

@@ -11,7 +11,7 @@ using SpaceRace.World.Buildings.Collection;
 //Tiles don't currently hold their own position (errors)
 //Check actionsTaken increment 
 
-public class AI : TurnObject {
+public class AI : ITurnObject {
 
 	//Initialisation
 	ResourceBox resourcesAvailable;
@@ -55,13 +55,13 @@ public class AI : TurnObject {
 		turnFinished = false;
 		actionsTaken = 0;
 		while (actionsTaken < 3) {
-			//surveyArea (SpaceRace.PlayerTools.Resources.Free);
+			//surveyArea (SpaceRace.PlayerTools.Resource.Free);
 	//		if (turn == 0) { /*after hack: how should turns be handled?*/			not needed for hack
 	//			placeTownHall ();
 //			}
 			/*after hack: sort out looping so player doesn't place duplicate buildings if they aren't useful for progression*/
 
-		//	Tile placeHouseTile = surveyArea (SpaceRace.PlayerTools.Resources.Free); //survey for blank land
+		//	Tile placeHouseTile = surveyArea (SpaceRace.PlayerTools.Resource.Free); //survey for blank land
 //			placeBuilding (mapGen.GetTile(5,5), "House"); //place house
 			if (turn == 0) {
 				mapGen.GetTile (1, 1).Build (Game.LOOK_FOR_BUILDING ("House"), playerAI);
@@ -75,7 +75,7 @@ public class AI : TurnObject {
 				mapGen.GetTile (6, 6).Build (Game.LOOK_FOR_BUILDING ("House"), playerAI);
 				actionsTaken++;
 			}
-		//	Tile placeLumberTile = surveyArea (SpaceRace.PlayerTools.Resources.Wood); //survey for wood
+		//	Tile placeLumberTile = surveyArea (SpaceRace.PlayerTools.Resource.Wood); //survey for wood
 		//	placeBuilding (placeLumberTile, "LumberYard"); //place lumber yard
 		}
 		turnFinished = true;
@@ -120,7 +120,7 @@ public class AI : TurnObject {
 
 	/*Surveys tiles avilable to place a building
 	 * Returns the tile to place the building on*/
-/*	private Tile surveyArea (SpaceRace.PlayerTools.Resources toFind) {
+/*	private Tile surveyArea (SpaceRace.PlayerTools.Resource toFind) {
 		Tile placeOn = null;
 		for (int col=0; col<mapTilesAvailable.GetLength(0); col++){
 			for (int row = 0; row < mapTilesAvailable.GetLength(1); row++) {
@@ -195,13 +195,13 @@ public class AI : TurnObject {
 
 		/*for after hack*/
 		/*returns a list of resources with their priority for advancement in the game*/
-		//	private List<Resources> checkPriority(){
+		//	private List<Resource> checkPriority(){
 		//	check goal for current turn
 		//	}
 
 
 		/*for after hack*/
-		//	private List<Resources> getOpptResource(Player oppt, Resource resourceToFind) {		
+		//	private List<Resource> getOpptResource(Player oppt, Resource resourceToFind) {		
 		//		return null;
 		//	}
 

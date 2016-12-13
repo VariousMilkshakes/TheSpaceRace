@@ -6,6 +6,7 @@ using SpaceRace.World.Buildings;
 using SpaceRace.World.Buildings.Collection;
 using System;
 using SpaceRace.PlayerTools;
+using SpaceRace.Utils;
 using SpaceRace.World;
 
 public class Tile: MonoBehaviour{
@@ -84,6 +85,8 @@ public class Tile: MonoBehaviour{
 	/// The type of Tile that this is. (Currently grass(0) or water(1))
 	/// </summary>
 	public int type;
+
+	public string Type = "Grass";
 
 	/// <summary>
 	/// The x position.
@@ -282,19 +285,24 @@ public class Tile: MonoBehaviour{
 
 		Building newBuilding;
 
-		try
-		{
-			newBuilding = genericBuildMethod.Invoke(null, new object[] { builder }) as Building;
-		}
+	    try
+	    {
+	        newBuilding = genericBuildMethod.Invoke(null, new object[] {builder, this}) as Building;
+	    }
 		catch (Exception e)
 		{
+		    if (e.InnerException.GetType() == typeof(BuildingException))
+		    {
+		        UiHack.ERROR.Handle((BuildingException)e.InnerException);
+		    }
+
 			Debug.Log(e);
 			return false;
 		}
 
 		builder.TrackBuilding(newBuilding);
 		building = newBuilding;
-		sr.sprite = building.ActiveSprite;
+//		sr.sprite = building.ActiveSprite;
 		builder.Inventory.AddResource(building.OnBuild());
 
 		return true;
