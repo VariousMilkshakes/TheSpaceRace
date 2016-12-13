@@ -21,7 +21,7 @@ namespace SpaceRace.World.Buildings
 		public static T BUILD<T>(Player builder, Tile position) where T : Building, new()
 		{
 			UnityEngine.Debug.Log(typeof(T).Name);
-			T newBuilding = (T) Activator.CreateInstance(typeof(T), new object[] {builder});
+			T newBuilding = (T) Activator.CreateInstance(typeof(T), new object[] {builder, position});
 			Inventory builderInv = builder.Inventory;
 
 			// Check if player can afford to spend resources
