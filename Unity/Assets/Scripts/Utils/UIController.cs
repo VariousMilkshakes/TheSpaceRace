@@ -101,7 +101,7 @@ namespace Assets.Scripts.Utils
 		/// <returns></returns>
 		public GameObject CreateBuildingButton(Type building, int buttonSize, Tile delegateTile)
 		{
-			GameObject newMenuItem = GameObject.Instantiate(
+			GameObject newMenuItem = (GameObject)GameObject.Instantiate(
 				UiHack.BUILDING_ITEM_TEMPLATE,
 				new Vector3(0, 0),
 				UiHack.BUILDING_ITEM_TEMPLATE.transform.rotation);
