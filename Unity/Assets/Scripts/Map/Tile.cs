@@ -275,7 +275,6 @@ public class Tile: MonoBehaviour{
 	void OnMouseDown(){
 
 		Component[] sprtren = this.gameObject.GetComponentsInChildren <SpriteRenderer> ();
-		SpriteRenderer tisr = (SpriteRenderer)sprtren [0];
 		SpriteRenderer hisr = (SpriteRenderer)sprtren [1];
 		if (!selected) {
 			DeselectTile ();

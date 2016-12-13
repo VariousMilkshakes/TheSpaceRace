@@ -4,7 +4,7 @@ using System.Collections;
 public class CameraContol : MonoBehaviour {
 
 	// The camera to control.
-	public Camera camera;
+	public Camera _camera;
 	// The speed the camera moves at.
 	public float speed;
 	// The 2DRigidbody of the camera.
@@ -31,8 +31,8 @@ public class CameraContol : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		camera = Camera.main;
-		rb = camera.GetComponent<Rigidbody2D> ();
+		_camera = Camera.main;
+		rb = _camera.GetComponent<Rigidbody2D> ();
 		xMoveMax = planeManager.columns - 8;
 		yMoveMax = planeManager.rows - 3.5f;
 	}
@@ -42,12 +42,12 @@ public class CameraContol : MonoBehaviour {
 	*/
 	void Zoom(){
 		float scroll = Input.GetAxis ("Mouse ScrollWheel");
-		if (camera.orthographicSize > zoomMax) {
-			camera.orthographicSize = zoomMax;
-		} else if (camera.orthographicSize < zoomMin) {
-			camera.orthographicSize = zoomMin;
+		if (_camera.orthographicSize > zoomMax) {
+			_camera.orthographicSize = zoomMax;
+		} else if (_camera.orthographicSize < zoomMin) {
+			_camera.orthographicSize = zoomMin;
 		} else {
-			camera.orthographicSize = Mathf.SmoothDamp (camera.orthographicSize, camera.orthographicSize + scroll * -scrollMult, ref zoomSpeed, 0.2f);
+			_camera.orthographicSize = Mathf.SmoothDamp (_camera.orthographicSize, _camera.orthographicSize + scroll * -scrollMult, ref zoomSpeed, 0.2f);
 		}
 
 	}
