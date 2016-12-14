@@ -157,21 +157,17 @@ namespace SpaceRace.World.Buildings.Collection
 						//add all tiles surrounding the current city limit to borderTiles
 						if (tile.GetY () == maxYCoord + 1 && tile.GetX () >= minXCoord - 1 && tile.GetX () - 1 <= maxXCoord) {	
 							topBorder.Add (tile);
-                            tile.ApplyPlayerColor(Color.blue);
 						} 
 							if (tile.GetY () == minYCoord - 1 && tile.GetX () >= minXCoord - 1 && tile.GetX ()-1 <= maxXCoord) {
 								bottomBorder.Add (tile);
-                                tile.ApplyPlayerColor(Color.blue);
 
                             } 
 								if (tile.GetX () == maxXCoord + 1 && tile.GetY () > minYCoord - 1 && tile.GetY () < maxYCoord + 1) {
 									rightBorder.Add (tile);
-                                    tile.ApplyPlayerColor(Color.gray);
 
                                 } 
 									if (tile.GetX () == minXCoord - 1 && tile.GetY () > minYCoord - 1 && tile.GetY () < maxYCoord + 1) {
 										leftBorder.Add (tile);
-                                        tile.ApplyPlayerColor(Color.cyan);
 
                                     }
 								}
