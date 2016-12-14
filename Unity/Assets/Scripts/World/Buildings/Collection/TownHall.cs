@@ -106,10 +106,8 @@ namespace SpaceRace.World.Buildings.Collection
 				minXCoord = findMinX (cityTiles);
 				minYCoord = findMinY (cityTiles);
 
-
 			///Trigger city expansion if population has increased by 2
-			//	use me int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
-			int population = 10; /*test, delete me*/
+			int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resource.Population);
 			if (population % 2 == 0) {
 				expandCityBoundary ();
 			}
