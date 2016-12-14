@@ -5,51 +5,54 @@ using System;
 
 namespace SpaceRace.PlayerTools
 {
-	/// <summary>
-	/// Keeps track of players resources
-	/// </summary>
-	[System.Serializable]
-	public class Inventory
-	{
+    /// <summary>
+    /// Keeps track of players resources
+    /// </summary>
+    [System.Serializable]
+    public class Inventory
+    {
 
-		/// <summary>
-		/// Contains the players resource count
-		/// </summary>
-		private Dictionary<Resource, int> resources;
+        /// <summary>
+        /// Contains the players resource count
+        /// </summary>
+        private Dictionary<Resource, int> resources;
 
-		private Action<Resource> resourceUpdateEvent;
+        private Action<Resource> resourceUpdateEvent;
 
-		public Inventory()
-		{
-			resources = new Dictionary<Resource, int>();
-		}
+        public Inventory ()
+        {
+            resources = new Dictionary<Resource, int>();
+        }
 
-		/// <summary>
-		/// Find out how much of 'x' resource player has
-		/// </summary>
-		/// <param name="targetResource">Target resource to look up</param>
-		/// <returns>Quantity of resource</returns>
-		public int CheckResource(Resource targetResource)
-		{
-			if (!resources.ContainsKey(targetResource))
-			{
-				return 0;
-			}
+        /// <summary>
+        /// Find out how much of 'x' resource player has
+        /// </summary>
+        /// <param name="targetResource">Target resource to look up</param>
+        /// <returns>Quantity of resource</returns>
+        public int CheckResource (Resource targetResource)
+        {
+            if (!resources.ContainsKey(targetResource)) {
+                return 0;
+            }
 
-			return resources[targetResource];
-		}
+            return resources[targetResource];
+        }
 
-		/// <summary>
-		/// Attempt to spend players resource
-		/// </summary>
-		/// <param name="requirements">Resource to spend</param>
-		/// <returns>Returns true if the player had sufficient resources</returns>
-		public bool SpendResource(ResourceBox requirements)
-		{
-			if (CheckResource(requirements.Type) >= requirements.Quantity)
-			{
-				resources[requirements.Type] -= requirements.Quantity;
-				resourceUpdateEvent.Invoke(requirements.Type);
+        /// <summary>
+        /// Attempt to spend players resource
+        /// </summary>
+        /// <param name="requirements">Resource to spend</param>
+        /// <returns>Returns true if the player had sufficient resources</returns>
+        public bool SpendResource (ResourceBox requirements)
+        {
+            if (CheckResource(requirements.Type) >= requirements.Quantity) {
+                try {
+                    resources[requirements.Type] -= requirements.Quantity;
+                    resourceUpdateEvent.Invoke(requirements.Type);
+                } catch (Exception) {
+                    return false;
+                }
+				
 				return true;
 			}
 

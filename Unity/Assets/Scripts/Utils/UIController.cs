@@ -115,9 +115,10 @@ namespace Assets.Scripts.Utils
 			menuButton.onClick.AddListener(delegate
 			{
 				var localOwner = owner;
+			    var localTile = delegateTile;
 
-				if (delegateTile.Build(localBuilding, localOwner))
-					delegateTile.ApplyPlayerColor(localOwner.Color);
+				if (localTile.Build(localBuilding, localOwner))
+					localTile.ApplyPlayerColor(localOwner.Color);
 
 				NotifyPropertyChange(UiHack.PROPERTY_CLEAR_BUILDINGS, null);
 			});

@@ -114,6 +114,7 @@ namespace SpaceRace.Utils
         /// </summary>
 		public void UnbindFrom()
 		{
+            ClearBuildingMenu();
 			controller.PropertyUpdateEvent.RemoveAllListeners();
 		}
 

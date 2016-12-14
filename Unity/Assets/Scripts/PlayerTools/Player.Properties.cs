@@ -75,10 +75,13 @@ namespace SpaceRace.PlayerTools
 				{
 					int resInInv = inventory.CheckResource(requiredRes);
 					int resDeposit = building.Input.Fill(resInInv);
-					inventory.SpendResource(new ResourceBox(requiredRes, resDeposit));
-				}
 
-				building.OnTurn();
+				    if (inventory.SpendResource(new ResourceBox(requiredRes, resDeposit))) {
+                        building.OnTurn();
+                    }
+				} else {
+				    building.OnTurn();
+				}
 
 				inventory.AddResource(building.Output);
 			}
