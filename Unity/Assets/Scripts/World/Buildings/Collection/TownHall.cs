@@ -7,8 +7,6 @@ using System.Collections.Generic;
 
 using System.Linq;
 
-//TODO:
-//once everything works, refactor so that Player.Properties looks after tiles that the player owns
 
 namespace SpaceRace.World.Buildings.Collection
 {
@@ -31,6 +29,7 @@ namespace SpaceRace.World.Buildings.Collection
 		private List<Tile> rightBorder;
 		private List<Tile> leftBorder;
 		private List<Tile> borderTiles;
+    //    int populationTarget;
 		String playerName;
 		UnityEngine.Color playerColour;
 		public const string BUILDING_NAME = "TownHall";
@@ -55,7 +54,8 @@ namespace SpaceRace.World.Buildings.Collection
 
 			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
 			mapTiles = mapGen.GetTiles ();
-		
+
+     //       populationTarget = 2;
 
 			/// Each border of tiles surrounding the city boundary 
 			topBorder = new List<Tile> ();
@@ -107,11 +107,12 @@ namespace SpaceRace.World.Buildings.Collection
 				minYCoord = findMinY (cityTiles);
 
 			///Trigger city expansion if population has increased by 2
-			int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resource.Population);
+			int population = _owner.Inventory.CheckResource (SpaceRace.PlayerTools.Resource.Population);
 			if (population % 2 == 0) {
 				expandCityBoundary ();
 			}
 
+        //    populationTarget ++;
 		}
 
 
