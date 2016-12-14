@@ -9,7 +9,6 @@ using System.Linq;
 
 //TODO:
 //once everything works, refactor so that Player.Properties looks after tiles that the player owns
-//set max/min x/y when initial city tiles are set. Only change the max/min when border lists are all owned
 
 namespace SpaceRace.World.Buildings.Collection
 {
@@ -103,7 +102,7 @@ namespace SpaceRace.World.Buildings.Collection
 			/// Initially, only tiles owned by the current user are those directly surrounding the town hall
 
 				/// After first turn, the maximum X and Y coordinates are dependent on the current city tiles
-				setCityTiles ();
+				
 				maxXCoord = findMaxX (cityTiles);
 				maxYCoord = findMaxY (cityTiles);
 				minXCoord = findMinX (cityTiles);
@@ -149,6 +148,7 @@ namespace SpaceRace.World.Buildings.Collection
 		private int setTilesOwned ()
 		{
 			tilesOwned = 0;
+            
 			foreach (Tile tile in cityTiles) {
 				if (tile.GetOwner ()!= null) {
 					if (tile.GetOwner ().Equals(playerName)) {
