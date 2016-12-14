@@ -9,6 +9,7 @@ using SpaceRace.PlayerTools;
 using SpaceRace.Utils;
 using SpaceRace.World;
 using SpaceRace.World.Buildings;
+using SpaceRace.World.Buildings.Collection;
 
 public class GameRules {
 
@@ -26,6 +27,13 @@ public class GameRules {
     }
 
 	#region Building Validation
+
+    public static bool FORCE_BUILD_ORDER (Type buildingType, Player builder)
+    {
+        if (builder.BuildingCount == 0 &&
+            buildingType.Name != TownHall.BUILDING_NAME) return false;
+        return true;
+    }
 
     /// <summary>
     /// Checks that the tile being built on is valid for that building.

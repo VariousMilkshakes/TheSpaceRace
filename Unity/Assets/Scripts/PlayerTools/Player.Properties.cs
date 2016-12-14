@@ -32,6 +32,11 @@ namespace SpaceRace.PlayerTools
 			get { return inventory; }
 		}
 
+	    public int BuildingCount
+	    {
+	        get { return playerBuildings.Count; }
+	    }
+
 		public UIController PlayerUI
 		{
 			get { return playerUI; }
