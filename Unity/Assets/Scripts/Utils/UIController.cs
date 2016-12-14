@@ -8,6 +8,7 @@ using SpaceRace.PlayerTools;
 using SpaceRace.Utils;
 using SpaceRace.World;
 using SpaceRace.World.Buildings;
+using SpaceRace.World.Buildings.Collection;
 using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.UI;
@@ -146,5 +147,28 @@ namespace Assets.Scripts.Utils
 			owner.Age = (WorldStates) Enum.GetValues(typeof(Resource)).GetValue(current);
 		    owner.ReadyToAdvance = false;
 		}
+
+        //TODO: Make abstract disaster
+	    public void Cast (Tile selectedTile, GameObject MeteorPrefab)
+	    {
+	        if (selectedTile == null) {
+                UiHack.ERROR.Handle("No tile selected!");
+            }
+
+	        bool destroyBuilding = !(selectedTile.Building != null &&
+                selectedTile.Building.GetType().Name == TownHall.BUILDING_NAME);
+
+            ResourceBox cost = new ResourceBox(Resource.Faith, 100);
+	        if (!Player.Inventory.SpendResource(cost)) {
+	            UiHack.ERROR.Handle("Not enough faith!");
+	            return;
+	        }
+
+            Transform t = selectedTile.gameObject
+                                         .GetComponent<Transform>();
+            GameObject cast = (GameObject)GameObject.Instantiate(MeteorPrefab,
+                new Vector3(t.position.x, t.position.y, -1f), t.rotation);
+            cast.GetComponent<Meteor>().Target(selectedTile.gameObject, destroyBuilding);
+        }
 	}
 }

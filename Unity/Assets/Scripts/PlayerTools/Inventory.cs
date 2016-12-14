@@ -81,6 +81,14 @@ namespace SpaceRace.PlayerTools
 			if (resourceUpdateEvent != null) resourceUpdateEvent.Invoke(targetResource);
 		}
 
+	    public void ModifyResource (Resource targetResource, float mod)
+	    {
+	        if (!resources.ContainsKey(targetResource)) return;
+
+	        resources[targetResource] = (int)Math.Floor(resources[targetResource] * mod);
+	        resourceUpdateEvent.Invoke(targetResource);
+	    }
+
 		/// <summary>
 		/// Add listener to call event each time an inventory value is changed
 		/// </summary>

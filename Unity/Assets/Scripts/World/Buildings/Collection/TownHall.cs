@@ -7,8 +7,6 @@ using System.Collections.Generic;
 
 using System.Linq;
 
-//TODO:
-//once everything works, refactor so that Player.Properties looks after tiles that the player owns
 
 namespace SpaceRace.World.Buildings.Collection
 {
