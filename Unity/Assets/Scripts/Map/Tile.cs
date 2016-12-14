@@ -359,7 +359,7 @@ public class Tile: MonoBehaviour{
 
 		builder.TrackBuilding(newBuilding);
 		building = newBuilding;
-//		sr.sprite = building.ActiveSprite;
+	    sr.sprite = building.GetActiveSprite();
 		builder.Inventory.AddResource(building.OnBuild());
 
 		return true;
