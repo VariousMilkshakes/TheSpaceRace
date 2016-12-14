@@ -55,6 +55,11 @@ namespace SpaceRace.World.Buildings
 			set { _buildingState = value; }
 		}
 
+        public Player Owner
+        {
+            get { return _owner; }
+        }
+
         /*
 		* The Sprite of building to replace tile sprite
 		*/

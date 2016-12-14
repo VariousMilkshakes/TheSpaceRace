@@ -8,6 +8,8 @@ using System;
 using SpaceRace.PlayerTools;
 using SpaceRace.Utils;
 using SpaceRace.World;
+using UnityEngine.Assertions.Must;
+using UnityEngine.EventSystems;
 
 public class Tile: MonoBehaviour{
 
@@ -284,7 +286,10 @@ public class Tile: MonoBehaviour{
 	/// Also this tile's selected is set to 'true'.
 	/// </description>
 	/// <see cref="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnMouseDown.html"/>
-	void OnMouseDown(){
+	void OnMouseDown()
+	{
+
+	    if (EventSystem.current.IsPointerOverGameObject()) return;
 
 		Component[] sprtren = this.gameObject.GetComponentsInChildren <SpriteRenderer> ();
 		SpriteRenderer hisr = (SpriteRenderer)sprtren [1];
@@ -369,13 +374,30 @@ public class Tile: MonoBehaviour{
 			return false;
 		}
 
-		builder.TrackBuilding(newBuilding);
+        // Get rid of old buildings
+	    if (building != null) {
+	        builder.RemoveBuilding(building);
+	    }
+
+        builder.TrackBuilding(newBuilding);
 		building = newBuilding;
 	    sr.sprite = building.GetActiveSprite();
 		builder.Inventory.AddResource(building.OnBuild());
 
 		return true;
 	}
+
+    //TODO: Move this to building class
+    public void DestoryBuilding ()
+    {
+        if (building == null) return;
+
+        Player owner = building.Owner;
+        owner.RemoveBuilding(building);
+
+        building = null;
+        SetTileSprite(this.type);
+    }
 
 	/// <summary>
 	/// Applies the color of the player.
