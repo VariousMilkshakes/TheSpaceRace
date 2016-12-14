@@ -4,7 +4,7 @@ using System;
 using Assets.Scripts.Utils;
 using SpaceRace;
 using SpaceRace.PlayerTools;
-
+using SpaceRace.World;
 using UnityEngine.UI;
 using SpaceRace.World.Buildings;
 using UnityEngine.Rendering;
@@ -61,8 +61,10 @@ namespace SpaceRace.Utils
 		public GameObject WoodTracker;
 		public GameObject PopTracker;
 		public GameObject MoneyTracker;
+		public GameObject StoneTracker;
+		public GameObject FoodTracker;
 
-		private Dictionary<Resource, Text> trackers;
+        private Dictionary<Resource, Text> trackers;
 		#endregion
 
 
@@ -79,8 +81,10 @@ namespace SpaceRace.Utils
 			trackers.Add(Resource.Money, MoneyTracker.GetComponent<Text>());
 			trackers.Add(Resource.Population, PopTracker.GetComponent<Text>());
 			trackers.Add(Resource.Wood, WoodTracker.GetComponent<Text>());
-			
-			AdvanceAge.SetActive(false);
+			trackers.Add(Resource.Stone, StoneTracker.GetComponent<Text>());
+			trackers.Add(Resource.Food, FoodTracker.GetComponent<Text>());
+
+            AdvanceAge.SetActive(false);
 		}
 
         /// <summary>
@@ -143,8 +147,6 @@ namespace SpaceRace.Utils
 		{
 			ClearBuildingMenu();
 
-			if (targetTile.type == 1) return;
-
 			List<Type> buildingTypes;
 			if (targetTile.Building != null && targetTile.Building.Upgradeable)
 			{
@@ -191,10 +193,12 @@ namespace SpaceRace.Utils
 
 		public void AdvancePlayer ()
 		{
-			GameObject notice = Instantiate(AdvanceAgeNotice, new Vector3(100, 100), Canvas.transform.rotation) as GameObject;
-			notice.transform.SetParent(Canvas.transform);
-
-			controller.AdvancePlayerAge();
+            controller.AdvancePlayerAge();
+		    string advanceMessage = "You have advanced to the \n" +
+		                            Enum.GetName(typeof(WorldStates), controller.Player.Age) +
+		                            " Age";
+			ERROR.Handle(new PlayerException(advanceMessage));
+            AdvanceAge.SetActive(false);
 		}
 
 		public void ClearBuildingMenu ()

@@ -45,7 +45,8 @@ public class GameRules {
                                                .Value
                                                .Split(',');
 
-	    if (!acceptedTiles.Contains(tile.Type)) return false;
+	    string tileType = Enum.GetName(typeof(Tile.TileType), tile.Type);
+	    if (!acceptedTiles.Contains(tileType)) return false;
 
         // TODO: use generic to convert config to datatype
 	    string boolString = buildingConfig.LookForProperty(buildingType.Name, Building.TOWNHALL_CONNECTION)
@@ -110,6 +111,7 @@ public class GameRules {
         newInventory.AddResource(Resource.Wood, wood);
         newInventory.AddResource(Resource.Population, pop);
         newInventory.AddResource(Resource.Money, money);
+        newInventory.AddResource(Resource.Stone, 500);
     }
 
     #endregion

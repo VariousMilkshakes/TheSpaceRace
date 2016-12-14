@@ -9,7 +9,6 @@
 		None,
 		All,
 		Roman,		// /
-		Viking,		// |
 		MiddleAges,	// |
 		Tudor,		// \ Era Dependent
 		CivilWar,	// / World States

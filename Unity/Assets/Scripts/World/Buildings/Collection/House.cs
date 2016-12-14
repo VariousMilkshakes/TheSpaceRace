@@ -30,5 +30,10 @@ namespace SpaceRace.World.Buildings.Collection
 		{
             return GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(BUILDING_NAME, BUILDING_REQUIREMENTS, true);
         }
+
+	    public override ResourceBox OnBuild ()
+	    {
+	        return GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(BUILDING_NAME, OUTPUT_ON_BUILD, true);
+        }
 	}
 }

@@ -12,7 +12,7 @@ namespace SpaceRace.World.Buildings
 {
     public partial class Building
     {
-        public readonly bool Upgradeable = false;
+        public bool Upgradeable = false;
 
         protected WorldStates _buildingState;
         protected Resource _buildingResource = Resource.None;
