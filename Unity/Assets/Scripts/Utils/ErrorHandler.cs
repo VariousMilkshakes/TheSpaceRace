@@ -15,6 +15,13 @@ public class ErrorHandler : MonoBehaviour
     private int lifetime;
     private int fadeTick;
 
+    public void Handle (string error)
+    {
+        hideError();
+        errorMessage.text = error;
+        displayError();
+    }
+
     public void Handle(BuildingException e)
     {
         hideError();

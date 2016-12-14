@@ -88,6 +88,11 @@ namespace SpaceRace.PlayerTools
 			playerBuildings.Add(newBuilding);
 		}
 
+	    public void RemoveBuilding (Building oldBuilding)
+	    {
+	        playerBuildings.Remove(oldBuilding);
+	    }
+
 	    public void AdvanceTurn ()
 	    {
 	        playerTurn++;

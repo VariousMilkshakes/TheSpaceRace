@@ -54,8 +54,12 @@ namespace SpaceRace.Utils
 		public GameObject BuildingButtonHolder;
 	    public GameObject ErrorAlert;
 
+	    public GameObject MeteorPrefab;
+
 		private List<GameObject> activeUiItems;
 	    private UIController controller;
+
+	    private Tile selectedTile;
 
 		#region ResourceTrackers
 		public GameObject WoodTracker;
@@ -63,6 +67,7 @@ namespace SpaceRace.Utils
 		public GameObject MoneyTracker;
 		public GameObject StoneTracker;
 		public GameObject FoodTracker;
+	    public GameObject FaithTracker;
 
         private Dictionary<Resource, Text> trackers;
 		#endregion
@@ -83,6 +88,7 @@ namespace SpaceRace.Utils
 			trackers.Add(Resource.Wood, WoodTracker.GetComponent<Text>());
 			trackers.Add(Resource.Stone, StoneTracker.GetComponent<Text>());
 			trackers.Add(Resource.Food, FoodTracker.GetComponent<Text>());
+            trackers.Add(Resource.Faith, FaithTracker.GetComponent<Text>());
 
             AdvanceAge.SetActive(false);
 		}
@@ -145,6 +151,7 @@ namespace SpaceRace.Utils
 		/// <param name="targetTile"></param>
 		public void DisplayBuildings (Tile targetTile)
 		{
+		    selectedTile = targetTile;
 			ClearBuildingMenu();
 
 			List<Type> buildingTypes;
@@ -217,5 +224,10 @@ namespace SpaceRace.Utils
 			display.text = "Turn " + controller.Player.Turn + " Player " +
                             controller.Player.PlayerName;
 		}
+
+	    public void CastMeteor ()
+	    {
+	        controller.Cast(selectedTile, MeteorPrefab);
+	    }
 	}
 }
