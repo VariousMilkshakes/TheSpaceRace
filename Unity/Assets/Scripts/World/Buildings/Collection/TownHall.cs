@@ -9,7 +9,6 @@ using System.Linq;
 
 //TODO:
 //once everything works, refactor so that Player.Properties looks after tiles that the player owns
-//set max/min x/y when initial city tiles are set. Only change the max/min when border lists are all owned
 
 namespace SpaceRace.World.Buildings.Collection
 {
@@ -32,7 +31,6 @@ namespace SpaceRace.World.Buildings.Collection
 		private List<Tile> rightBorder;
 		private List<Tile> leftBorder;
 		private List<Tile> borderTiles;
-		int tilesOwned;
 		String playerName;
 		UnityEngine.Color playerColour;
 		public const string BUILDING_NAME = "TownHall";
@@ -103,16 +101,13 @@ namespace SpaceRace.World.Buildings.Collection
 			/// Initially, only tiles owned by the current user are those directly surrounding the town hall
 
 				/// After first turn, the maximum X and Y coordinates are dependent on the current city tiles
-				setCityTiles ();
 				maxXCoord = findMaxX (cityTiles);
 				maxYCoord = findMaxY (cityTiles);
 				minXCoord = findMinX (cityTiles);
 				minYCoord = findMinY (cityTiles);
 
-
 			///Trigger city expansion if population has increased by 2
-			//	use me int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resources.Population);
-			int population = 10; /*test, delete me*/
+			int population = currentPlayer.Inventory.CheckResource (SpaceRace.PlayerTools.Resource.Population);
 			if (population % 2 == 0) {
 				expandCityBoundary ();
 			}
@@ -143,24 +138,6 @@ namespace SpaceRace.World.Buildings.Collection
 		}
 
 		/// <summary>
-		/// Calculates the number of tiles on the map owned by the current player
-		/// </summary>
-		/// <returns>The number of tiles owned.</returns>
-		private int setTilesOwned ()
-		{
-			tilesOwned = 0;
-			foreach (Tile tile in cityTiles) {
-				if (tile.GetOwner ()!= null) {
-					if (tile.GetOwner ().Equals(playerName)) {
-						tilesOwned++;
-					}
-				}
-			}
-			Debug.Log ("Tiles owned: " + tilesOwned + ", " + "borderTiles.Count(): " + borderTiles.Count ());
-			return tilesOwned;
-		}
-
-		/// <summary>
 		/// Expands the city boundary by randomly selecting one of the tiles bordering the city boundary 
 		/// and setting this to be long to the player
 		/// </summary>
@@ -168,49 +145,63 @@ namespace SpaceRace.World.Buildings.Collection
 		private void expandCityBoundary ()
 		{
 			System.Random rnd = new System.Random ();
-			setTilesOwned ();
+           
 
-			int i = 0;
-			if (tilesOwned >= borderTiles.Count () && i == 0) {
+            int i = 0;
+            Debug.Log("Tiles owned: " + cityTiles.Count() + " Border tiles: " + borderTiles.Count());
+			if (cityTiles.Count () >= borderTiles.Count ()+cityTiles.Count() && i == 0) {
 				foreach (Tile tile in mapTiles) {
 					if (tile.GetOwner () == null) {
 						//add all tiles surrounding the current city limit to borderTiles
-						if (tile.GetY () == maxYCoord + 1 && tile.GetX () >= minXCoord && tile.GetX () - 1 <= maxXCoord + 1) {	
+						if (tile.GetY () == maxYCoord + 1 && tile.GetX () >= minXCoord - 1 && tile.GetX () - 1 <= maxXCoord) {	
 							topBorder.Add (tile);
-						} else {
-							if (tile.GetY () == minYCoord - 1 && tile.GetX () >= minXCoord - 1 && tile.GetX () <= maxXCoord + 1) {
+						} 
+							if (tile.GetY () == minYCoord - 1 && tile.GetX () >= minXCoord - 1 && tile.GetX ()-1 <= maxXCoord) {
 								bottomBorder.Add (tile);
 
-							} else {
+                            } 
 								if (tile.GetX () == maxXCoord + 1 && tile.GetY () > minYCoord - 1 && tile.GetY () < maxYCoord + 1) {
 									rightBorder.Add (tile);
 
-								} else {
+                                } 
 									if (tile.GetX () == minXCoord - 1 && tile.GetY () > minYCoord - 1 && tile.GetY () < maxYCoord + 1) {
 										leftBorder.Add (tile);
 
-									}
+                                    }
 								}
 							}
-						}
-					}
-				}
-				//Add tiles in each border to borderTiles
-				borderTiles.AddRange (topBorder);
-				borderTiles.AddRange (bottomBorder);
-				borderTiles.AddRange (leftBorder);
-				borderTiles.AddRange (rightBorder);
-				i++;
+
+                //Add tiles in each border to borderTiles
+                borderTiles.AddRange(topBorder);
+                borderTiles.AddRange(bottomBorder);
+                borderTiles.AddRange(leftBorder);
+                borderTiles.AddRange(rightBorder);
+
+
+                i++;
 			}
 
+            
+            for (int count = 0; count < borderTiles.Count(); count++)
+            {
+                if (cityTiles.Contains(borderTiles[count]))
+                {
+                    borderTiles.Remove(borderTiles[count]);
+                   
+                }
+            }
 
-			int borderIndex = borderTiles.Count ();
-			int expandToIndex = rnd.Next (borderIndex);
-			Tile expandTo = borderTiles.ElementAt (expandToIndex);
-			expandTo.SetOwner (playerName, playerColour);
-			cityTiles.Add (expandTo);
-			tilesOwned++;
-		}
+            if (borderTiles.Count() != 0)
+            {
+                int borderIndex = borderTiles.Count();
+                int expandToIndex = rnd.Next(borderIndex);
+                Tile expandTo = borderTiles.ElementAt(expandToIndex);
+
+                expandTo.SetOwner(playerName, playerColour);
+                cityTiles.Add(expandTo);
+
+            }
+        }
 
 
 		/// <summary>
