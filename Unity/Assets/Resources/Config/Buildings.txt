@@ -9,7 +9,7 @@
 [House]
 Res.BuildRequirements.type=Wood
 ;Make sure to define type before count
-Res.BuildRequirements.count=5
+Res.BuildRequirements.count=10
 Res.OnBuild.type=Population
 Res.OnBuild.count=1
 Res.OnTurnInput.type=Free
@@ -33,7 +33,7 @@ Res.OnTurnOutput.type=Wood
 Res.OnTurnOutput.count=30
 Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_LumberYard
-Tiles=Forest
+Tiles=Forest,Grass
 Age=Roman
 RequireTownHall=false
 
@@ -77,7 +77,7 @@ Res.OnTurnOutput.type=Stone
 Res.OnTurnOutput.count=20
 Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_Quarry
-Tiles=Grass,Mountain
+Tiles=Mountain
 Age=Roman
 RequireTownHall=false
 
@@ -182,7 +182,7 @@ Res.OnTurnInput.count=0
 Res.OnTurnOutput.type=Food
 Res.OnTurnOutput.count=5
 Res.RequireWorker=false
-Sprite.All=Buildings/Grass_With_Well
+Sprite.All=Buildings/Well
 Tiles=Grass
 Age=MiddleAges
 RequireTownHall=true
@@ -212,7 +212,7 @@ Res.OnTurnInput.count=0
 Res.OnTurnOutput.type=Food
 Res.OnTurnOutput.count=20
 Res.RequireWorker=true
-Sprite.All=Buildings/Grass_With_FishingDock
-Tiles=Grass
+Sprite.All=Buildings/FishingDock
+Tiles=Water
 Age=MiddleAges
 RequireTownHall=false

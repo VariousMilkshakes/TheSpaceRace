@@ -143,6 +143,7 @@ namespace Assets.Scripts.Utils
 		{
 			int current = (int) owner.Age + 1;
 			owner.Age = (WorldStates) Enum.GetValues(typeof(Resource)).GetValue(current);
+		    owner.ReadyToAdvance = false;
 		}
 	}
 }

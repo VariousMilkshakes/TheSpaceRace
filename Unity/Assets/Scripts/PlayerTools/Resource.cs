@@ -15,6 +15,7 @@
 		Hydrogen,   // 9
 		Population, // 10
 		Faith,      // 11
-		Money		// 12
+		Money,		// 12
+        Food        // 13
 	}
 }

@@ -10,6 +10,15 @@ using SpaceRace.Utils;
 using SpaceRace.World;
 
 public class Tile: MonoBehaviour{
+
+    public enum TileType
+    {
+        Grass,
+        Water,
+        Sand,
+        Mountain
+    }
+
 	/// <summary>
 	/// The sr.
 	/// </summary>
@@ -99,7 +108,10 @@ public class Tile: MonoBehaviour{
 	/// </summary>
 	public int type;
 
-	public string Type = "Grass";
+    public TileType Type
+    {
+        get { return (TileType)type; }
+    }
 
 	/// <summary>
 	/// The score.

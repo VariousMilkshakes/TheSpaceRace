@@ -26,7 +26,7 @@ public class ErrorHandler : MonoBehaviour
     public void Handle(PlayerException e)
     {
         hideError();
-        string errorString = e.ToString();
+        string errorString = e.Message;
         errorMessage.text = errorString;
         displayError();
     }
