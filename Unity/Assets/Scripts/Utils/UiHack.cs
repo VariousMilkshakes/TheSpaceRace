@@ -174,10 +174,10 @@ namespace SpaceRace.Utils
 				buildingTypes = controller.GetValidBuildings(targetTile);
 			}
 
-		    float panelWidth = 500f;
+		    float panelWidth = 700f;
 		    float startX = Canvas.transform.position.x;
 			float xPos = startX - panelWidth / 2;
-			float yPos = 30;
+			float yPos = 50;
 			float xSpacing = 10f;
 		    float ySpacing = 30f;
 			int buttonSize = 64;
@@ -189,7 +189,7 @@ namespace SpaceRace.Utils
 				menuItem.transform.position = new Vector3(xPos, yPos);
                 var text = menuItem.transform.GetChild(0);
 			    text.GetComponent<Text>().text = building.Name;
-			    float scale = 0.5f;
+			    float scale = 1f;
 			    menuItem.transform.localScale = new Vector3(scale, scale);
 				activeUiItems.Add(menuItem);
 
