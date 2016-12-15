@@ -61,6 +61,7 @@
      <Compile Include="Assets\Scripts\PlayerTools\PlayerException.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Resource.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\ResourceBox.cs" />
+     <Compile Include="Assets\Scripts\Utils\ButtonHover.cs" />
      <Compile Include="Assets\Scripts\Utils\Config.cs" />
      <Compile Include="Assets\Scripts\Utils\ErrorHandler.cs" />
      <Compile Include="Assets\Scripts\Utils\UIController.cs" />
@@ -86,9 +87,6 @@
      <Compile Include="Assets\Scripts\World\Disasters\Meteor.cs" />
      <Compile Include="Assets\Scripts\World\WorldStates.cs" />
      <None Include="Assets\Resources\Config\Buildings.txt" />
- <Reference Include="UnityEngine.Advertisements">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -103,9 +101,6 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Purchasing">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
