@@ -99,6 +99,9 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	public Sprite GetResourceSprite(int index){
+		if (index > 4) {
+			index = 4;
+		}
 		return resourceSprites [index];
 	}
 
@@ -538,6 +541,7 @@ public class MapGenerator : MonoBehaviour {
 		SetUpResource (Resource.Wood, (int)TileTypes.GRASS, 20);
 		SetUpResource (Resource.Stone, (int)TileTypes.MOUNTIAN, 5);
 		SetUpResource (Resource.Iron, (int)TileTypes.MOUNTIAN, 5);
+		SetUpResource (Resource.Fish, (int)TileTypes.WATER, 5);
 
 		//Sets any remaining grass Tiles to have straw on them for farms to gather (and convert to food?)
 		List<List<Coord>> grassRegions = GetRegions ((int)TileTypes.GRASS);

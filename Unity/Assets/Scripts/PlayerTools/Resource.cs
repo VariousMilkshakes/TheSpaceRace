@@ -16,6 +16,7 @@
 		Population, // 10
 		Faith,      // 11
 		Money,		// 12
-        Food        // 13
+        Food,       // 13
+		Fish		// 14
 	}
 }
