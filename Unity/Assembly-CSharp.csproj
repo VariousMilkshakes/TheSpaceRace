@@ -70,22 +70,25 @@
      <Compile Include="Assets\Scripts\World\Buildings\Building.Events.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Building.Setup.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\BuildingException.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Bakery.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Church.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Colosseum.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Field.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\FishingDock.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\House.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\LumberYard.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Monument.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Plaza.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Quarry.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Temple.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\TownHall.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\Well.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Bakery.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Church.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Colosseum.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Field.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]FishingDock.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]LumberYard.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Monument.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Plaza.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Quarry.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Temple.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]TownHall.cs" />
+     <Compile Include="Assets\Scripts\World\Disasters\Meteor.cs" />
      <Compile Include="Assets\Scripts\World\WorldStates.cs" />
      <None Include="Assets\Resources\Config\Buildings.txt" />
+ <Reference Include="UnityEngine.Advertisements">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -100,6 +103,9 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Purchasing">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
