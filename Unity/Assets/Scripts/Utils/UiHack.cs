@@ -7,6 +7,7 @@ using SpaceRace.PlayerTools;
 using SpaceRace.World;
 using UnityEngine.UI;
 using SpaceRace.World.Buildings;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
 namespace SpaceRace.Utils
@@ -16,6 +17,7 @@ namespace SpaceRace.Utils
 		#region Property Flags
 		public const int PROPERTY_RESOURCE_TRACKERS = 01;
 		public const int PROPERTY_CLEAR_BUILDINGS = 02;
+	    public const int PROPERTY_BUILDING_TIP = 03;
 		#endregion
 
 		public static GameObject BUILDING_ITEM_TEMPLATE
@@ -54,6 +56,8 @@ namespace SpaceRace.Utils
 		public GameObject BuildingButtonHolder;
 	    public GameObject ErrorAlert;
 
+	    public GameObject InfoPanel;
+
 	    public GameObject MeteorPrefab;
 
 		private List<GameObject> activeUiItems;
@@ -76,7 +80,9 @@ namespace SpaceRace.Utils
 		// Use this for initialization
 		void Start()
 		{
-		    ERROR = ErrorAlert.GetComponent<ErrorHandler>();
+            ButtonHover.SHOW_TOOL_TIP(false);
+
+            ERROR = ErrorAlert.GetComponent<ErrorHandler>();
 			UiHack.BUILDING_ITEM_TEMPLATE = BuildingButtonHolder;
 			activeUiItems = new List<GameObject>();
 			//Text currentText = WoodTracker.GetComponent<Text>();
@@ -128,6 +134,9 @@ namespace SpaceRace.Utils
 				case PROPERTY_CLEAR_BUILDINGS:
 					ClearBuildingMenu();
 					break;
+                case PROPERTY_BUILDING_TIP:
+                    displayBuildingInfo(updateArgs[0]);
+			        break;
 			}
 		}
 
@@ -211,6 +220,8 @@ namespace SpaceRace.Utils
 
 		public void ClearBuildingMenu ()
 		{
+            ButtonHover.SHOW_TOOL_TIP(false);
+
 			foreach (GameObject uiObject in activeUiItems)
 			{
 				Destroy(uiObject.gameObject);
@@ -229,6 +240,23 @@ namespace SpaceRace.Utils
 	    public void CastMeteor ()
 	    {
 	        controller.Cast(selectedTile, MeteorPrefab);
+	    }
+
+	    public void DisplayToolTop (Type building)
+	    {
+	        controller.FetchBuildingInfo(building);
+	    }
+
+	    public void ClearToolTip ()
+	    {
+            Text infoText = InfoPanel.GetComponent<Text>();
+            infoText.text = "";
+        }
+
+	    private void displayBuildingInfo (object info)
+	    {
+	        Text infoText = InfoPanel.GetComponent<Text>();
+	        infoText.text = (string)info;
 	    }
 	}
 }

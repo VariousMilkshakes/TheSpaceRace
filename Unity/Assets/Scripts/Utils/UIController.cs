@@ -11,6 +11,7 @@ using SpaceRace.World.Buildings;
 using SpaceRace.World.Buildings.Collection;
 using UnityEngine.Events;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Utils
@@ -124,22 +125,24 @@ namespace Assets.Scripts.Utils
 			});
 
 			// Set sprite for building
-			try
-			{
-				Config buildingConfig = GameRules.CONFIG_REPO["Buildings"];
-				string spritePath = buildingConfig.LookForProperty(building.Name, "Sprite.All").Value;
-				Texture2D rawSprite = Resources.Load(spritePath, typeof(Texture2D)) as Texture2D;
+		    try {
+		        Config buildingConfig = GameRules.CONFIG_REPO["Buildings"];
+		        string spritePath = buildingConfig.LookForProperty(building.Name, "Sprite.All")
+		                                          .Value;
+		        Texture2D rawSprite = Resources.Load(spritePath, typeof(Texture2D)) as Texture2D;
 
-				menuButton.image.sprite = Sprite.Create(rawSprite,
-					new Rect(0, 0, buttonSize, buttonSize),
-					new Vector2());
-			}
-			catch (Exception e)
-			{
-				Debug.Log(e);
-			}
+		        menuButton.image.sprite = Sprite.Create(rawSprite,
+		                                                new Rect(0, 0, buttonSize, buttonSize),
+		                                                new Vector2());
+		    } catch (Exception e) {
+		        Debug.Log(e);
+		    }
 
-			return newMenuItem;
+		    ButtonHover hover = menuButton.GetComponent<ButtonHover>();
+		    hover.TargetBuilding = building;
+            hover.UiHandler = GameObject.Find("TempUIHandler");
+
+		    return newMenuItem;
 		}
 
 		public void AdvancePlayerAge()
@@ -171,5 +174,19 @@ namespace Assets.Scripts.Utils
                 new Vector3(t.position.x, t.position.y, -1f), t.rotation);
             cast.GetComponent<Meteor>().Target(selectedTile.gameObject, destroyBuilding);
         }
-	}
+
+        public void FetchBuildingInfo(Type building)
+        {
+            string info = building.Name + "\n";
+
+            Config config = GameRules.CONFIG_REPO[Building.CONFIG];
+            ResourceBox requirements = config.GetPropertyResourceBox(building.Name,
+                                                                Building.BUILDING_REQUIREMENTS);
+
+            info += requirements.Cap + " ";
+            info += Enum.GetName(typeof(Resource), requirements.Type) + "\n";
+
+            NotifyPropertyChange(UiHack.PROPERTY_BUILDING_TIP, new object[]{ info });
+        }
+    }
 }
