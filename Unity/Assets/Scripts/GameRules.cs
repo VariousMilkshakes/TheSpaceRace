@@ -54,7 +54,9 @@ public class GameRules {
                                                .Split(',');
 
 	    string tileType = Enum.GetName(typeof(Tile.TileType), tile.Type);
-	    if (!acceptedTiles.Contains(tileType)) return false;
+	    string tileResource = Enum.GetName(typeof(Resource), tile.GetResource());
+	    if (!acceptedTiles.Contains(tileType) &&
+            !acceptedTiles.Contains(tileResource)) return false;
 
         // TODO: use generic to convert config to datatype
 	    string boolString = buildingConfig.LookForProperty(buildingType.Name, Building.TOWNHALL_CONNECTION)
@@ -68,6 +70,7 @@ public class GameRules {
 	    }
 
 	    if (tile.GetOwner() != builder.PlayerName) return false;
+	    if (tile.Building != null) return false;
 
 	    return true;
 	}

@@ -58,10 +58,10 @@ namespace SpaceRace
 
 			Player player1 = new Player();
 			Player player2 = new Player();
-			player1.PlayerName = "Jim";
-			player1.Color = Color.magenta;
-			player2.PlayerName = "Jack";
-			player2.Color = Color.cyan;
+			player1.PlayerName = "Player 1";
+			player1.Color = Color.gray;
+			player2.PlayerName = "Player 2";
+			player2.Color = Color.magenta;
 
 			uiHandler = UiHandlerObject.GetComponent<UiHack>();
 			uiHandler.BindTo(player1.PlayerUI);

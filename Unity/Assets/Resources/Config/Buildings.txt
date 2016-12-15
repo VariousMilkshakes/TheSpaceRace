@@ -77,7 +77,7 @@ Res.OnTurnOutput.type=Stone
 Res.OnTurnOutput.count=20
 Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_Quarry
-Tiles=Mountain
+Tiles=Stone
 Age=Roman
 RequireTownHall=false
 

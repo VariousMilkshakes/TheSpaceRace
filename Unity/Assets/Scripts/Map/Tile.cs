@@ -13,6 +13,7 @@ using UnityEngine.EventSystems;
 
 public class Tile: MonoBehaviour{
 
+    //TODO: Generate fish like stone in water
     public enum TileType
     {
         Grass,
