@@ -10,60 +10,16 @@ using SpaceRace.World.Buildings;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
-namespace SpaceRace.Utils
-{
-	public class UiHack : MonoBehaviour
-	{
-		#region Property Flags
-		public const int PROPERTY_RESOURCE_TRACKERS = 01;
-		public const int PROPERTY_CLEAR_BUILDINGS = 02;
-	    public const int PROPERTY_BUILDING_TIP = 03;
-		#endregion
-
-		public static GameObject BUILDING_ITEM_TEMPLATE
-		{
-			get
-			{
-				return building_item_template;
-			}
-
-			set
-			{
-				building_item_template = building_item_template == null
-					? value
-					: building_item_template;
-			}
-		}
-
-	    public static ErrorHandler ERROR
-	    {
-	        get { return error_handler; }
-	        set
-	        {
-	            error_handler = error_handler == null
-	                ? value
-	                : error_handler;
-	        }
-	    }
-
+namespace SpaceRace.Utils {
+	
+	public class UiHack : MonoBehaviour {
+		
+		private Dictionary<Resource, Text> trackers;
 		private static GameObject building_item_template;
-        private static ErrorHandler error_handler;
-
-        public GameObject Canvas;
-		public GameObject AdvanceAge;
-		public GameObject AdvanceAgeNotice;
-		public GameObject TurnPlayerTracker;
-		public GameObject BuildingButtonHolder;
-	    public GameObject ErrorAlert;
-
-	    public GameObject InfoPanel;
-
-	    public GameObject MeteorPrefab;
-
+		private static ErrorHandler error_handler;
 		private List<GameObject> activeUiItems;
-	    private UIController controller;
-
-	    private Tile selectedTile;
+		private UIController controller;
+		private Tile selectedTile;
 
 		#region ResourceTrackers
 		public GameObject WoodTracker;
@@ -71,20 +27,58 @@ namespace SpaceRace.Utils
 		public GameObject MoneyTracker;
 		public GameObject StoneTracker;
 		public GameObject FoodTracker;
-	    public GameObject FaithTracker;
+		public GameObject FaithTracker;
 
-        private Dictionary<Resource, Text> trackers;
+		public GameObject Canvas;
+		public GameObject AdvanceAge;
+		public GameObject AdvanceAgeNotice;
+		public GameObject TurnPlayerTracker;
+		public GameObject BuildingButtonHolder;
+		public GameObject ErrorAlert;
+		public GameObject InfoPanel;
+		public GameObject MeteorPrefab;
+
+		#region Property Flags
+		public const int PROPERTY_RESOURCE_TRACKERS = 01;
+		public const int PROPERTY_CLEAR_BUILDINGS = 02;
+	    public const int PROPERTY_BUILDING_TIP = 03;
+
 		#endregion
 
+		public static GameObject BUILDING_ITEM_TEMPLATE {
+			
+			get {
+				return building_item_template;
+			}
+			set {
+				building_item_template = building_item_template == null
+					? value
+					: building_item_template;
+			}
+		}
+
+	    public static ErrorHandler ERROR {
+
+			get {
+				return error_handler;
+			}
+			set {
+				error_handler = error_handler == null
+					? value
+	                : error_handler;
+			}
+		}
+
+		#endregion
 
 		// Use this for initialization
-		void Start()
-		{
+		void Start() {
             ButtonHover.SHOW_TOOL_TIP(false);
 
             ERROR = ErrorAlert.GetComponent<ErrorHandler>();
 			UiHack.BUILDING_ITEM_TEMPLATE = BuildingButtonHolder;
 			activeUiItems = new List<GameObject>();
+
 			//Text currentText = WoodTracker.GetComponent<Text>();
 			//currentText.text = "" + currentPlayer.Inventory.CheckResource(PlayerTools.Resource.Wood);
 
@@ -104,10 +98,9 @@ namespace SpaceRace.Utils
         /// tracking player
         /// </summary>
         /// <param name="playerController">Current player's UI controller</param>
-		public void BindTo(UIController playerController)
-		{
+		public void BindTo(UIController playerController) {
+			
 			controller = playerController;
-
 			controller.PropertyUpdateEvent.AddListener(updateHandler);
 			controller.ResourceUpdate();
 
@@ -118,16 +111,15 @@ namespace SpaceRace.Utils
         /// Called at the end of players phase in order to
         /// switch to next player
         /// </summary>
-		public void UnbindFrom()
-		{
+		public void UnbindFrom() {
+			
             ClearBuildingMenu();
 			controller.PropertyUpdateEvent.RemoveAllListeners();
 		}
 
-		private void updateHandler(int propertyFlag, object[] updateArgs)
-		{
-			switch (propertyFlag)
-			{
+		private void updateHandler(int propertyFlag, object[] updateArgs) {
+
+			switch (propertyFlag) {
 				case PROPERTY_RESOURCE_TRACKERS:
 					UpdateResource(updateArgs[0], updateArgs[1]);
 					break;
@@ -143,8 +135,8 @@ namespace SpaceRace.Utils
 		/// <summary>
 		/// Called everytime player resources change
 		/// </summary>
-		public void UpdateResource(object updatedResource, object newValue)
-		{
+		public void UpdateResource(object updatedResource, object newValue) {
+			
 			Resource resource = (Resource) updatedResource;
 			int value = (int) newValue;
 
@@ -159,31 +151,29 @@ namespace SpaceRace.Utils
 		/// Display menu of buildings available on the tile
 		/// </summary>
 		/// <param name="targetTile"></param>
-		public void DisplayBuildings (Tile targetTile)
-		{
+		public void DisplayBuildings (Tile targetTile) {
+
+			float panelWidth = 700f;
+			float startX = Canvas.transform.position.x;
+			float xPos = startX - panelWidth / 2;
+			float yPos = 50;
+			float xSpacing = 10f;
+			float ySpacing = 30f;
+			int buttonSize = 64;
+			
 		    selectedTile = targetTile;
 			ClearBuildingMenu();
 
 			List<Type> buildingTypes;
-			if (targetTile.Building != null && targetTile.Building.Upgradeable)
-			{
+
+			if (targetTile.Building != null && targetTile.Building.Upgradeable) {
 				buildingTypes = GameRules.GET_BUILDING_UPGRADES_FOR(targetTile.Building.GetType());
-			}
-			else
-			{
+			} else {
 				buildingTypes = controller.GetValidBuildings(targetTile);
 			}
-
-		    float panelWidth = 700f;
-		    float startX = Canvas.transform.position.x;
-			float xPos = startX - panelWidth / 2;
-			float yPos = 50;
-			float xSpacing = 10f;
-		    float ySpacing = 30f;
-			int buttonSize = 64;
 			
-			foreach (Type building in buildingTypes)
-			{
+			foreach (Type building in buildingTypes) {
+				
 				GameObject menuItem = controller.CreateBuildingButton(building, buttonSize, targetTile);
 				menuItem.transform.SetParent(Canvas.transform);
 				menuItem.transform.position = new Vector3(xPos, yPos);
@@ -195,66 +185,55 @@ namespace SpaceRace.Utils
 
 				xPos += buttonSize * scale + xSpacing;
 
-			    if (xPos + (buttonSize*scale) >= startX + panelWidth / 2)
-			    {
+			    if (xPos + (buttonSize*scale) >= startX + panelWidth / 2) {
 			        xPos = startX;
 			        yPos += ySpacing + (buttonSize*scale);
 			    }
 			}
 		}
 
-		public void DisplayAdvanceButton ()
-		{
+		public void DisplayAdvanceButton () {
 			AdvanceAge.SetActive(true);
 		}
 
-		public void AdvancePlayer ()
-		{
+		public void AdvancePlayer (){
             controller.AdvancePlayerAge();
 		    string advanceMessage = "You have advanced to the \n" +
-		                            Enum.GetName(typeof(WorldStates), controller.Player.Age) +
-		                            " Age";
+				Enum.GetName(typeof(WorldStates), controller.Player.Age) + " Age";
+			
 			ERROR.Handle(new PlayerException(advanceMessage));
             AdvanceAge.SetActive(false);
 		}
 
-		public void ClearBuildingMenu ()
-		{
+		public void ClearBuildingMenu () {
             ButtonHover.SHOW_TOOL_TIP(false);
 
-			foreach (GameObject uiObject in activeUiItems)
-			{
+			foreach (GameObject uiObject in activeUiItems) {
 				Destroy(uiObject.gameObject);
 			}
-
 			activeUiItems.Clear();
 		}
 
-		private void setPlayer ()
-		{
+		private void setPlayer () {
 			Text display = TurnPlayerTracker.GetComponent<Text>();
 			display.text = "Turn " + controller.Player.Turn + " Player " +
-                            controller.Player.PlayerName;
+				controller.Player.PlayerName;
 		}
 
-	    public void CastMeteor ()
-	    {
+	    public void CastMeteor () {
 	        controller.Cast(selectedTile, MeteorPrefab);
 	    }
 
-	    public void DisplayToolTop (Type building)
-	    {
+	    public void DisplayToolTop (Type building) {
 	        controller.FetchBuildingInfo(building);
 	    }
 
-	    public void ClearToolTip ()
-	    {
+	    public void ClearToolTip () {
             Text infoText = InfoPanel.GetComponent<Text>();
             infoText.text = "";
         }
 
-	    private void displayBuildingInfo (object info)
-	    {
+	    private void displayBuildingInfo (object info) {
 	        Text infoText = InfoPanel.GetComponent<Text>();
 	        infoText.text = (string)info;
 	    }
