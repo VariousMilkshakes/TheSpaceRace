@@ -11,9 +11,12 @@ using SpaceRace.World;
 using UnityEngine.Assertions.Must;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Tile.
+/// describes how tiles act in the game.
+/// </summary>
 public class Tile: MonoBehaviour{
 
-    //TODO: Generate fish like stone in water
     public enum TileType
     {
         Grass,
@@ -23,7 +26,7 @@ public class Tile: MonoBehaviour{
     }
 
 	/// <summary>
-	/// The sr.
+	/// The sprite renderer.
 	/// </summary>
 	/// <description>
 	/// This attribute means that this Tiles GameObject cannot be set in the inspector.
@@ -32,6 +35,9 @@ public class Tile: MonoBehaviour{
 	[HideInInspector]
 	public SpriteRenderer sr;
 
+	/// <summary>
+	/// The resource sprite renderer.
+	/// </summary>
 	[HideInInspector]
 	public SpriteRenderer rsr;
 
@@ -194,6 +200,9 @@ public class Tile: MonoBehaviour{
 		buildingSprite = statics[(int)SpriteType.BUILDING];
 	}
 
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
 	void Update(){
 		if (GetResourceBox().Quantity == 0){
 			reBox = ResourceBox.EMPTY ();

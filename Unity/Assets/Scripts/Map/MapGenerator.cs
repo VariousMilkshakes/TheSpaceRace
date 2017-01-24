@@ -4,7 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 using SpaceRace.PlayerTools;
-
+/*
+	TODO: decouple logic into other classes, already started with zone class (only for methods which do not refer to the Unity API).
+*/
+/// <summary>
+/// Map generator.
+/// Responsible for generating the map and keeping track of tiles.
+/// </summary>
 public class MapGenerator : MonoBehaviour {
 	/// <summary>
 	/// The number of columns (x).
@@ -84,11 +90,6 @@ public class MapGenerator : MonoBehaviour {
 	/// </summary>
 	int[,] gridPos;
 
-	public enum TileTypes
-	{
-		GRASS, WATER, SAND, MOUNTIAN
-	}
-
 	/// <summary>
 	/// Gets the sprite.
 	/// </summary>
@@ -165,6 +166,11 @@ public class MapGenerator : MonoBehaviour {
 		return tiles;
 	}
 
+	/// <summary>
+	/// Gets the tiles with resource.
+	/// </summary>
+	/// <returns>The tiles with resource.</returns>
+	/// <param name="resource">Resource.</param>
 	public List<Tile> GetTilesWithResource(Resource resource){
 		List<Tile> result = new List<Tile> ();
 		foreach (Tile tile in tiles) {
@@ -197,7 +203,7 @@ public class MapGenerator : MonoBehaviour {
 	/// <param name="y">The y coordinate.</param>
 	public Tile GetTile(int x, int y){
 		foreach (Tile t in tiles) {
-			if (t.transform.position.x  == x && t.transform.position.y == y) {
+			if (t.transform.position.x == x && t.transform.position.y == y) {
 				return t;
 			}
 		} throw new NoTileException ("No such Tile");
@@ -247,8 +253,10 @@ public class MapGenerator : MonoBehaviour {
 
 		CreateMountains ();
 
+		//remove regions of mountains smaller than 5 tiles in area.
 		RemoveRegionsOfSize ((int)TileTypes.MOUNTIAN, (int)TileTypes.GRASS, mountainThreshold);
 
+		//remove regions of mountains larger than 50 tiles in area.
 		int mountainsTooLargeThreshold = 50;
 		List<List<Coord>> regions = GetRegions ((int)TileTypes.MOUNTIAN);
 		foreach (List<Coord> region in regions) {
@@ -287,11 +295,9 @@ public class MapGenerator : MonoBehaviour {
 		//Change all the tiles around water to sand tiles.
 		List<List<Coord>> grassRegions = GetRegions((int) TileTypes.GRASS);
 
-		List<Coord> sandTiles = new List<Coord> ();
 		foreach (List<Coord> grassregion in grassRegions) {
 			foreach (Coord tile in grassregion){
 				if (GetAdjacentTilesOfType(tile.tileX, tile.tileY, (int)TileTypes.WATER) >= 1){
-					sandTiles.Add (tile);
 					gridPos [tile.tileX, tile.tileY] = (int)TileTypes.SAND;
 				}
 			}
@@ -305,7 +311,6 @@ public class MapGenerator : MonoBehaviour {
 		List<List<Coord>> grassRegions = GetRegions((int) TileTypes.GRASS);
 
 		//Change a portion of grass tiles into mountain/rocky tiles
-
 		List<Coord> mountainTiles = new List<Coord> ();
 		foreach (List<Coord> grassRegion in grassRegions) {
 			foreach (Coord tile in grassRegion) {
@@ -317,6 +322,7 @@ public class MapGenerator : MonoBehaviour {
 		foreach (Coord tile in mountainTiles) {
 			gridPos [tile.tileX, tile.tileY] = (int)TileTypes.MOUNTIAN;
 		}
+		//smooth mountains
 		for (int i = 0; i < 5; i++) {
 			foreach (List<Coord> grassRegion in grassRegions) {
 				foreach (Coord tile in grassRegion) {
@@ -450,31 +456,6 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Gets the adjacent water count.
-	/// </summary>
-	/// <returns>The adjacent water count.</returns>
-	/// <param name="posX">Position x.</param>
-	/// <param name="posY">Position y.</param>
-	/// <description>
-	/// This method iterates over the eight positions adjacent to the given grid position and evaluates its type.
-	/// As water tiles are of type 1, simply returning the sum of all adjacent tiles will return the number of adjacent water tiles.
-	/// 
-	/// </description>
-	int GetAdjacentWaterCount(int posX, int posY){
-		int adjacentTiles = 0;
-		for (int adjX = posX -1; adjX <= posX +1; adjX++) {
-			for (int adjY = posY -1; adjY <= posY +1; adjY++) {
-				if(IsInRange(adjX, adjY)){
-					if (adjX != posX || adjY != posY) {
-						adjacentTiles += gridPos [adjX, adjY];
-					}
-				}
-			}
-		}
-		return adjacentTiles;
-	}
-
-	/// <summary>
 	/// Gets the number of the adjacent tiles of type.
 	/// </summary>
 	/// <returns>the number of the adjacent tiles of type.</returns>
@@ -562,10 +543,10 @@ public class MapGenerator : MonoBehaviour {
 	/// <param name="baseTileType">Base tile type.</param>
 	/// <param name="minimum">Minimum.</param>
 	void SetUpResource(Resource resource, int baseTileType, int minimum){
-		List<List<Coord>> grassRegions = GetRegions (baseTileType);
+		List<List<Coord>> regions = GetRegions (baseTileType);
 
-		foreach (List<Coord> grassRegion in grassRegions) {
-			foreach (Coord tile in grassRegion) {
+		foreach (List<Coord> region in regions) {
+			foreach (Coord tile in region) {
 				if(rnd.Next(0, 100) < minimum){
 					GetTile(tile.tileX, tile.tileY).addResource(resource);
 				}
@@ -580,12 +561,12 @@ public class MapGenerator : MonoBehaviour {
 	/// <param name="resource">Resource.</param>
 	/// <param name="amount">Amount.</param>
 	/// <param name="baseTileType">Base tile type.</param>
-	void EnsureResourceExists(Resource resource, int amount, int baseTileType){
+	void EnsureResourceExists(Resource resource, int minimum, int baseTileType){
 
-		if (GetTilesWithResource (resource).Count < amount) {
+		if (GetTilesWithResource (resource).Count < minimum) {
 			List<List<Coord>> regions = GetRegions (baseTileType);
 			foreach (List<Coord> region in regions) {
-				for (int i = amount/regions.Count; i > 0; i--) {
+				for (int i = minimum/regions.Count; i > 0; i--) {
 					int rndIndex = rnd.Next (0, region.Count);
 					GetTile (region [rndIndex].tileX, region [rndIndex].tileY).addResource (resource);
 					region.Remove (region [rndIndex]);
@@ -610,5 +591,18 @@ public class MapGenerator : MonoBehaviour {
 			tileX = x;
 			tileY = y;
 		}
+	}
+
+	private int[,] CombineZones(int[,] firstZone, int[,] secondZone){
+		int size = columns * 2;
+		int[,] resultingZone = new int[size, size];
+		for (int x = 0; x < size - 1; x++) {
+			for (int y = 0; y < size - 1; y++) {
+				resultingZone [x, y] = firstZone [x, y];
+				resultingZone [size + x, size + y] = secondZone [x, y];
+			}
+		}
+
+		return resultingZone;
 	}
 }
