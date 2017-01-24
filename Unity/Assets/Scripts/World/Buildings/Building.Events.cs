@@ -7,6 +7,8 @@ using System.Text;
 using SpaceRace.PlayerTools;
 using SpaceRace;
 
+//hello ben
+
 namespace SpaceRace.World.Buildings
 {
 	public abstract partial class Building : ITurnObject
