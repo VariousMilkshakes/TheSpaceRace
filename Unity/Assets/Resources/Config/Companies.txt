@@ -1,0 +1,10 @@
+﻿[Companies]
+
+[Generation]
+Names=Tim's,Sue's,Pete's,Mega,Super
+
+;Types of companies
+[School]
+Res.All.type=Population
+Res.All.count=5
+Reward=!=addResource(Money 10)

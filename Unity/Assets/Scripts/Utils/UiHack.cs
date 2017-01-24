@@ -55,7 +55,7 @@ namespace SpaceRace.Utils
 		public GameObject TurnPlayerTracker;
 		public GameObject BuildingButtonHolder;
 	    public GameObject ErrorAlert;
-
+	    public GameObject CommandInput;
 	    public GameObject InfoPanel;
 
 	    public GameObject MeteorPrefab;
@@ -64,6 +64,8 @@ namespace SpaceRace.Utils
 	    private UIController controller;
 
 	    private Tile selectedTile;
+
+	    private bool inputOpen = false;
 
 		#region ResourceTrackers
 		public GameObject WoodTracker;
@@ -257,6 +259,23 @@ namespace SpaceRace.Utils
 	    {
 	        Text infoText = InfoPanel.GetComponent<Text>();
 	        infoText.text = (string)info;
+	    }
+
+	    void Update ()
+	    {
+	        if (Input.GetKeyDown(KeyCode.F8)) { 
+//	            && Input.GetKeyDown(KeyCode.LeftShift)) {
+	            CommandInput.SetActive(!inputOpen);
+	            inputOpen = !inputOpen;
+	        }
+
+	        if (inputOpen) {
+	            if (Input.GetKeyDown(KeyCode.Return)) {
+	                GameManager.RUN_INSTRUCTION(CommandInput.GetComponent<InputField>().text);
+	                CommandInput.GetComponent<InputField>()
+	                            .text = "";
+	            }
+	        }
 	    }
 	}
 }
