@@ -131,6 +131,10 @@ namespace SpaceRace
 		public String GetActivePlayerName() {
 			return activePlayer.PlayerName;
 		}
+
+		public List<Player> GetActivePlayers(){
+			return activePlayers;
+		}
 			
 	}
 }

@@ -3,5 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum TileTypes{
-	GRASS, WATER, SAND, MOUNTIAN
+
+	GRASS, 
+	WATER, 
+	SAND, 
+	MOUNTIAN
 }

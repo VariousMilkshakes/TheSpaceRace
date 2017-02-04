@@ -56,8 +56,10 @@
      <Compile Include="Assets\Scripts\Map\MapGenerator.cs" />
      <Compile Include="Assets\Scripts\Map\NoTileException.cs" />
      <Compile Include="Assets\Scripts\Map\Tile.cs" />
+     <Compile Include="Assets\Scripts\Map\TileFlag.cs" />
      <Compile Include="Assets\Scripts\Map\TileTypes.cs" />
      <Compile Include="Assets\Scripts\Map\Zone.cs" />
+     <Compile Include="Assets\Scripts\Map\ZoneManager.cs" />
      <Compile Include="Assets\Scripts\NetworkManager.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Inventory.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Player.Properties.cs" />
