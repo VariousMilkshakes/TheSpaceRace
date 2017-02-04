@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace SpaceRace.World.Buildings
 {
+    /// <summary>
+    /// Set up the requirements for a building
+    /// </summary>
 	public partial class Building
 	{
 	    public const string CONFIG = "Buildings";

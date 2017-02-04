@@ -7,8 +7,6 @@ using System.Text;
 using SpaceRace.PlayerTools;
 using SpaceRace;
 
-//hello ben
-
 namespace SpaceRace.World.Buildings
 {
 	public abstract partial class Building : ITurnObject
@@ -19,7 +17,7 @@ namespace SpaceRace.World.Buildings
 		/// Attempt for player to create instance of building
 		/// </summary>
 		/// <typeparam name="T">Type of building to create</typeparam>
-		/// <param name="builder">Player building building</param>
+		/// <param name="builder">Player building the building</param>
 		/// <returns>New instance of building</returns>
 		/// <throws>Buidling Exception if player has insufficient resources</throws>
 		public static T BUILD<T>(Player builder, Tile position) where T : Building, new()
@@ -29,7 +27,6 @@ namespace SpaceRace.World.Buildings
 			Inventory builderInv = builder.Inventory;
 
 			// Check if player can afford to spend resources
-
 			if (builderInv.SpendResource(newBuilding.BuildRequirements()))
 			{
 				return newBuilding;
