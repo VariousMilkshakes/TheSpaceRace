@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using System.Collections.Generic;
 using SpaceRace.PlayerTools;
 using UnityEngine;
-using SpaceRace.Utils;
 
 namespace SpaceRace.World.Buildings.Collection
 {
