@@ -51,7 +51,6 @@ namespace SpaceRace.World.Buildings.Collection
 		public TownHall (Player builder, Tile pos)
 			: base (typeof(TownHall), builder, pos, loaded_sprites)
 		{
-			Sprite sprite = null;
 			mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent<MapGenerator> ();
 			playerName = _owner.PlayerName;
 			playerColour = _owner.Color;
@@ -115,7 +114,7 @@ namespace SpaceRace.World.Buildings.Collection
 			minYCoord = findMinY (cityTiles);
 
 			///Trigger city expansion if population has increased by 2
-			int population = _owner.Inventory.CheckResource (SpaceRace.PlayerTools.Resource.Population);
+			int population = _owner.Inventory.CheckResource (Resource.Population);
 			if (population % 2 == 0) {  //needs to be changed
 				expandCityBoundary ();
 			}
