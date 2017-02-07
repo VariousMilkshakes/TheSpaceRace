@@ -77,7 +77,6 @@ namespace Zones{
 			for (int i = 0; i < 5; i++) {
 				Smooth ();
 			}
-			//EnsureTileTypeExists (TileTypes.WATER, 20);
 			CreateWaterShape (6);
 			ProcessGrid ();
 			SetUpResources ();
@@ -90,7 +89,7 @@ namespace Zones{
 		private void CreateWaterShape(int radius){
 			int waterTiles = GetTilesOfType (TileTypes.WATER).Count;
 			int midPoint = size/2;
-			if (GetTilesOfType (TileTypes.WATER).Count <= 20) {
+			if (waterTiles <= 20) {
 				for(int i = 0; i < radius; i++){
 					for (int x = midPoint - radius; x < midPoint + radius; x++) {
 						for(int y = midPoint - radius; y < midPoint + radius; y++){

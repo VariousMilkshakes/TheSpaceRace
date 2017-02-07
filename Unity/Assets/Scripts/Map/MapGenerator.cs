@@ -174,16 +174,18 @@ public class MapGenerator : MonoBehaviour {
 		}
 		tiles = new List<Tile> ();
 
+		int zoneSise = size / 2;
+
 		List<Zone> zones = new List<Zone> ();
-		zones.Add (new Zone (size, (float)seed.GetHashCode (), (int)waterPercentage));
-		zones.Add (new Zone (size, -(float)seed.GetHashCode (), (int)waterPercentage));
-		zones.Add (new Zone (size, 2f * (float)seed.GetHashCode (), (int)waterPercentage));
-		zones.Add (new Zone (size, -2f * (float)seed.GetHashCode (), (int)waterPercentage));
+		zones.Add (new Zone (zoneSise, (float)seed.GetHashCode (), (int)waterPercentage));
+		zones.Add (new Zone (zoneSise, -(float)seed.GetHashCode (), (int)waterPercentage));
+		zones.Add (new Zone (zoneSise, 2f * (float)seed.GetHashCode (), (int)waterPercentage));
+		zones.Add (new Zone (zoneSise, -2f * (float)seed.GetHashCode (), (int)waterPercentage));
 
 		ZoneManager ZM = new ZoneManager ();
-		Zone newZone = ZM.CombineZones (zones, size);
+		Zone newZone = ZM.CombineZones (zones, zoneSise);
 		gridPos = newZone.GetZone ();
-		size = size * 2;
+		size = zoneSise * 2;
 		SetUpMap ();
 	}
 
