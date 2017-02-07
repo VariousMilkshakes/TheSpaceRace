@@ -7,10 +7,14 @@ using System.Text;
 using SpaceRace.PlayerTools;
 using SpaceRace;
 
+//hello ben
+
 namespace SpaceRace.World.Buildings
 {
-	public abstract partial class Building : TurnObject
+	public abstract partial class Building : ITurnObject
 	{
+        //Bug: Buildings not using resources
+
 		/// <summary>
 		/// Attempt for player to create instance of building
 		/// </summary>
@@ -18,13 +22,14 @@ namespace SpaceRace.World.Buildings
 		/// <param name="builder">Player building building</param>
 		/// <returns>New instance of building</returns>
 		/// <throws>Buidling Exception if player has insufficient resources</throws>
-		public static T BUILD<T>(Player builder) where T : Building, new()
+		public static T BUILD<T>(Player builder, Tile position) where T : Building, new()
 		{
 			UnityEngine.Debug.Log(typeof(T).Name);
-			T newBuilding = (T)Activator.CreateInstance(typeof(T), null);
+			T newBuilding = (T) Activator.CreateInstance(typeof(T), new object[] {builder, position});
 			Inventory builderInv = builder.Inventory;
 
 			// Check if player can afford to spend resources
+
 			if (builderInv.SpendResource(newBuilding.BuildRequirements()))
 			{
 				return newBuilding;
@@ -34,11 +39,11 @@ namespace SpaceRace.World.Buildings
 			throw new BuildingException("Not enough resources", typeof(T));
 		}
 
-		/// <summary>
-		/// Resources required for a player to build
-		/// </summary>
-		/// <returns>Required resources</returns>
-		public abstract ResourceBox BuildRequirements();
+	    /// <summary>
+	    /// Resources required for a player to build
+	    /// </summary>
+	    /// <returns>Required resources</returns>
+	    public abstract ResourceBox BuildRequirements ();
 
 		/// <summary>
 		/// Input and output resources from building
@@ -63,8 +68,8 @@ namespace SpaceRace.World.Buildings
 		{
 			Output.Empty();
 
-			/// If the building gets insufficient input resources
-			/// then the output is left empty
+			// If the building gets insufficient input resources
+			// then the output is left empty
 			if (Input.IsFull())
 			{
 				Output.Fill(Output.Cap);

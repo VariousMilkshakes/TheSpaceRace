@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
+using SpaceRace.PlayerTools;
+using SpaceRace.World.Buildings;
 using UnityEngine;
 
 namespace SpaceRace.Utils
@@ -33,7 +34,6 @@ namespace SpaceRace.Utils
 
 			return configs;
 		}
-
 
 		public Dictionary<string, List<Property>> Properties;
 
@@ -65,6 +65,26 @@ namespace SpaceRace.Utils
 				throw new Exception("Could not read file", ioe);
 			}
 		}
+
+	    public ResourceBox GetPropertyResourceBox (string configHeader, string propKey, bool fill = false)
+	    {
+	        const string typeSubfix = ".type";
+	        const string countSubfix = ".count";
+
+	        Property typeProp = LookForProperty(configHeader, propKey + typeSubfix);
+	        Property countProp = LookForProperty(configHeader, propKey + countSubfix);
+
+	        int type = Array.IndexOf(Enum.GetNames(typeof(Resource)),
+	                                      typeProp.Value);
+	        int count = 0;
+            if (!Int32.TryParse(countProp.Value, out count))
+                Debug.Log("Error in config file: " + configHeader +
+                    ": invalid count: " + propKey);
+
+            ResourceBox newBox = new ResourceBox((Resource)type, 0, count);
+	        if (fill) newBox.Fill(newBox.Cap);
+            return newBox;
+	    }
 
 		private List<string> cleanLines (List<string> rawLines)
 		{

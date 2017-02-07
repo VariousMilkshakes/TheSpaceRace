@@ -1,8 +1,8 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using SpaceRace.World.Buildings;
 
-using PT = SpaceRace.PlayerTools;
+using SpaceRace.PlayerTools;
 using UnityEngine;
 using SpaceRace.Utils;
 
@@ -10,38 +10,25 @@ namespace SpaceRace.World.Buildings.Collection
 {
 	class Monument : Building
 	{
+        public const string BUILDING_NAME = "Monument";
 
-		public Monument () : base (typeof(House))
-		{
-			Sprite sprite = null;
+        /// <summary>
+        /// Load sprites as singletons associated with worldstates
+        /// Means that a sprite is only loaded once
+        /// </summary>
+	    private static Dictionary<WorldStates, Sprite> loaded_sprites = new Dictionary<WorldStates, Sprite>();
 
-			/// Set sprite for building
-			try
-			{
-				Config buildingConfigs = GameRules.CONFIG_REPO["Buildings"];
-				string spritePath = buildingConfigs.LookForProperty("Monument", "Sprite.All").Value;
-				sprite = UnityEngine.Resources.Load(spritePath, typeof(Sprite)) as Sprite;
-			}
-			catch (Exception e)
-			{
-				Debug.Log(e);
-			}
-			_buildingSprites.Add(WorldStates.All, sprite);
+        public Monument(Player builder, Tile pos)
+            : base (typeof(Monument), builder, pos, loaded_sprites){ }
 
-			Input = new PT.ResourceBox(PT.Resources.Free, 0, 0);
-			Output = new PT.ResourceBox(PT.Resources.Faith, 0, 0);
-		}
+        public override Sprite GetActiveSprite()
+        {
+            return loaded_sprites[_buildingState];
+        }
 
-		public override PT.ResourceBox BuildRequirements()
-		{
-			return new PT.ResourceBox(PT.Resources.Wood, 400);
-		}
-
-		public override void OnTurn() { }
-
-		public override PT.ResourceBox OnBuild()
-		{
-			return new PT.ResourceBox(PT.Resources.Faith, 100);
-		}
-	}
+        public override ResourceBox BuildRequirements()
+        {
+            return GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(BUILDING_NAME, BUILDING_REQUIREMENTS, true);
+        }
+    }
 }

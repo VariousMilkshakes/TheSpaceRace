@@ -6,42 +6,48 @@ using System.Text;
 using SpaceRace.PlayerTools;
 using SpaceRace.Utils;
 
-using UE = UnityEngine;
+using UnityEngine;
 
 namespace SpaceRace.World.Buildings
 {
-	public partial class Building
-	{
-		protected Dictionary<WorldStates, UE.Sprite> _buildingSprites;
-		protected WorldStates _buildingState;
-		protected Resources _buildingResource = Resources.None;
-		protected int _buildingResourceCost = 0;
+    public partial class Building
+    {
+        public bool Upgradeable = false;
 
-		#region ResourceBoxes For Events
+        protected WorldStates _buildingState;
+        protected Resource _buildingResource = Resource.None;
+        protected int _buildingResourceCost = 0;
+        protected Player _owner;
+        protected Tile _position;
 
-		protected Dictionary<string, ResourceBox> _eventResources = new Dictionary<string, ResourceBox>()
-		{
-			{ "BuildRequirements", ResourceBox.EMPTY() },
-			{ "OnBuild", ResourceBox.EMPTY() },
-			{ "OnTurn", ResourceBox.EMPTY() }
-		};
+        #region ResourceBoxes For Events
 
-		#endregion
+        protected Dictionary<string, ResourceBox> _eventResources = new Dictionary<string, ResourceBox>(){
+                                                                        { "BuildRequirements", ResourceBox.EMPTY() },
+                                                                        { "OnBuild", ResourceBox.EMPTY() },
+                                                                        { "OnTurn", ResourceBox.EMPTY() }
+                                                                    };
 
-		public Building(Type t)
-		{
-			_buildingSprites = new Dictionary<WorldStates, UE.Sprite>();
-			useConfig(checkForConfig(t));
-			_buildingState = WorldStates.All;
-		}
+        #endregion
 
-		/*
-		* The Sprite of building to replace tile sprite
-		*/
-		public UE.Sprite ActiveSprite
-		{
-			get { return _buildingSprites[_buildingState]; }
-		}
+        protected Building (Type t, Player builder, Tile pos, Dictionary<WorldStates, Sprite> spriteContainer)
+        {
+            _buildingState = WorldStates.All;
+            _owner = builder;
+            _position = pos;
+
+            // Try to load building sprite from path in config
+            try {
+                Config buildingsConfig = GameRules.CONFIG_REPO[CONFIG];
+                string spritePath = buildingsConfig.LookForProperty(t.Name, SPRITE(WorldStates.All)).Value;
+                _setSprite(spriteContainer, Resources.Load(spritePath, typeof(Sprite)) as Sprite);
+            } catch (Exception) {
+                throw new BuildingException("Could not load building");
+            }
+
+            Input = GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(t.Name, INPUT_ON_TURN);
+            Output = GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(t.Name, OUTPUT_ON_TURN);
+        }
 
 		public WorldStates State
 		{
@@ -49,27 +55,21 @@ namespace SpaceRace.World.Buildings
 			set { _buildingState = value; }
 		}
 
-		/// <summary>
-		/// Assign config values to object fields
-		/// </summary>
-		/// <param name="c">Relevant config</param>
-		private void useConfig(List<Config.Property> c)
-		{
-			if (c == null) return;
+        public Player Owner
+        {
+            get { return _owner; }
+        }
 
-			foreach (Config.Property prop in c)
-			{
-				try
-				{
-					string[] keyParts = prop.Key.Split('.');
-					domainSwitch(keyParts, prop.Value);
-				}
-				catch
-				{
-					Console.WriteLine("Could not read property: " + prop.ToString());
-				}
-			}
-		}
+        /*
+		* The Sprite of building to replace tile sprite
+		*/
+        public abstract Sprite GetActiveSprite();
+
+	    protected void _setSprite (Dictionary<WorldStates, Sprite> sprites, Sprite newSprite)
+	    {
+	        if (!sprites.ContainsKey(_buildingState))
+                sprites.Add(_buildingState, newSprite);
+	    }
 
 		/// <summary>
 		/// Handle properties using the "Res" domain
@@ -83,7 +83,7 @@ namespace SpaceRace.World.Buildings
 			
 			if (propKey[2] == "type")
 			{
-				Resources rType = findEnumValue<Resources>(propValue);
+				Resource rType = findEnumValue<Resource>(propValue);
 				newBox = new ResourceBox(rType);
 			}
 			else if (_eventResources.ContainsKey(propKey[1]))
@@ -140,18 +140,6 @@ namespace SpaceRace.World.Buildings
 		}
 
 		/// <summary>
-		/// Handle Properties using the "Sprite" domain
-		/// </summary>
-		/// <param name="spriteProp"></param>
-		private void assignSprite(string[] propKey, string propValue)
-		{
-			WorldStates targetState = findEnumValue<WorldStates>(propKey[1]);
-
-			UE.Sprite newSprite = UE.Resources.Load<UE.Sprite>(propValue);
-			_buildingSprites.Add(targetState, newSprite);
-		}
-
-		/// <summary>
 		/// Redirects property using domain
 		/// </summary>
 		/// <param name="propKey"></param>
@@ -165,7 +153,7 @@ namespace SpaceRace.World.Buildings
 					assignResource(propKey, propValue);
 					break;
 				case "Sprite":
-					assignSprite(propKey, propValue);
+//					assignSprite(propKey, propValue);
 					break;
 				default:
 					throw new Exception("Invalid property domain");

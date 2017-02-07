@@ -5,51 +5,54 @@ using System;
 
 namespace SpaceRace.PlayerTools
 {
-	/// <summary>
-	/// Keeps track of players resources
-	/// </summary>
-	[System.Serializable]
-	public class Inventory
-	{
+    /// <summary>
+    /// Keeps track of players resources
+    /// </summary>
+    [System.Serializable]
+    public class Inventory
+    {
 
-		/// <summary>
-		/// Contains the players resource count
-		/// </summary>
-		private Dictionary<Resources, int> resources;
+        /// <summary>
+        /// Contains the players resource count
+        /// </summary>
+        private Dictionary<Resource, int> resources;
 
-		private Action resourceUpdateEvent;
+        private Action<Resource> resourceUpdateEvent;
 
-		public Inventory()
-		{
-			resources = new Dictionary<Resources, int>();
-		}
+        public Inventory ()
+        {
+            resources = new Dictionary<Resource, int>();
+        }
 
-		/// <summary>
-		/// Find out how much of 'x' resource player has
-		/// </summary>
-		/// <param name="targetResource">Target resource to look up</param>
-		/// <returns>Quantity of resource</returns>
-		public int CheckResource(Resources targetResource)
-		{
-			if (!resources.ContainsKey(targetResource))
-			{
-				return 0;
-			}
+        /// <summary>
+        /// Find out how much of 'x' resource player has
+        /// </summary>
+        /// <param name="targetResource">Target resource to look up</param>
+        /// <returns>Quantity of resource</returns>
+        public int CheckResource (Resource targetResource)
+        {
+            if (!resources.ContainsKey(targetResource)) {
+                return 0;
+            }
 
-			return resources[targetResource];
-		}
+            return resources[targetResource];
+        }
 
-		/// <summary>
-		/// Attempt to spend players resource
-		/// </summary>
-		/// <param name="requirements">Resource to spend</param>
-		/// <returns>Returns true if the player had sufficient resources</returns>
-		public bool SpendResource(ResourceBox requirements)
-		{
-			if (CheckResource(requirements.Type) >= requirements.Quantity)
-			{
-				resources[requirements.Type] -= requirements.Quantity;
-				resourceUpdateEvent.Invoke();
+        /// <summary>
+        /// Attempt to spend players resource
+        /// </summary>
+        /// <param name="requirements">Resource to spend</param>
+        /// <returns>Returns true if the player had sufficient resources</returns>
+        public bool SpendResource (ResourceBox requirements)
+        {
+            if (CheckResource(requirements.Type) >= requirements.Quantity) {
+                try {
+                    resources[requirements.Type] -= requirements.Quantity;
+                    resourceUpdateEvent.Invoke(requirements.Type);
+                } catch (Exception) {
+                    return false;
+                }
+				
 				return true;
 			}
 
@@ -66,7 +69,7 @@ namespace SpaceRace.PlayerTools
 		/// </summary>
 		/// <param name="targetResource">Resource to increase</param>
 		/// <param name="quantity">Amount to increase resource by</param>
-		public void AddResource(Resources targetResource, int quantity)
+		public void AddResource(Resource targetResource, int quantity)
 		{
 			if (resources.ContainsKey(targetResource))
 			{
@@ -78,14 +81,22 @@ namespace SpaceRace.PlayerTools
 				resources.Add(targetResource, quantity);
 			}
 
-			if (resourceUpdateEvent != null) resourceUpdateEvent.Invoke();
+			if (resourceUpdateEvent != null) resourceUpdateEvent.Invoke(targetResource);
 		}
+
+	    public void ModifyResource (Resource targetResource, float mod)
+	    {
+	        if (!resources.ContainsKey(targetResource)) return;
+
+	        resources[targetResource] = (int)Math.Floor(resources[targetResource] * mod);
+	        resourceUpdateEvent.Invoke(targetResource);
+	    }
 
 		/// <summary>
 		/// Add listener to call event each time an inventory value is changed
 		/// </summary>
 		/// <param name="Listener">Event to call</param>
-		public void AddListener (Action Listener)
+		public void AddListener (Action<Resource> Listener)
 		{
 			resourceUpdateEvent = Listener;
 		}
