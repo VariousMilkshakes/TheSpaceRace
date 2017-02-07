@@ -5,10 +5,10 @@ using UnityEngine.UI;
 public class ManageMultiplayer : MonoBehaviour {
     public InputField numberOfPlayerInputField;
     public InputField userIdInputField;
-    public Button backButton;
+    public Button closeButton;
 
 
-    public MapGenerator mapGenerator;
+   // public MapGenerator mapGenerator;
     public GameOptions gameOptions;
 
 
@@ -19,7 +19,7 @@ public class ManageMultiplayer : MonoBehaviour {
 
         numberOfPlayerInputField.onValueChanged.AddListener(delegate { OnNumberOfPlayerChange(); });
         userIdInputField.onValueChanged.AddListener(delegate { OnUserIdChange(); });
-        backButton.onClick.AddListener(delegate { OnBackClickEvent(); });
+        closeButton.onClick.AddListener(delegate { OnCloseClickEvent(); });
     } 
     public void OnNumberOfPlayerChange() //allows user to input number of player
                                          //they want to play with
@@ -30,9 +30,9 @@ public class ManageMultiplayer : MonoBehaviour {
     {
 
     }
-    public void OnBackClickEvent() //takes player back to option menu upon clicking the button. 
+    public void OnCloseClickEvent() //takes player back to option menu upon clicking the button. 
     {
-
+         
     }
     
 
