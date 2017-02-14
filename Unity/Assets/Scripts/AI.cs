@@ -148,7 +148,7 @@ public class AI : Player {
 
 
 
-	/**************************************************************************************************************ignore*/
+	/*****************************************************************************************************planning
 
 	/*checks which building is best to construct next
 	* if no building is best, returns null - make a move other than constructing a building
@@ -171,13 +171,13 @@ public class AI : Player {
 	 * how many resources needed to attract company?
 	 * initiate interaction with company?
 		}
-	*/
+	
 
 		/* checks amount of resources aquired and which resource is needed
 		changes priority of that resource accordingly
 		private Resource setResourcePriority(){
 		}
-		*/
+		
 
 		/* checks priority of each resource and chooses next action depending on the resources
 		private void resourceCheck() {
@@ -185,43 +185,43 @@ public class AI : Player {
 			which do I need to increase for best advancement in the game?
 				how will I increase that resource? -> run method which will act on this
 			}
-		*/
+		
 
 
 		/*for after hack, returns number of a type of building within the city
-		helps in deciding on whether to build a building in a turn*/
+		helps in deciding on whether to build a building in a turn
 		//	private int countConstruction(Building<T> toCount) {
 		//		iterate through all tiles inside the city, check the sprite on each tile and which building it corresponds to
 		//		return null;
 		//	}
 
 
-		/*for after hack*/
-		/*returns a list of resources with their priority for advancement in the game*/
+		/*for after hack
+		/*returns a list of resources with their priority for advancement in the game
 		//	private List<Resource> checkPriority(){
 		//	check goal for current turn
 		//	}
 
 
-		/*for after hack*/
+		/*for after hack
 		//	private List<Resource> getOpptResource(Player oppt, Resource resourceToFind) {		
 		//		return null;
 		//	}
 
 
-		/*for after hack*/
+		/*for after hack
 		//	private void trade(Player oppt, Resource resourceToTrade) {
 		//		actionsTaken++;
 		//		return null;
 		//	}
 
 
-		/*for after hack*/
+		/*for after hack
 		//	private bool rocketLaunch(int hydrogen){
 		//		how is this initiated?
 		//		actionsTaken++;
 		//		return null;
-		//	}
+		//	}*/
 
 	}
 
