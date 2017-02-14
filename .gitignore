@@ -28,3 +28,15 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+$PROJDIR/Temp/
+$PROJDIR/Library/
+$PROJDIR/Obj/
+ 
+*.csproj
+*.unityproj
+*.sln
+*.user
+*.userprefs
+*.DS_store
+Unity/Library/
