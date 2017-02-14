@@ -286,5 +286,15 @@ namespace SpaceRace.World.Buildings.Collection
 			return min;
 		}
 
-	}
+        /// <summary>
+        /// Get the city tiles for this player
+        /// </summary>
+        /// <returns>A list of tiles contained within the city boundary</returns>
+        public List<Tile> GetCityTiles()
+        {
+            return cityTiles;
+        }
+
+
+    }
 }

@@ -1,24 +1,31 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using SpaceRace;
 using SpaceRace.PlayerTools;
-using SpaceRace.World.Buildings;
+using System.Collections.Generic;
 using SpaceRace.World.Buildings.Collection;
 
+/********Problems/plan for this class
+ Tiles don't currently hold their own position (errors)
+ Check actionsTaken increment 
+ after hack: sort out looping so player doesn't place duplicate buildings if they aren't useful for progression
+ * Taking a turn:
+ * first turn: build town hall, for other turns:
+ * check resources - which is a priority to increase?
+ * how do I increase that resource? - construction, trade, company? 
+ * 				--> depends on that resource (each resource has if statement which takes to the relevant method)
+ * if no money to pay for buildings/no relevant tiles to place buildings on, do i have faith?
+ * is my opponent significantly ahead of me?
+ * take the best action
+ *******************/
 
-//Tiles don't currently hold their own position (errors)
-//Check actionsTaken increment 
-
-public class AI : ITurnObject {
-
+public class AI : Player {
 	//Initialisation
 	ResourceBox resourcesAvailable;
-	int[,] mapTilesAvailable;
-	int[,] cityTilesAvailable;	//will be different once town hall has been written
 	System.Random random1;
-	double rocketSuccessProb;
+    TileFlag[,] mapTilesAvailable;
+    List<Tile> cityTilesAvailable;
+    double rocketSuccessProb;
 	Player playerAI;
 	Player oppt;
 	int turn;
@@ -29,37 +36,33 @@ public class AI : ITurnObject {
 	public AI (Player player) {
 		mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
 			.GetComponent<MapGenerator>();
-		playerAI = player;
+        mapTilesAvailable = mapGen.GetGridPos();
+        playerAI = player;
 		actionsTaken = 0;
 		turn = 0;
 		random1 = new System.Random ();
-		//mapTilesAvailable = mapGen.GetGridPos();
-		//cityTilesAvailable = mapGen.GetGridPos (); //will be different once town hall has been written
 	}
 
-
-	/******************ignore
-	 * Taking a turn:
-	 * first turn: build town hall, for other turns:
-	 * check resources - which is a priority to increase?
-	 * how do I increase that resource? - construction, trade, company? 
-	 * 				--> depends on that resource (each resource has if statement which takes to the relevant method)
-	 * if no money to pay for buildings/no relevant tiles to place buildings on, do i have faith?
-	 * is my opponent significantly ahead of me?
-	 * take the best action
-	 *******************/
-
-	//Main GetTile to run in each turn
 	public void OnTurn () {
+
 		playerAI.OnTurn ();
 		turnFinished = false;
 		actionsTaken = 0;
-		while (actionsTaken < 3) {
-			//surveyArea (SpaceRace.PlayerTools.Resource.Free);
-	//		if (turn == 0) { /*after hack: how should turns be handled?*/			not needed for hack
-	//			placeTownHall ();
-//			}
-			/*after hack: sort out looping so player doesn't place duplicate buildings if they aren't useful for progression*/
+
+        //If the town hall has been placed, update the tiles inside cityTilesAvailable
+        if (GetPlayerBuildings().Exists(x => x.GetType().Equals("TownHall")))
+        {
+            TownHall townHall = (TownHall)GetPlayerBuildings().Find(x => x.GetType().Equals("TownHall"));
+            cityTilesAvailable = townHall.GetCityTiles();
+        }
+
+        //Take three turns in this turn
+        while (actionsTaken < 3) {
+            //For the first turn, the AI must place a town hall
+			if (turn == 0) { 
+				placeTownHall ();
+                actionsTaken++;
+			}
 
 		//	Tile placeHouseTile = surveyArea (SpaceRace.PlayerTools.Resource.Free); //survey for blank land
 //			placeBuilding (mapGen.GetTile(5,5), "House"); //place house
@@ -82,7 +85,7 @@ public class AI : ITurnObject {
 	//	turn++;
 	}
 
-/*	private void placeTownHall () {
+	private void placeTownHall () {
 		//iterate through tiles available to find area with surrounding resources
 		for (int col = 0; col < mapTilesAvailable.GetLength (0); col++) {
 			for (int row = 0; row < mapTilesAvailable.GetLength (1); row++) {
@@ -116,7 +119,7 @@ public class AI : ITurnObject {
 		actionsTaken++;
 	}
 
-*/
+
 
 	/*Surveys tiles avilable to place a building
 	 * Returns the tile to place the building on*/
@@ -135,14 +138,14 @@ public class AI : ITurnObject {
 	}
 */
 	//place chosen building on specific tile
-/*	private void placeBuilding (Tile tile, string buildingToPlace) {
+	private void placeBuilding (Tile tile, string buildingToPlace) {
 	//	if (tile != null) {
 			Type building = Game.LOOK_FOR_BUILDING (buildingToPlace);
 			tile.Build (building, playerAI);
 			actionsTaken++;
 	//	}
 	}
-*/
+
 
 
 	/**************************************************************************************************************ignore*/
