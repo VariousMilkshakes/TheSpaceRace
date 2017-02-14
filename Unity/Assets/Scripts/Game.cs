@@ -47,6 +47,7 @@ namespace SpaceRace
 		public GameObject UiHandlerObject;
 
 		private List<Player> activePlayers;
+        private List<AI> activeAIs;
 		private UiHack uiHandler;
 		private Player activePlayer;
 		private bool running;
@@ -57,11 +58,14 @@ namespace SpaceRace
 			running = true;
 
 			Player player1 = new Player();
-			Player player2 = new Player();
+            Player player2 = new Player();
+            AI computerPlayer = new AI(new Player());
 			player1.PlayerName = "1";
 			player1.Color = Color.gray;
 			player2.PlayerName = "2";
 			player2.Color = Color.magenta;
+            computerPlayer.PlayerName = "Computer";
+            computerPlayer.Color = Color.blue;
 
 			uiHandler = UiHandlerObject.GetComponent<UiHack>();
 			uiHandler.BindTo(player1.PlayerUI);
@@ -71,6 +75,11 @@ namespace SpaceRace
 				player1,
 				player2
 			};
+
+            activeAIs = new List<AI>()
+            {
+                computerPlayer
+            };
 
 			StartCoroutine(new_turn_handler);
 		}
@@ -98,8 +107,14 @@ namespace SpaceRace
 
 			if (running)
 			{
-				StartCoroutine(new_turn_handler);
+                //Allow AI to take its turn
+                foreach (AI p in activeAIs)
+                {
+                    p.OnTurn();
+                }
+                    StartCoroutine(new_turn_handler);
 			}
+
 		}
 
 		/// <summary>

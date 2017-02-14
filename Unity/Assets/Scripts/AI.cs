@@ -27,7 +27,6 @@ public class AI : Player {
     List<Tile> cityTilesAvailable;
     double rocketSuccessProb;
 	Player playerAI;
-	Player oppt;
 	int turn;
 	int actionsTaken;
 	bool turnFinished;
