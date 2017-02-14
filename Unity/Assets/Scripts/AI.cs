@@ -33,8 +33,8 @@ public class AI : ITurnObject {
 		actionsTaken = 0;
 		turn = 0;
 		random1 = new System.Random ();
-		mapTilesAvailable = mapGen.GetGridPos();
-		cityTilesAvailable = mapGen.GetGridPos (); //will be different once town hall has been written
+		//mapTilesAvailable = mapGen.GetGridPos();
+		//cityTilesAvailable = mapGen.GetGridPos (); //will be different once town hall has been written
 	}
 
 

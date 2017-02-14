@@ -52,9 +52,14 @@
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameRules.cs" />
      <Compile Include="Assets\Scripts\ITurnObject.cs" />
+     <Compile Include="Assets\Scripts\Map\Map Tests\MapGeneratorTest.cs" />
      <Compile Include="Assets\Scripts\Map\MapGenerator.cs" />
      <Compile Include="Assets\Scripts\Map\NoTileException.cs" />
      <Compile Include="Assets\Scripts\Map\Tile.cs" />
+     <Compile Include="Assets\Scripts\Map\TileFlag.cs" />
+     <Compile Include="Assets\Scripts\Map\TileTypes.cs" />
+     <Compile Include="Assets\Scripts\Map\Zone.cs" />
+     <Compile Include="Assets\Scripts\Map\ZoneManager.cs" />
      <Compile Include="Assets\Scripts\NetworkManager.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Inventory.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Player.Properties.cs" />
@@ -84,6 +89,7 @@
      <Compile Include="Assets\Scripts\World\Buildings\Collection\Temple.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\TownHall.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\Well.cs" />
+     <Compile Include="Assets\Scripts\World\Disasters\INaturalDisaster.cs" />
      <Compile Include="Assets\Scripts\World\Disasters\Meteor.cs" />
      <Compile Include="Assets\Scripts\World\WorldStates.cs" />
      <None Include="Assets\Resources\Config\Buildings.txt" />
