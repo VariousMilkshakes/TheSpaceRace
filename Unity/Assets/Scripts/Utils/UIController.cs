@@ -9,6 +9,7 @@ using SpaceRace.Utils;
 using SpaceRace.World;
 using SpaceRace.World.Buildings;
 using SpaceRace.World.Buildings.Collection;
+using SpaceRace.World.Disasters;
 using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -153,7 +154,7 @@ namespace Assets.Scripts.Utils
 		}
 
         //TODO: Make abstract disaster
-	    public void Cast (Tile selectedTile, GameObject MeteorPrefab)
+	    public void Cast (Tile selectedTile, INaturalDisaster disaster)
 	    {
 	        if (selectedTile == null) {
                 UiHack.ERROR.Handle("No tile selected!");
@@ -162,17 +163,19 @@ namespace Assets.Scripts.Utils
 	        bool destroyBuilding = !(selectedTile.Building != null &&
                 selectedTile.Building.GetType().Name == TownHall.BUILDING_NAME);
 
-            ResourceBox cost = new ResourceBox(Resource.Faith, 100);
+			ResourceBox cost = disaster.Cost();
 	        if (!Player.Inventory.SpendResource(cost)) {
 	            UiHack.ERROR.Handle("Not enough faith!");
 	            return;
 	        }
 
-            Transform t = selectedTile.gameObject
-                                         .GetComponent<Transform>();
-            GameObject cast = (GameObject)GameObject.Instantiate(MeteorPrefab,
-                new Vector3(t.position.x, t.position.y, -1f), t.rotation);
-            cast.GetComponent<Meteor>().Target(selectedTile.gameObject, destroyBuilding);
+			GameObject prefab = disaster.GetPrefab ();
+			Type prefabType = prefab.GetType();
+
+
+            Transform t = selectedTile.gameObject.GetComponent<Transform>();
+			GameObject cast = (GameObject)GameObject.Instantiate(prefab, new Vector3(t.position.x, t.position.y, -1f), t.rotation);
+			cast.GetComponent <INaturalDisaster>().Target(selectedTile.gameObject, destroyBuilding);
         }
 
         public void FetchBuildingInfo(Type building)
@@ -180,8 +183,7 @@ namespace Assets.Scripts.Utils
             string info = building.Name + "\n";
 
             Config config = GameRules.CONFIG_REPO[Building.CONFIG];
-            ResourceBox requirements = config.GetPropertyResourceBox(building.Name,
-                                                                Building.BUILDING_REQUIREMENTS);
+            ResourceBox requirements = config.GetPropertyResourceBox(building.Name, Building.BUILDING_REQUIREMENTS);
 
             info += requirements.Cap + " ";
             info += Enum.GetName(typeof(Resource), requirements.Type) + "\n";

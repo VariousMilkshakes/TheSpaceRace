@@ -1,11 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SpaceRace.PlayerTools;
 
-public interface INaturalDisaster{
+namespace SpaceRace.World.Disasters{
+	public interface INaturalDisaster{
 
-	void Target (GameObject target);
+		ResourceBox Cost();
 
-	void Damage ();
+		GameObject GetPrefab ();
 
+		void Target (GameObject target, bool destrayable);
+
+		void Damage ();
+
+	}
 }
