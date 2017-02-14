@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using SpaceRace.PlayerTools;
-using SpaceRace.Utils;
 using SpaceRace.World;
 using SpaceRace.World.Buildings;
-using SpaceRace.World.Buildings.Collection;
 using UnityEngine;
 
 namespace Assets.Scripts.World.Buildings.Collection
@@ -38,6 +33,10 @@ namespace Assets.Scripts.World.Buildings.Collection
             return loaded_sprites[_buildingState];
         }
 
+        /// <summary>
+        /// The resources required to construct the building
+        /// </summary>
+        /// <returns>ResourceBox required for this building</returns>
         public override ResourceBox BuildRequirements()
         {
             return GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(BUILDING_NAME, BUILDING_REQUIREMENTS, true);

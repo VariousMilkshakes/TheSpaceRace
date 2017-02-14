@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SpaceRace.World.Buildings
 {
+    /// <summary>
+    /// Exception methods for constructing buildings, thrown in case of error
+    /// </summary>
     public class BuildingException : Exception
 	{
 		public Type Building { get; set; }
@@ -22,7 +22,7 @@ namespace SpaceRace.World.Buildings
 
 	    public override string ToString()
 	    {
-	        return this.Message;
+	        return Message;
 	    }
 	}
 }

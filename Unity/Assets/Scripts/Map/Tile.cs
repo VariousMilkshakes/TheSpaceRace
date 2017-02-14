@@ -11,9 +11,12 @@ using SpaceRace.World;
 using UnityEngine.Assertions.Must;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Tile.
+/// describes how tiles act in the game.
+/// </summary>
 public class Tile: MonoBehaviour{
 
-    //TODO: Generate fish like stone in water
     public enum TileType
     {
         Grass,
@@ -23,7 +26,7 @@ public class Tile: MonoBehaviour{
     }
 
 	/// <summary>
-	/// The sr.
+	/// The sprite renderer.
 	/// </summary>
 	/// <description>
 	/// This attribute means that this Tiles GameObject cannot be set in the inspector.
@@ -32,6 +35,9 @@ public class Tile: MonoBehaviour{
 	[HideInInspector]
 	public SpriteRenderer sr;
 
+	/// <summary>
+	/// The resource sprite renderer.
+	/// </summary>
 	[HideInInspector]
 	public SpriteRenderer rsr;
 
@@ -68,6 +74,8 @@ public class Tile: MonoBehaviour{
 	/// </description>
 	[HideInInspector]
 	GameObject highlighter;
+
+	GameObject resourceSpriteRenderer;
 
 	/// <summary>
 	/// Gets the building to be placed on this tile.
@@ -140,6 +148,7 @@ public class Tile: MonoBehaviour{
 		return owner;
 	}
 
+	private MapGenerator mapGen;
 
 	/// <summary>
 	/// Sets the state.
@@ -157,7 +166,7 @@ public class Tile: MonoBehaviour{
 	enum SpriteType { HOVER, SELECTED, BUILDING };
 
 	/// <summary>
-	/// Initiates a new tile.
+	/// Sets up tile.
 	/// </summary>
 	/// <description>
 	/// Constructor.
@@ -166,41 +175,48 @@ public class Tile: MonoBehaviour{
 	/// 	This means that the 'new' keyword cannot be used to instantiate this class.
 	/// 	This method therefore must be called everytime a new Tile object is instantiated to set default values and pass the object parameters.
 	/// </description>
-	/// <param name="type">Type.</param>
-	/// <param name="x">The x coordinate.</param>
-	/// <param name="y">The y coordinate.</param>
 	/// <see cref="https://docs.unity3d.com/ScriptReference/MonoBehaviour.html"/>
-	public void NewTile(int type){
-		MapGenerator mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
+	/// <param name="flags">Flags.</param>
+	public void SetUpTile(TileFlag flags){
+		mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
 		Sprite[] statics = mapGen.GetStaticSprites();
 		hoverSprite = statics[(int)SpriteType.HOVER];
 		selectedSprite = statics[(int)SpriteType.SELECTED];
-		this.type = type;
-		sr = gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
+		this.type = flags.GetTileType ();
+		this.resource = flags.GetResource ();
+		sr = this.gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
 
 		highlighter = new GameObject ("Highliter");
 		highlighter.transform.SetParent (this.gameObject.transform);
 		hsr = highlighter.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
-		hsr.sortingOrder = 1;
+		hsr.sortingOrder = 2;
 		hsr.sprite = null;
+		SetTileSprite ((TileTypes)flags.GetTileType());
 
+		resourceSpriteRenderer = new GameObject ("resourceSpriteRenderer");
+		resourceSpriteRenderer.transform.SetParent (this.gameObject.transform);
+		rsr = resourceSpriteRenderer.gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
+		rsr.sortingOrder = 1;
 		reBox = ResourceBox.EMPTY ();
+		this.AddResource (resource);
 
 		bx2D = gameObject.AddComponent (typeof(BoxCollider2D)) as BoxCollider2D;
 		bx2D.isTrigger = true;
 		bx2D.enabled = true;
-		SetTileSprite (this.type);
 		building = null;
 		buildingSprite = statics[(int)SpriteType.BUILDING];
 	}
 
-	void Update(){
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
+	/*void Update(){
 		if (GetResourceBox().Quantity == 0){
 			reBox = ResourceBox.EMPTY ();
-			resource = Resource.Free;
-			SetTileSprite (type);
+			resource = Resource.None;
+			//SetTileSprite ((TileTypes)type);
 		}
-	}
+	}*/
 
 	/// <summary>
 	/// Gets the x.
@@ -238,14 +254,10 @@ public class Tile: MonoBehaviour{
 	/// Adds the resource.
 	/// </summary>
 	/// <param name="resouce">Resource.</param>
-	public void addResource(Resource resource){
-		int offset = 2; // 2 becuase the first two entries in resource are none and free and as such don't require a sprite.
-		if ((int)this.resource < offset) {
-			this.resource = resource;
-			MapGenerator mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
-			sr.sprite = mapGen.GetResourceSprite ((int)resource - offset);
-			reBox = new ResourceBox (resource, 10, 10);
-		}
+	public void AddResource(Resource resource){
+		this.resource = resource;
+		SetResourceSprite (resource);
+		reBox = new ResourceBox (resource, 10, 10);
 	}
 
 	/// <summary>
@@ -343,9 +355,32 @@ public class Tile: MonoBehaviour{
 	/// This means that the array of sprites passed to the Tile object cannot changed or the indexing of the arry will fail.
 	/// </description>
 	/// <param name="type">Type.</param>
-	void SetTileSprite(int type){
-		MapGenerator mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
-		sr.sprite = mapGen.GetSprite (type);
+	void SetTileSprite(TileTypes type){
+		try{
+			this.sr.sprite = Resources.Load(GetSpritePath(type), typeof(Sprite)) as Sprite;
+		}catch(Exception e){
+			Debug.Log (e.StackTrace);
+		}
+	}
+
+	void SetResourceSprite(Resource resource){
+		rsr.sprite = Resources.Load (GetResourceSpritePath (resource), typeof(Sprite)) as Sprite;
+	}
+
+	public string GetSpritePath(TileTypes type){
+		string outString;
+		if(mapGen.GetSpritePaths().TryGetValue (type, out outString)){
+			return outString;
+		}
+		return "Sprites/Water_Tile_Sprite";
+	}
+
+	public string GetResourceSpritePath(Resource type){
+		string outString;
+		if(mapGen.GetResourceSpritePaths().TryGetValue (type, out outString)){
+			return outString;
+		}
+		return "Sprites/Fish";
 	}
 
 	/// <summary>
@@ -383,6 +418,7 @@ public class Tile: MonoBehaviour{
         builder.TrackBuilding(newBuilding);
 		building = newBuilding;
 	    sr.sprite = building.GetActiveSprite();
+		rsr.sprite = null;
 		builder.Inventory.AddResource(building.OnBuild());
 
 		return true;
@@ -397,7 +433,9 @@ public class Tile: MonoBehaviour{
         owner.RemoveBuilding(building);
 
         building = null;
-        SetTileSprite(this.type);
+		SetTileSprite((TileTypes)this.type);
+		SetResourceSprite (this.resource);
+
     }
 
 	/// <summary>

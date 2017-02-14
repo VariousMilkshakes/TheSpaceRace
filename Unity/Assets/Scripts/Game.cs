@@ -58,9 +58,9 @@ namespace SpaceRace
 
 			Player player1 = new Player();
 			Player player2 = new Player();
-			player1.PlayerName = "Player 1";
+			player1.PlayerName = "1";
 			player1.Color = Color.gray;
-			player2.PlayerName = "Player 2";
+			player2.PlayerName = "2";
 			player2.Color = Color.magenta;
 
 			uiHandler = UiHandlerObject.GetComponent<UiHack>();
@@ -111,6 +111,7 @@ namespace SpaceRace
 
 			uiHandler.BindTo(activePlayer.PlayerUI);
 			activePlayer.OnTurn();
+            UiHack.ERROR.Handle("NEXT PLAYER");
 		}
 
 		/// <summary>
@@ -129,6 +130,10 @@ namespace SpaceRace
 
 		public String GetActivePlayerName() {
 			return activePlayer.PlayerName;
+		}
+
+		public List<Player> GetActivePlayers(){
+			return activePlayers;
 		}
 			
 	}

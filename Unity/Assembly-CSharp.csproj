@@ -39,10 +39,10 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+      <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEditor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -52,15 +52,21 @@
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameRules.cs" />
      <Compile Include="Assets\Scripts\ITurnObject.cs" />
+     <Compile Include="Assets\Scripts\Map\Map Tests\MapGeneratorTest.cs" />
      <Compile Include="Assets\Scripts\Map\MapGenerator.cs" />
      <Compile Include="Assets\Scripts\Map\NoTileException.cs" />
      <Compile Include="Assets\Scripts\Map\Tile.cs" />
+     <Compile Include="Assets\Scripts\Map\TileFlag.cs" />
+     <Compile Include="Assets\Scripts\Map\TileTypes.cs" />
+     <Compile Include="Assets\Scripts\Map\Zone.cs" />
+     <Compile Include="Assets\Scripts\Map\ZoneManager.cs" />
      <Compile Include="Assets\Scripts\NetworkManager.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Inventory.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Player.Properties.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\PlayerException.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\Resource.cs" />
      <Compile Include="Assets\Scripts\PlayerTools\ResourceBox.cs" />
+     <Compile Include="Assets\Scripts\Utils\ButtonHover.cs" />
      <Compile Include="Assets\Scripts\Utils\Config.cs" />
      <Compile Include="Assets\Scripts\Utils\ErrorHandler.cs" />
      <Compile Include="Assets\Scripts\Utils\UIController.cs" />
@@ -70,24 +76,28 @@
      <Compile Include="Assets\Scripts\World\Buildings\Building.Events.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Building.Setup.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\BuildingException.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Bakery.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Church.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Colosseum.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Field.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\FishingDock.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\House.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\LumberYard.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Monument.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Plaza.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Quarry.cs" />
+     <Compile Include="Assets\Scripts\World\Buildings\Collection\Temple.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\TownHall.cs" />
      <Compile Include="Assets\Scripts\World\Buildings\Collection\Well.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Bakery.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Church.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Colosseum.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Field.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]FishingDock.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]LumberYard.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Monument.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Plaza.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Quarry.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]Temple.cs" />
-     <Compile Include="Assets\Scripts\World\Buildings\Collection\[TODO]TownHall.cs" />
+     <Compile Include="Assets\Scripts\World\Disasters\INaturalDisaster.cs" />
+     <Compile Include="Assets\Scripts\World\Disasters\Meteor.cs" />
      <Compile Include="Assets\Scripts\World\WorldStates.cs" />
      <None Include="Assets\Resources\Config\Buildings.txt" />
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>

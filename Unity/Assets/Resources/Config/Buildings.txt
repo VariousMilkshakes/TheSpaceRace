@@ -213,6 +213,6 @@ Res.OnTurnOutput.type=Food
 Res.OnTurnOutput.count=20
 Res.RequireWorker=true
 Sprite.All=Buildings/FishingDock
-Tiles=Water
+Tiles=Fish
 Age=MiddleAges
 RequireTownHall=false

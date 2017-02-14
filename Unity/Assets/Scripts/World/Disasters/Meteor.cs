@@ -5,7 +5,7 @@ using SpaceRace.PlayerTools;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Meteor : MonoBehaviour
+public class Meteor : MonoBehaviour , INaturalDisaster
 {
 
     private Transform position;

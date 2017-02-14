@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using SpaceRace.PlayerTools;
 using SpaceRace.Utils;
 
@@ -10,6 +8,9 @@ using UnityEngine;
 
 namespace SpaceRace.World.Buildings
 {
+    /// <summary>
+    /// Building partial class, properties and methods for this building
+    /// </summary>
     public partial class Building
     {
         public bool Upgradeable = false;
