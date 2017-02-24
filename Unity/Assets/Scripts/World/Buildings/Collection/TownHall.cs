@@ -1,6 +1,8 @@
 ﻿using System;
 using SpaceRace.PlayerTools;
 using UnityEngine;
+using SpaceRace.Utils;
+using SpaceRace.Game;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -52,7 +54,7 @@ namespace SpaceRace.World.Buildings.Collection
 			: base (typeof(TownHall), builder, pos, loaded_sprites)
 		{
 			mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent<MapGenerator> ();
-			playerName = _owner.PlayerName;
+			playerName = _owner.Name;
 			playerColour = _owner.Color;
 
 			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SpaceRace.PlayerTools;
 using SpaceRace.Utils;
+using SpaceRace.Game;
 
 using UnityEngine;
 
@@ -166,7 +167,7 @@ namespace SpaceRace.World.Buildings
 		/// </summary>
 		/// <param name="t">Type of building to look for config of</param>
 		/// <returns>Relevant config</returns>
-		public List<Config.Property> checkForConfig(Type t)
+		public List<Property> checkForConfig(Type t)
 		{
 			string target = t.Name;
 			Config parentConfig = GameRules.CONFIG_REPO["Buildings"];

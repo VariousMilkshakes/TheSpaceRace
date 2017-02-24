@@ -1,0 +1,13 @@
+﻿[Companies]
+
+[Generation]
+Names=Tim's,Sue's,Pete's,Mega,Super,Ye Olde,Cheap,Exotic,Fine,New,Unrivaled
+
+;Types of companies
+[School]
+Target.Res.type=Population
+Target.Res.count=5
+Reward.Res.type=Population
+Reward.Res.count=5
+Buff.Res.type=Population
+Buff.Res.count=

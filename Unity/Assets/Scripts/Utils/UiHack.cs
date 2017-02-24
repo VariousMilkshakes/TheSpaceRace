@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 using Assets.Scripts.Utils;
-using SpaceRace;
+using SpaceRace.Game;
 using SpaceRace.PlayerTools;
 using SpaceRace.World;
 using UnityEngine.UI;
@@ -55,7 +55,7 @@ namespace SpaceRace.Utils
 		public GameObject TurnPlayerTracker;
 		public GameObject BuildingButtonHolder;
 	    public GameObject ErrorAlert;
-
+	    public GameObject CommandInput;
 	    public GameObject InfoPanel;
 
 	    public GameObject MeteorPrefab;
@@ -64,6 +64,8 @@ namespace SpaceRace.Utils
 	    private UIController controller;
 
 	    private Tile selectedTile;
+
+	    private bool inputOpen = false;
 
 		#region ResourceTrackers
 		public GameObject WoodTracker;
@@ -234,7 +236,7 @@ namespace SpaceRace.Utils
 		{
 			Text display = TurnPlayerTracker.GetComponent<Text>();
 			display.text = "Turn " + controller.Player.Turn + " Player " +
-                            controller.Player.PlayerName;
+                            controller.Player.Name;
 		}
 
 	    public void CastMeteor ()
@@ -258,5 +260,19 @@ namespace SpaceRace.Utils
 	        Text infoText = InfoPanel.GetComponent<Text>();
 	        infoText.text = (string)info;
 	    }
+
+	    void Update ()
+	    {
+	        if (Input.GetKeyDown(KeyCode.F8)) { 
+//	            && Input.GetKeyDown(KeyCode.LeftShift)) {
+	            CommandInput.SetActive(!inputOpen);
+	            inputOpen = !inputOpen;
+	        }
+	    }
+
+	    public void CompleteTurn ()
+	    {
+            controller.Player.TurnComplete = true;
+        }
 	}
 }

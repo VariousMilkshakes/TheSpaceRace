@@ -34,8 +34,10 @@ public class Meteor : MonoBehaviour , INaturalDisaster
 	// Update is called once per frame
 	void Update () {
 	    if (moving) {
+            // Continue moving
             position.Translate(movement);
 
+            // Check  colission with tile
 	        if (position.position.x <= targetPos.x || position.position.y <= targetPos.y) {
 	            moving = false;
                 destroy();
@@ -44,8 +46,10 @@ public class Meteor : MonoBehaviour , INaturalDisaster
 
 	    switch (explodeTime) {
             case -1:
+                // Not exploding
 	            break;
             case 0:
+                // Clear disaster
                 Destroy(gameObject);
 	            break;
             default:
@@ -54,6 +58,11 @@ public class Meteor : MonoBehaviour , INaturalDisaster
 	    }
 	}
 
+    /// <summary>
+    /// Runs on target on tile
+    /// </summary>
+    /// <param name="target">Target tile</param>
+    /// <param name="destroyBuilding"></param>
     public void Target (GameObject target, bool destroyBuilding = true)
     {
         destoryable = destroyBuilding;
@@ -74,11 +83,13 @@ public class Meteor : MonoBehaviour , INaturalDisaster
         explodeTime = 60;
 
         if (destoryable)
+            // TODO: Disable building instead of destroying
             targetTile.GetComponent<Tile>().DestoryBuilding();
         else
             damage();
     }
 
+    // Pick random resource to destory
     private void damage ()
     {
         int min = 0;

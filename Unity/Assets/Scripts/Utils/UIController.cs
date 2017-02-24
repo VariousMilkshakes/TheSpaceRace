@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SpaceRace;
+using SpaceRace.Game;
 using SpaceRace.PlayerTools;
 using SpaceRace.Utils;
 using SpaceRace.World;
@@ -87,7 +87,7 @@ namespace Assets.Scripts.Utils
 		{
 			//TODO: Change when will has added tile type
 
-			return Game.BUILDING_REPO
+			return GameRules.BUILDING_REPO
 				.Where(building =>
                     GameRules.FORCE_BUILD_ORDER(building, owner) &&
 					GameRules.CHECK_BUILDING_TILE(building, selectedTile, owner) &&
@@ -159,19 +159,24 @@ namespace Assets.Scripts.Utils
                 UiHack.ERROR.Handle("No tile selected!");
             }
 
+            // Casting validation
 	        bool destroyBuilding = !(selectedTile.Building != null &&
                 selectedTile.Building.GetType().Name == TownHall.BUILDING_NAME);
 
+            /// Spend faith
             ResourceBox cost = new ResourceBox(Resource.Faith, 100);
 	        if (!Player.Inventory.SpendResource(cost)) {
 	            UiHack.ERROR.Handle("Not enough faith!");
 	            return;
 	        }
 
+            // Place disater on map
             Transform t = selectedTile.gameObject
                                          .GetComponent<Transform>();
             GameObject cast = (GameObject)GameObject.Instantiate(MeteorPrefab,
                 new Vector3(t.position.x, t.position.y, -1f), t.rotation);
+
+            // Starts disaster
             cast.GetComponent<Meteor>().Target(selectedTile.gameObject, destroyBuilding);
         }
 

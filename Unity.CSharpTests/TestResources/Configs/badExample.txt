@@ -1,0 +1,24 @@
+﻿;[Config Title]
+;[Heading]
+;Domain.PropertyKey.SubPropertyKey=Value
+
+;Res: Resource Property
+;Sprite: Sprite Domain
+[Buildings]
+
+[House]
+Res.BuildRequirements.type=Wood
+;Make sure to define type before count
+incorrect
+Res.BuildRequirements.count=10
+Res.OnBuild.type=Population
+Res.OnBuild.count=1
+Res.OnTurnInput.type=Free
+Res.OnTurnInput.count=0
+Res.OnTurnOutput.type=Money
+Res.OnTurnOutput.count=10
+Res.RequireWorker=false
+Sprite.All=Buildings/Grass_With_House
+Tiles=Grass
+Age=Roman
+RequireTownHall=true

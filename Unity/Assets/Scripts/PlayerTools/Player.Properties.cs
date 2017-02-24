@@ -5,6 +5,7 @@ using System.Text;
 using Assets.Scripts.Utils;
 using UnityEngine;
 
+using SpaceRace.Game;
 using SpaceRace.World;
 using SpaceRace.World.Buildings;
 
@@ -20,12 +21,12 @@ namespace SpaceRace.PlayerTools
 	    private int playerTurn = 1;
 		private List<Tile> playerTiles;
 
-		public string PlayerName;
-		public Color Color;
+		public readonly string Name;
+		public readonly Color Color;
 
 		public bool ReadyToAdvance = false;
 		public bool TurnComplete = false;
-		public WorldStates Age = WorldStates.Roman;
+	    public WorldStates Age = WorldStates.Roman;
 
 		public Inventory Inventory
 		{
@@ -47,13 +48,15 @@ namespace SpaceRace.PlayerTools
 	        get { return playerTurn; }
 	    }
 
-		public Player ()
+		public Player (string name, Color colour)
 		{
+		    Name = name;
+		    Color = colour;
+
 			playerBuildings = new List<Building>();
 			playerTiles = new List<Tile> ();
 
-            inventory = new Inventory();
-			GameRules.SETUP_INVENTORY(inventory);
+		    inventory = GameRules.DEF_INVENTORY();
 
             playerUI = new UIController(this);
         }
@@ -118,7 +121,7 @@ namespace SpaceRace.PlayerTools
 		/// Gets the buildings owned by this player
 		/// </summary>
 		/// <returns>The player's buildings.</returns>
-		public List<SpaceRace.World.Buildings.Building> GetPlayerBuildings(){
+		public List<Building> GetPlayerBuildings(){
 			return playerBuildings;
 		}
 

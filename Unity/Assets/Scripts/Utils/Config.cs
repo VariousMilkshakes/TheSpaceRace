@@ -140,10 +140,12 @@ namespace SpaceRace.Utils
 		}
 
 		/// <summary>
-		/// Check if object has relevant config file
-		/// </summary>
-		/// <param name="t">Type of building to look for config of</param>
-		/// <returns>Relevant config</returns>
+        /// Search for relevant property in config branch
+        /// </summary>
+        /// <param name="configHeader">branch of config</param>
+        /// <param name="propKey">property key to look for</param>
+        /// <returns>Relevant property/</returns>
+        /// <exception cref="Exception">Property does not exist in branch</exception>
 		public Property LookForProperty(string configHeader, string propKey)
 		{
 			foreach (Property p in Properties[configHeader])
@@ -167,29 +169,5 @@ namespace SpaceRace.Utils
 
 			Properties[header].Add(new Property(parts[0], parts[1]));
 		}
-
-		public struct Property
-		{
-			public string Key;
-			public string Value;
-
-			public Property(string key, string value)
-			{
-				Key = key;
-				Value = value;
-			}
-
-			public string ToString ()
-			{
-				return String.Format("key: {0}, value: {1}", Key, Value);
-			}
-
-			public bool IsProperty (string checkKey)
-			{
-				if (checkKey == Key) return true;
-				return false;
-			}
-		}
-
 	}
 }
