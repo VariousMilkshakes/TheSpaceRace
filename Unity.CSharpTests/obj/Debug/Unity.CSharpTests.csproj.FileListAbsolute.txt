@@ -2,9 +2,12 @@ D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\Unity.CSharpTests.
 D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\Unity.CSharpTests.pdb
 D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\Assembly-CSharp.dll
 D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
-D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\UnityEngine.dll
 D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\Assembly-CSharp.pdb
 D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\UnityEngine.xml
 D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\obj\Debug\Unity.CSharpTests.csprojResolveAssemblyReference.cache
 D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\obj\Debug\Unity.CSharpTests.dll
 D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\obj\Debug\Unity.CSharpTests.pdb
+D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\UnityEngine.UI.dll
+D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\UnityEditor.dll
+D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\UnityEngine.UI.xml
+D:\Uni\y2\Group Word\TheSpaceRace\Unity.CSharpTests\bin\Debug\UnityEditor.xml

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 using Assets.Scripts.Utils;
-using SpaceRace;
+using SpaceRace.Game;
 using SpaceRace.PlayerTools;
 using SpaceRace.World;
 using UnityEngine.UI;
@@ -236,7 +236,7 @@ namespace SpaceRace.Utils
 		{
 			Text display = TurnPlayerTracker.GetComponent<Text>();
 			display.text = "Turn " + controller.Player.Turn + " Player " +
-                            controller.Player.PlayerName;
+                            controller.Player.Name;
 		}
 
 	    public void CastMeteor ()
@@ -268,14 +268,11 @@ namespace SpaceRace.Utils
 	            CommandInput.SetActive(!inputOpen);
 	            inputOpen = !inputOpen;
 	        }
-
-	        if (inputOpen) {
-	            if (Input.GetKeyDown(KeyCode.Return)) {
-	                GameManager.RUN_INSTRUCTION(CommandInput.GetComponent<InputField>().text);
-	                CommandInput.GetComponent<InputField>()
-	                            .text = "";
-	            }
-	        }
 	    }
+
+	    public void CompleteTurn ()
+	    {
+            controller.Player.TurnComplete = true;
+        }
 	}
 }

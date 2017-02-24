@@ -305,8 +305,9 @@ public class Tile: MonoBehaviour{
 			GameObject ui = GameObject.Find("TempUIHandler");
 			SpaceRace.Utils.UiHack uih = ui.GetComponent<SpaceRace.Utils.UiHack>();
 			uih.DisplayBuildings(this);
-		}catch
+		}catch (Exception e)
 		{
+            Debug.Log(e);
 			Debug.Log("Could not find");
 		}
 
@@ -371,7 +372,7 @@ public class Tile: MonoBehaviour{
 		        UiHack.ERROR.Handle((BuildingException)e.InnerException);
 		    }
 
-			Debug.Log(e);
+		    Debug.Log(e);
 			return false;
 		}
 

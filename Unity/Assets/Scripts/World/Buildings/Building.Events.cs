@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 
 using SpaceRace.PlayerTools;
-using SpaceRace;
+using SpaceRace.Game;
 
 namespace SpaceRace.World.Buildings
 {
