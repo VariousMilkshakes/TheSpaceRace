@@ -17,6 +17,7 @@
 		Faith,      // 11
 		Money,		// 12
         Food,       // 13
-		Fish		// 14
+		Fish,		// 14
+        Tourism     // 15
 	}
 }
