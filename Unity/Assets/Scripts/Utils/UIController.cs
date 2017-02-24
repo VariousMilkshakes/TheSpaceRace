@@ -154,7 +154,7 @@ namespace Assets.Scripts.Utils
 		}
 
         //TODO: Make abstract disaster
-	    public void Cast (Tile selectedTile, INaturalDisaster disaster)
+		public void Cast (Tile selectedTile, ANaturalDisaster disaster)
 	    {
 	        if (selectedTile == null) {
                 UiHack.ERROR.Handle("No tile selected!");
@@ -169,13 +169,9 @@ namespace Assets.Scripts.Utils
 	            return;
 	        }
 
-			GameObject prefab = disaster.GetPrefab ();
-			Type prefabType = prefab.GetType();
-
-
             Transform t = selectedTile.gameObject.GetComponent<Transform>();
-			GameObject cast = (GameObject)GameObject.Instantiate(prefab, new Vector3(t.position.x, t.position.y, -1f), t.rotation);
-			cast.GetComponent <INaturalDisaster>().Target(selectedTile.gameObject, destroyBuilding);
+			ANaturalDisaster cast = (ANaturalDisaster)GameObject.Instantiate(disaster, new Vector3(t.position.x, t.position.y, -1f), t.rotation);
+			cast.GetComponent <ANaturalDisaster>().Target(selectedTile.gameObject, destroyBuilding);
         }
 
         public void FetchBuildingInfo(Type building)

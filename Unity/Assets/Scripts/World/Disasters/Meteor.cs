@@ -5,7 +5,7 @@ using SpaceRace.PlayerTools;
 using UnityEngine;
 using Random = UnityEngine.Random;
 namespace SpaceRace.World.Disasters{
-	public class Meteor : MonoBehaviour , INaturalDisaster
+	public class Meteor : ANaturalDisaster
 	{
 
 	    private Transform position;
@@ -24,7 +24,6 @@ namespace SpaceRace.World.Disasters{
 	    private const float damageMod = 0.1f;
 
 		private ResourceBox cost;
-		private GameObject prefab = (GameObject) Resources.Load("Prefabs/Disasters/Meteor_0");
 
 		// Use this for initialization
 		void Awake ()
@@ -38,14 +37,7 @@ namespace SpaceRace.World.Disasters{
 		
 		// Update is called once per frame
 		void Update () {
-		    if (moving) {
-	            position.Translate(movement);
-
-		        if (position.position.x <= targetPos.x || position.position.y <= targetPos.y) {
-		            moving = false;
-	                DestroyTarget();
-		        }
-	        }
+			Move ();
 
 		    switch (explodeTime) {
 	            case -1:
@@ -59,12 +51,19 @@ namespace SpaceRace.World.Disasters{
 		    }
 		}
 
-		public ResourceBox Cost(){
-			return cost;
+		void Move(){
+			if (moving) {
+				position.Translate(movement);
+
+				if (position.position.x <= targetPos.x || position.position.y <= targetPos.y) {
+					moving = false;
+					DestroyTarget();
+				}
+			}
 		}
 
-		public GameObject GetPrefab(){
-			return prefab;
+		new public ResourceBox Cost(){
+			return cost;
 		}
 
 	    public void Target (GameObject target, bool destroyBuilding = true)
