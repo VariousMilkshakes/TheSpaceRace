@@ -247,3 +247,19 @@ Sprite.All=Buildings/Grass_With_Palace
 Tiles=Grass
 Age=MiddleAges
 RequireTownHall=true
+
+;TODO: check input and output depending on companies
+[Workshop]
+Res.BuildRequirements.type=Stone
+Res.BuildRequirements.count=500
+Res.OnBuild.type=Free
+Res.OnBuild.count=0
+Res.OnTurnInput.type=Free
+Res.OnTurnInput.count=0
+Res.OnTurnOutput.type=Free
+Res.OnTurnOutput.count=0
+Res.RequireWorker=true
+Sprite.All=Buildings/Grass_With_Workshop
+Tiles=Grass
+Age=MiddleAges
+RequireTownHall=true
