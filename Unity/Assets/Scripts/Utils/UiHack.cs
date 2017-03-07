@@ -150,9 +150,9 @@ namespace SpaceRace.Utils
 
 			if (!trackers.ContainsKey(resource)) return;
 
-			string current = trackers[resource].text;
-			string label = current.Split(':')[0];
-			trackers[resource].text = label + ": " + value;
+			//string current = trackers[resource].text;
+			//string label = current.Split(':')[0];
+			trackers[resource].text = value;
 		}
 
 		/// <summary>
