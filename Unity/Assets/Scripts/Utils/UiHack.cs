@@ -59,7 +59,7 @@ namespace SpaceRace.Utils
 
 	    public GameObject InfoPanel;
 
-		public ANaturalDisaster MeteorPrefab;
+		private GameObject DisasterPrefab;
 
 		private List<GameObject> activeUiItems;
 	    private UIController controller;
@@ -242,9 +242,15 @@ namespace SpaceRace.Utils
 
 	    public void CastMeteor ()
 	    {
-			//Debug.Log (EventSystem.current.currentSelectedGameObject.name);
-			//MeteorPrefab = (ANaturalDisaster) Resources.Load (EventSystem.current.currentSelectedGameObject.name);
-			controller.Cast(selectedTile, (ANaturalDisaster)MeteorPrefab);
+			string prefabName = EventSystem.current.currentSelectedGameObject.name;
+			Debug.Log (prefabName);
+
+			/*try{*/
+
+			controller.Cast(selectedTile, prefabName);
+			/*}catch(Exception e){
+				Debug.Log (e.ToString());
+			}*/
 	    }
 
 	    public void DisplayToolTop (Type building)

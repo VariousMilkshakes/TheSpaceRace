@@ -154,24 +154,27 @@ namespace Assets.Scripts.Utils
 		}
 
         //TODO: Make abstract disaster
-		public void Cast (Tile selectedTile, ANaturalDisaster disaster)
+		public void Cast (Tile selectedTile, string disasterName)
 	    {
 	        if (selectedTile == null) {
-                UiHack.ERROR.Handle("No tile selected!");
+				UiHack.ERROR.Handle ("No tile selected!");
             }
 
-	        bool destroyBuilding = !(selectedTile.Building != null &&
-                selectedTile.Building.GetType().Name == TownHall.BUILDING_NAME);
+			bool destroyBuilding = !(selectedTile.Building != null && selectedTile.Building.GetType ().Name == TownHall.BUILDING_NAME);
+
+			Transform t = selectedTile.gameObject.GetComponent<Transform> ();
+			GameObject cast = GameObject.Instantiate(Resources.Load ("Prefabs/Disasters/" + disasterName, typeof(GameObject))) as GameObject;
+
+			ANaturalDisaster disaster = cast.GetComponent <ANaturalDisaster> ();
 
 			ResourceBox cost = disaster.Cost();
-	        if (!Player.Inventory.SpendResource(cost)) {
-	            UiHack.ERROR.Handle("Not enough faith!");
-	            return;
-	        }
+			if (!Player.Inventory.SpendResource(cost)) {
+				UiHack.ERROR.Handle("Not enough faith!");
+				GameObject.Destroy (cast);
+				return;
+			}
 
-            Transform t = selectedTile.gameObject.GetComponent<Transform>();
-			ANaturalDisaster cast = (ANaturalDisaster)GameObject.Instantiate(disaster, new Vector3(t.position.x, t.position.y, -1f), t.rotation);
-			cast.GetComponent <ANaturalDisaster>().Target(selectedTile.gameObject, destroyBuilding);
+			disaster.Target (selectedTile.gameObject, destroyBuilding);
         }
 
         public void FetchBuildingInfo(Type building)
