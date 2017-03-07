@@ -25,7 +25,7 @@ namespace SpaceRace.PlayerTools
 
 		public bool ReadyToAdvance = false;
 		public bool TurnComplete = false;
-		public WorldStates Age = WorldStates.Roman;
+		public WorldStates Age = WorldStates.MiddleAges;
 
 		public Inventory Inventory
 		{

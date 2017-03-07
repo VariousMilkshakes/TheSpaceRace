@@ -15,7 +15,7 @@ namespace SpaceRace.World.Buildings.Collection
 	    private static Dictionary<WorldStates, Sprite> loaded_sprites = new Dictionary<WorldStates, Sprite>();
 
         public Workshop(Player builder, Tile pos)
-            : base (typeof(House), builder, pos, loaded_sprites){ }
+            : base (typeof(Workshop), builder, pos, loaded_sprites){ }
 
         public override Sprite GetActiveSprite()
         {
