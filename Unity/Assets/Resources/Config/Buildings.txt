@@ -340,6 +340,21 @@ Tiles=Water
 Age=MiddleAges
 RequireTownHall=true
 
+[University]
+Res.BuildRequirements.type=Stone
+Res.BuildRequirements.count=200
+Res.OnBuild.type=Free
+Res.OnBuild.count=0
+Res.OnTurnInput.type=Free
+Res.OnTurnInput.count=0
+Res.OnTurnOutput.type=Money
+Res.OnTurnOutput.count=60
+Res.RequireWorker=true
+Sprite.All=Buildings/University
+Tiles=Grass
+Age=MiddleAges
+RequireTownHall=true
+
 [Hotel]
 Res.BuildRequirements.type=Money
 Res.BuildRequirements.count=300
