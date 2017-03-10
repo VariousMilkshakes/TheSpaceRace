@@ -62,11 +62,11 @@ namespace SpaceRace.World.Disasters{
 			}
 		}
 
-		new public ResourceBox Cost(){
+		override public ResourceBox Cost(){
 			return cost;
 		}
 
-	    public void Target (GameObject target, bool destroyBuilding = true)
+		override public void Target (GameObject target, bool destroyBuilding)
 	    {
 	        destoryable = destroyBuilding;
 	        targetTile = target;

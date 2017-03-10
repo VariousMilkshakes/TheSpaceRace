@@ -163,14 +163,14 @@ namespace Assets.Scripts.Utils
 			bool destroyBuilding = !(selectedTile.Building != null && selectedTile.Building.GetType ().Name == TownHall.BUILDING_NAME);
 
 			Transform t = selectedTile.gameObject.GetComponent<Transform> ();
-			GameObject cast = GameObject.Instantiate(Resources.Load ("Prefabs/Disasters/" + disasterName, typeof(GameObject))) as GameObject;
+			GameObject instance = GameObject.Instantiate(Resources.Load ("Prefabs/Disasters/" + disasterName, typeof(GameObject)), t.transform.position, Quaternion.identity) as GameObject;
 
-			ANaturalDisaster disaster = cast.GetComponent <ANaturalDisaster> ();
+			ANaturalDisaster disaster = instance.GetComponent <ANaturalDisaster> ();
 
 			ResourceBox cost = disaster.Cost();
 			if (!Player.Inventory.SpendResource(cost)) {
 				UiHack.ERROR.Handle("Not enough faith!");
-				GameObject.Destroy (cast);
+				GameObject.Destroy (instance);
 				return;
 			}
 

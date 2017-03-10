@@ -240,7 +240,7 @@ namespace SpaceRace.Utils
                             controller.Player.PlayerName;
 		}
 
-	    public void CastMeteor ()
+	    public void CastNaturalDisaster ()
 	    {
 			string prefabName = EventSystem.current.currentSelectedGameObject.name;
 			Debug.Log (prefabName);

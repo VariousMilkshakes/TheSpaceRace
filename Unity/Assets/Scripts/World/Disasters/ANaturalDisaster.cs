@@ -5,15 +5,7 @@ using SpaceRace.PlayerTools;
 
 public abstract class ANaturalDisaster : MonoBehaviour {
 
-	public ResourceBox Cost(){
-		return ResourceBox.EMPTY ();
-	}
+	public abstract ResourceBox Cost ();
 
-	public GameObject GetPrefab(){
-		return null;
-	}
-
-	public void Target(GameObject target, bool destroyBuilding){
-		
-	}
+	public abstract void Target (GameObject target, bool destroyBuilding);
 }
