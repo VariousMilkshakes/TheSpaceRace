@@ -324,6 +324,7 @@ Sprite.All=Buildings/Landmark
 Tiles=Grass,Sand
 Age=MiddleAges
 RequireTownHall=true
+Upgrade.To=Ruins
 
 [Pier]
 Res.BuildRequirements.type=Wood
@@ -382,5 +383,20 @@ Res.OnTurnOutput.count=0
 Res.RequireWorker=true
 Sprite.All=Buildings/Supermarket
 Tiles=Grass
+Age=Modern
+RequireTownHall=true
+
+[Ruins]
+Res.BuildRequirements.type=Money
+Res.BuildRequirements.count=100
+Res.OnBuild.type=Free
+Res.OnBuild.count=0
+Res.OnTurnInput.type=Free
+Res.OnTurnInput.count=0
+Res.OnTurnOutput.type=Tourism
+Res.OnTurnOutput.count=100
+Res.RequireWorker=false
+Sprite.All=Buildings/Ruins
+Tiles=Grass,Sand
 Age=Modern
 RequireTownHall=true
