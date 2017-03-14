@@ -51,6 +51,7 @@ Sprite.All=Buildings/Grass_With_Monument
 Tiles=Grass
 Age=Roman
 RequireTownHall=true
+Upgrade.To=Landmark
 
 [TownHall]
 Res.BuildRequirements.type=Money
@@ -355,6 +356,7 @@ Sprite.All=Buildings/University
 Tiles=Grass
 Age=MiddleAges
 RequireTownHall=true
+Upgrade.To=SpaceCenter
 
 [Hotel]
 Res.BuildRequirements.type=Money
@@ -397,6 +399,21 @@ Res.OnTurnOutput.type=Tourism
 Res.OnTurnOutput.count=100
 Res.RequireWorker=false
 Sprite.All=Buildings/Ruins
+Tiles=Grass,Sand
+Age=Modern
+RequireTownHall=true
+
+[SpaceCenter]
+Res.BuildRequirements.type=Steel
+Res.BuildRequirements.count=200
+Res.OnBuild.type=Free
+Res.OnBuild.count=0
+Res.OnTurnInput.type=Money
+Res.OnTurnInput.count=10
+Res.OnTurnOutput.type=Free
+Res.OnTurnOutput.count=0
+Res.RequireWorker=true
+Sprite.All=Buildings/SpaceCenter
 Tiles=Grass,Sand
 Age=Modern
 RequireTownHall=true
