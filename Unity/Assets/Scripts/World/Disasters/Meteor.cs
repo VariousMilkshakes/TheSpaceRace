@@ -94,15 +94,10 @@ namespace SpaceRace.World.Disasters{
 	    public void Damage ()
 	    {
 	        int min = 0;
-	        int max = Enum.GetValues(typeof(Resource))
-	                      .Length - 1;
+	        int max = Enum.GetValues(typeof(Resource)).Length - 1;
 
 	        Resource targetResource = (Resource)Random.Range(min, max);
-	        targetTile.GetComponent<Tile>()
-	                  .Building
-	                  .Owner
-	                  .Inventory
-	                  .ModifyResource(targetResource, 1f - damageMod);
+	        targetTile.GetComponent<Tile>().Building.Owner.Inventory.ModifyResource(targetResource, 1f - damageMod);
 	    }
 	}
 }
