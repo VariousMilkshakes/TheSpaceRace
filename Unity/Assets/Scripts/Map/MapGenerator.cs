@@ -191,7 +191,7 @@ public class MapGenerator : MonoBehaviour {
 
 	private void setUpSpriteDict(){
 		spritePaths.Add (TileTypes.GRASS, "Sprites/Grass_Tile_Sprite");
-		spritePaths.Add (TileTypes.MOUNTIAN, "Sprites/Grey_Tile_Sprite");
+		spritePaths.Add (TileTypes.MOUNTAIN, "Sprites/Grey_Tile_Sprite");
 		spritePaths.Add (TileTypes.SAND, "Sprites/Sand_Tile_Sprite");
 		spritePaths.Add (TileTypes.WATER, "Sprites/Water_Tile_Sprite");
 

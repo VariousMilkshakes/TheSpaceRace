@@ -213,11 +213,11 @@ namespace Zones{
 			CreateMountains ();
 
 			//remove regions of mountains smaller than 5 tiles in area.
-			RemoveRegionsOfSize ((int)TileTypes.MOUNTIAN, (int)TileTypes.GRASS, mountainThreshold);
+			RemoveRegionsOfSize ((int)TileTypes.MOUNTAIN, (int)TileTypes.GRASS, mountainThreshold);
 
 			//remove regions of mountains larger than 50 tiles in area.
 			int mountainsTooLargeThreshold = 50;
-			List<List<Coord>> regions = GetRegions ((int)TileTypes.MOUNTIAN);
+			List<List<Coord>> regions = GetRegions ((int)TileTypes.MOUNTAIN);
 			foreach (List<Coord> region in regions) {
 				if (region.Count > mountainsTooLargeThreshold) {
 					foreach (Coord tile in region) {
@@ -343,16 +343,16 @@ namespace Zones{
 				}
 			}
 			foreach (Coord tile in mountainTiles) {
-				gridPos [tile.tileX, tile.tileY].SetType((int)TileTypes.MOUNTIAN);
+				gridPos [tile.tileX, tile.tileY].SetType((int)TileTypes.MOUNTAIN);
 			}
 			//smooth mountains
 			for (int i = 0; i < 5; i++) {
 				foreach (List<Coord> grassRegion in grassRegions) {
 					foreach (Coord tile in grassRegion) {
-						if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)TileTypes.MOUNTIAN) > 3) {
-							gridPos [tile.tileX, tile.tileY].SetType((int)TileTypes.MOUNTIAN);
+						if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)TileTypes.MOUNTAIN) > 3) {
+							gridPos [tile.tileX, tile.tileY].SetType((int)TileTypes.MOUNTAIN);
 						}
-						if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)TileTypes.MOUNTIAN) < 2) {
+						if (GetAdjacentTilesOfType (tile.tileX, tile.tileY, (int)TileTypes.MOUNTAIN) < 2) {
 							gridPos [tile.tileX, tile.tileY].SetType((int)TileTypes.GRASS);
 						}
 					}
@@ -365,8 +365,8 @@ namespace Zones{
 		/// </summary>
 		void SetUpResources(){
 			SetUpResource (Resource.Wood, (int)TileTypes.GRASS, 20);
-			SetUpResource (Resource.Stone, (int)TileTypes.MOUNTIAN, 5);
-			SetUpResource (Resource.Iron, (int)TileTypes.MOUNTIAN, 5);
+			SetUpResource (Resource.Stone, (int)TileTypes.MOUNTAIN, 5);
+			SetUpResource (Resource.Iron, (int)TileTypes.MOUNTAIN, 5);
 			SetUpResource (Resource.Fish, (int)TileTypes.WATER, 5);
 
 			//Sets any remaining grass Tiles to have straw on them for farms to gather (and convert to food?)

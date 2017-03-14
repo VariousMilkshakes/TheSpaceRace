@@ -7,5 +7,5 @@ public enum TileTypes{
 	GRASS, 
 	WATER, 
 	SAND, 
-	MOUNTIAN
+	MOUNTAIN
 }
