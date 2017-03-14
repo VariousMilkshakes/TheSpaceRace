@@ -9,6 +9,7 @@ using SpaceRace.Utils;
 using SpaceRace.World;
 using SpaceRace.World.Buildings;
 using SpaceRace.World.Buildings.Collection;
+using SpaceRace.World.Disasters;
 using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -153,31 +154,27 @@ namespace Assets.Scripts.Utils
 		}
 
         //TODO: Make abstract disaster
-	    public void Cast (Tile selectedTile, GameObject MeteorPrefab)
+		public void Cast (Tile selectedTile, string disasterName)
 	    {
 	        if (selectedTile == null) {
-                UiHack.ERROR.Handle("No tile selected!");
+				UiHack.ERROR.Handle ("No tile selected!");
             }
 
-            // Casting validation
-	        bool destroyBuilding = !(selectedTile.Building != null &&
-                selectedTile.Building.GetType().Name == TownHall.BUILDING_NAME);
+			bool destroyBuilding = !(selectedTile.Building != null && selectedTile.Building.GetType ().Name == TownHall.BUILDING_NAME);
 
-            /// Spend faith
-            ResourceBox cost = new ResourceBox(Resource.Faith, 100);
-	        if (!Player.Inventory.SpendResource(cost)) {
-	            UiHack.ERROR.Handle("Not enough faith!");
-	            return;
-	        }
+			Transform t = selectedTile.gameObject.GetComponent<Transform> ();
+			GameObject instance = GameObject.Instantiate(Resources.Load ("Prefabs/Disasters/" + disasterName, typeof(GameObject)), t.transform.position, Quaternion.identity) as GameObject;
 
-            // Place disater on map
-            Transform t = selectedTile.gameObject
-                                         .GetComponent<Transform>();
-            GameObject cast = (GameObject)GameObject.Instantiate(MeteorPrefab,
-                new Vector3(t.position.x, t.position.y, -1f), t.rotation);
+			ANaturalDisaster disaster = instance.GetComponent <ANaturalDisaster> ();
 
-            // Starts disaster
-            cast.GetComponent<Meteor>().Target(selectedTile.gameObject, destroyBuilding);
+			ResourceBox cost = disaster.Cost();
+			if (!Player.Inventory.SpendResource(cost)) {
+				UiHack.ERROR.Handle("Not enough faith!");
+				GameObject.Destroy (instance);
+				return;
+			}
+
+			disaster.Target (selectedTile.gameObject, destroyBuilding);
         }
 
         public void FetchBuildingInfo(Type building)
@@ -185,8 +182,7 @@ namespace Assets.Scripts.Utils
             string info = building.Name + "\n";
 
             Config config = GameRules.CONFIG_REPO[Building.CONFIG];
-            ResourceBox requirements = config.GetPropertyResourceBox(building.Name,
-                                                                Building.BUILDING_REQUIREMENTS);
+            ResourceBox requirements = config.GetPropertyResourceBox(building.Name, Building.BUILDING_REQUIREMENTS);
 
             info += requirements.Cap + " ";
             info += Enum.GetName(typeof(Resource), requirements.Type) + "\n";

@@ -193,10 +193,6 @@ public class Tile: MonoBehaviour{
 		hsr.sprite = null;
 		SetTileSprite ((TileTypes)flags.GetTileType());
 
-		resourceSpriteRenderer = new GameObject ("resourceSpriteRenderer");
-		resourceSpriteRenderer.transform.SetParent (this.gameObject.transform);
-		rsr = resourceSpriteRenderer.gameObject.AddComponent (typeof(SpriteRenderer)) as SpriteRenderer;
-		rsr.sortingOrder = 1;
 		reBox = ResourceBox.EMPTY ();
 		this.AddResource (resource);
 
@@ -357,19 +353,22 @@ public class Tile: MonoBehaviour{
 	/// </description>
 	/// <param name="type">Type.</param>
 	void SetTileSprite(TileTypes type){
-		try{
+		//try{
 			this.sr.sprite = Resources.Load(GetSpritePath(type), typeof(Sprite)) as Sprite;
-		}catch(Exception e){
+		/*}catch(Exception e){
 			Debug.Log (e.StackTrace);
-		}
+		}*/
 	}
 
 	void SetResourceSprite(Resource resource){
-		rsr.sprite = Resources.Load (GetResourceSpritePath (resource), typeof(Sprite)) as Sprite;
+		if (resource != Resource.None && resource != Resource.Straw) {
+			sr.sprite = Resources.Load (GetResourceSpritePath (resource), typeof(Sprite)) as Sprite;
+		}
 	}
 
 	public string GetSpritePath(TileTypes type){
 		string outString;
+		mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent ("MapGenerator") as MapGenerator;
 		if(mapGen.GetSpritePaths().TryGetValue (type, out outString)){
 			return outString;
 		}
@@ -419,7 +418,6 @@ public class Tile: MonoBehaviour{
         builder.TrackBuilding(newBuilding);
 		building = newBuilding;
 	    sr.sprite = building.GetActiveSprite();
-		rsr.sprite = null;
 		builder.Inventory.AddResource(building.OnBuild());
 
 		return true;
@@ -435,8 +433,7 @@ public class Tile: MonoBehaviour{
 
         building = null;
 		SetTileSprite((TileTypes)this.type);
-		SetResourceSprite (this.resource);
-
+		SetResourceSprite (resource);
     }
 
 	/// <summary>

@@ -40,3 +40,5 @@ $PROJDIR/Obj/
 *.userprefs
 *.DS_store
 Unity/Library/
+
+*.meta

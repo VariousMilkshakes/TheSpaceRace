@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using SpaceRace.World.Buildings;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
+using SpaceRace.World.Disasters;
 
 namespace SpaceRace.Utils
 {
@@ -58,7 +59,7 @@ namespace SpaceRace.Utils
 	    public GameObject CommandInput;
 	    public GameObject InfoPanel;
 
-	    public GameObject MeteorPrefab;
+		private GameObject DisasterPrefab;
 
 		private List<GameObject> activeUiItems;
 	    private UIController controller;
@@ -78,6 +79,8 @@ namespace SpaceRace.Utils
         private Dictionary<Resource, Text> trackers;
 		#endregion
 
+		void Awake(){
+		}
 
 		// Use this for initialization
 		void Start()
@@ -239,9 +242,17 @@ namespace SpaceRace.Utils
                             controller.Player.Name;
 		}
 
-	    public void CastMeteor ()
+	    public void CastNaturalDisaster ()
 	    {
-	        controller.Cast(selectedTile, MeteorPrefab);
+			string prefabName = EventSystem.current.currentSelectedGameObject.name;
+			Debug.Log (prefabName);
+
+			/*try{*/
+
+			controller.Cast(selectedTile, prefabName);
+			/*}catch(Exception e){
+				Debug.Log (e.ToString());
+			}*/
 	    }
 
 	    public void DisplayToolTop (Type building)
