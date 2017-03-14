@@ -42,3 +42,5 @@ $PROJDIR/Obj/
 Unity/Library/
 
 *.meta
+
+Unity/Temp/
