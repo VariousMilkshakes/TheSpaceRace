@@ -92,6 +92,7 @@
      <Compile Include="Assets\Scripts\World\Disasters\ANaturalDisaster.cs" />
      <Compile Include="Assets\Scripts\World\Disasters\Meteor.cs" />
      <Compile Include="Assets\Scripts\World\Disasters\Tsunami.cs" />
+     <Compile Include="Assets\Scripts\World\Disasters\Volcano.cs" />
      <Compile Include="Assets\Scripts\World\WorldStates.cs" />
      <None Include="Assets\Resources\Config\Buildings.txt" />
  <Reference Include="UnityEngine.UI">

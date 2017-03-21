@@ -102,6 +102,10 @@ namespace SpaceRace.Utils
             AdvanceAge.SetActive(false);
 		}
 
+		public UIController GetController(){
+			return controller;
+		}
+
         /// <summary>
         /// Called at the start of players turn to begin
         /// tracking player
