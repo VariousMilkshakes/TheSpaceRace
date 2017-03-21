@@ -1,41 +1,41 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using SpaceRace;
-using SpaceRace.PlayerTools;
-using SpaceRace.World.Buildings;
-using SpaceRace.World.Buildings.Collection;
-
-
-//Tiles don't currently hold their own position (errors)
-//Check actionsTaken increment 
-
-public class AI : ITurnObject {
-
-	//Initialisation
-	ResourceBox resourcesAvailable;
-	int[,] mapTilesAvailable;
-	int[,] cityTilesAvailable;	//will be different once town hall has been written
-	System.Random random1;
-	double rocketSuccessProb;
-	Player playerAI;
-	Player oppt;
-	int turn;
-	int actionsTaken;
-	bool turnFinished;
-	MapGenerator mapGen;
-
-	public AI (Player player) {
-		mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
-			.GetComponent<MapGenerator>();
-		playerAI = player;
-		actionsTaken = 0;
-		turn = 0;
-		random1 = new System.Random ();
-		//mapTilesAvailable = mapGen.GetGridPos();
-		//cityTilesAvailable = mapGen.GetGridPos (); //will be different once town hall has been written
-	}
+﻿//using UnityEngine;
+//using System;
+//using System.Collections;
+//using System.Collections.Generic;
+//using SpaceRace;
+//using SpaceRace.PlayerTools;
+//using SpaceRace.World.Buildings;
+//using SpaceRace.World.Buildings.Collection;
+//
+//
+////Tiles don't currently hold their own position (errors)
+////Check actionsTaken increment 
+//
+//public class AI : ITurnObject {
+//
+//	//Initialisation
+//	ResourceBox resourcesAvailable;
+//	int[,] mapTilesAvailable;
+//	int[,] cityTilesAvailable;	//will be different once town hall has been written
+//	System.Random random1;
+//	double rocketSuccessProb;
+//	Player playerAI;
+//	Player oppt;
+//	int turn;
+//	int actionsTaken;
+//	bool turnFinished;
+//	MapGenerator mapGen;
+//
+//	public AI (Player player) {
+//		mapGen = GameObject.FindGameObjectWithTag("PlaneManager")
+//			.GetComponent<MapGenerator>();
+//		playerAI = player;
+//		actionsTaken = 0;
+//		turn = 0;
+//		random1 = new System.Random ();
+//		//mapTilesAvailable = mapGen.GetGridPos();
+//		//cityTilesAvailable = mapGen.GetGridPos (); //will be different once town hall has been written
+//	}
 
 
 	/******************ignore
@@ -50,11 +50,11 @@ public class AI : ITurnObject {
 	 *******************/
 
 	//Main GetTile to run in each turn
-	public void OnTurn () {
-		playerAI.OnTurn ();
-		turnFinished = false;
-		actionsTaken = 0;
-		while (actionsTaken < 3) {
+//	public void OnTurn () {
+//		playerAI.OnTurn ();
+//		turnFinished = false;
+//		actionsTaken = 0;
+//		while (actionsTaken < 3) {
 			//surveyArea (SpaceRace.PlayerTools.Resource.Free);
 	//		if (turn == 0) { /*after hack: how should turns be handled?*/			not needed for hack
 	//			placeTownHall ();

@@ -240,7 +240,6 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 80a2952c1fb23c245a01d112b4361e98, type: 2}
-  m_RootGameObject: {fileID: 359031577}
   m_IsPrefabParent: 0
 --- !u!224 &227534408
 RectTransform:
@@ -848,7 +847,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1964579034}
+      - m_Target: {fileID: 707706978}
         m_MethodName: CompleteTurn
         m_Mode: 1
         m_Arguments:
@@ -923,14 +922,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Canvas: {fileID: 842268337}
   AdvanceAge: {fileID: 359031577}
-  AdvanceAgeNotice: {fileID: 1000012522116588, guid: 654bbe6af12064347806ad2d72e42edf,
+  AdvanceAgeNotice: {fileID: 1000011823909402, guid: 023114e86068dbf429fabf9a63d88a53,
     type: 2}
   TurnPlayerTracker: {fileID: 746650319}
-  BuildingButtonHolder: {fileID: 149254, guid: 9c0bbbe926f92524b9f1070f831c0314, type: 2}
+  BuildingButtonHolder: {fileID: 149254, guid: 7633260696073b846a434daa1f1607e0, type: 2}
   ErrorAlert: {fileID: 1270087272}
+  CommandInput: {fileID: 0}
   InfoPanel: {fileID: 1488488714}
-  MeteorPrefab: {fileID: 1267026161006998, guid: eaed63f70f55cd6429cc04a196fca0bc,
-    type: 2}
   WoodTracker: {fileID: 397764748}
   PopTracker: {fileID: 1196929937}
   MoneyTracker: {fileID: 474701789}

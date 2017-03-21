@@ -367,7 +367,7 @@ namespace Zones{
 			SetUpResource (Resource.Wood, (int)TileTypes.GRASS, 20);
 			SetUpResource (Resource.Stone, (int)TileTypes.MOUNTAIN, 5);
 			SetUpResource (Resource.Iron, (int)TileTypes.MOUNTAIN, 5);
-			SetUpResource (Resource.Fish, (int)TileTypes.WATER, 5);
+			SetUpResource (Resource.Food, (int)TileTypes.WATER, 5);
 
 			//Sets any remaining grass Tiles to have straw on them for farms to gather (and convert to food?)
 			List<List<Coord>> grassRegions = GetRegions ((int)TileTypes.GRASS);
