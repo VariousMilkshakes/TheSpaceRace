@@ -23,8 +23,12 @@ public class Volcano : ANaturalDisaster {
 	private ResourceBox cost;
 
 	void Awake(){
-		cost = new ResourceBox (Resource.Faith, 10);
+		cost = new ResourceBox (Resource.Faith, 10000);
 		children = new List<GameObject> ();
+	}
+
+	void Update(){
+		CheckLifeTime ();
 	}
 
 	override public ResourceBox Cost(){
@@ -51,12 +55,14 @@ public class Volcano : ANaturalDisaster {
 
 		UIController controller = GameObject.Find ("TempUIHandler").GetComponent<UiHack> ().GetController () as UIController;
 		foreach (Tile t in meteorTiles) {
-			if(Random.value > 0.5f){
+			if(Random.value > 0.8){
+				controller.Player.Inventory.AddResource (Resource.Faith, 100);
 				controller.Cast (t, "Meteor");
 			}
+
 		}
 
-		lifeTime = 120;
+		lifeTime = 320;
 	}
 
 	List<Tile> GetSurroundingTiles(Tile target, int radius){
