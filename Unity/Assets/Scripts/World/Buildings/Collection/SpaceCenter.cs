@@ -39,55 +39,16 @@ namespace SpaceRace.World.Buildings.Collection
             base.OnTurn();
             //check amount of hydrogen this player owns
             hydrogen = _owner.Inventory.CheckResource(Resource.Hydrogen);
-            rnd = new System.Random();
-            landShip();
+            Debug.Log("Hydrogen: " + hydrogen);
+    
             if(landShip() == true)
             {
                 //end the game
                 Debug.Log("Congratulations");
-            }
-        }
-       
-        /// <summary>
-        /// Calculate the probability of landing the space ship
-        /// </summary>
-        /// <param name="hydrogen"></param>
-        /// <returns></returns>
-        private int calculateLandProb(int hydrogen)
-        {
-            int prob;
-            if(hydrogen < 350)
+            } else
             {
-                Debug.Log("Lowest");
-                prob = rnd.Next(20);
+                Debug.Log("Launch unsuccessful");
             }
-            else if(hydrogen < 500)
-            {
-                Debug.Log("Low");
-                prob = rnd.Next(20, 40);
-            }
-            else if(hydrogen < 650)
-            {
-                Debug.Log("Middle");
-                prob = rnd.Next(40, 60);
-            }
-            else if(hydrogen < 800)
-            {
-                Debug.Log("Good");
-                prob = rnd.Next(60, 80);
-            }
-            else if(hydrogen >= 800)
-            {
-                Debug.Log("Best");
-                prob = rnd.Next(80, 100);
-            }
-            else
-            {
-                prob = 0;
-            }
-            
-            var result = Math.Floor(20 + (100 + 1 - 20) * (Math.Pow(rnd.Next(100), 2)));
-            return (int)result;
         }
 
         /// <summary>
@@ -96,8 +57,10 @@ namespace SpaceRace.World.Buildings.Collection
         /// <returns>Returns true if landing was successful</returns>
         private Boolean landShip()
         {
-            if(calculateLandProb(hydrogen) > 80){
-                Debug.Log("Congratulations");
+            int landProb = calculateLandProb(hydrogen);
+            Debug.Log("Land prob: " + landProb);
+            if (landProb <= 20)
+            {
                 return true;
             }
             else
@@ -105,5 +68,51 @@ namespace SpaceRace.World.Buildings.Collection
                 return false;
             }
         }
+
+        /// <summary>
+        /// Calculate the probability of landing the space ship
+        /// </summary>
+        /// <param name="hydrogen"></param>
+        /// <returns></returns>
+        private int calculateLandProb(int hydrogen)
+        {
+            rnd = new System.Random();
+            int prob;
+            if (hydrogen < 350)
+            {
+                Debug.Log("Lowest");
+                prob = rnd.Next(100);
+            }
+            else if (hydrogen < 500)
+            {
+                Debug.Log("Low");
+                prob = rnd.Next(80);
+            }
+            else if (hydrogen < 650)
+            {
+                Debug.Log("Middle");
+                prob = rnd.Next(60);
+            }
+            else if (hydrogen < 800)
+            {
+                Debug.Log("Good");
+                prob = rnd.Next(40);
+            }
+            else if (hydrogen >= 800)
+            {
+                Debug.Log("Best");
+                prob = rnd.Next(20);
+            }
+            else
+            {
+                prob = 0;
+            }
+
+            /* int result = (int)Math.Floor((double)(Math.Abs(prob - prob) * (1 + 100 - 20) + 20));
+             return result;*/
+            return prob;
+        }
+
+       
     }
 }

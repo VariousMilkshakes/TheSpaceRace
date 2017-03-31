@@ -1,12 +1,11 @@
-﻿using SpaceRace.PlayerTools;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SpaceRace.PlayerTools;
 using UnityEngine;
 
 namespace SpaceRace.World.Buildings.Collection
 {
-    public class Palace : Building
+    class Palace : Building
     {
-
         public const string BUILDING_NAME = "Palace";
 
         /// <summary>
@@ -16,7 +15,7 @@ namespace SpaceRace.World.Buildings.Collection
 	    private static Dictionary<WorldStates, Sprite> loaded_sprites = new Dictionary<WorldStates, Sprite>();
 
         public Palace(Player builder, Tile pos)
-            : base (typeof(Palace), builder, pos, loaded_sprites){ }
+            : base(typeof(Palace), builder, pos, loaded_sprites) { }
 
         public override Sprite GetActiveSprite()
         {
@@ -30,11 +29,6 @@ namespace SpaceRace.World.Buildings.Collection
         public override ResourceBox BuildRequirements()
         {
             return GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(BUILDING_NAME, BUILDING_REQUIREMENTS, true);
-        }
-
-        public override ResourceBox OnBuild()
-        {
-            return GameRules.CONFIG_REPO[CONFIG].GetPropertyResourceBox(BUILDING_NAME, OUTPUT_ON_BUILD, true);
         }
     }
 }
