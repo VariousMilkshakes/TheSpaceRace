@@ -335,6 +335,7 @@ public class Tile : MonoBehaviour
         }
         catch (Exception e)
         {
+            Debug.Log(e);
             Debug.Log("Could not find");
         }
 
