@@ -41,7 +41,6 @@ $PROJDIR/Obj/
 *.DS_store
 Unity/Library/
 
-*.meta
 !*.png.meta
 
 Unity/Temp/
