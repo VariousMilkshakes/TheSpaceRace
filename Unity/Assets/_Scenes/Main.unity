@@ -747,10 +747,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 491965384}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de42ffa4720e3b1419273f3ff325268a, type: 3}
+  m_Script: {fileID: 11500000, guid: df69c476704992444b5e8a08dc824d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 60
+  size: 65
   seed: 
   randomSeed: 1
   waterPercentage: 45
@@ -917,14 +917,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 707706977}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0d359e30dcbc8e4bbc650552fd31482, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ff61b35462c1db48b4ce082615bd7d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Canvas: {fileID: 842268337}
   AdvanceAge: {fileID: 359031577}
   AdvanceAgeNotice: {fileID: 860292808}
   TurnPlayerTracker: {fileID: 746650319}
-  BuildingButtonHolder: {fileID: 149254, guid: 243cf73715cafb14091238ba7b8f3faf, type: 2}
+  BuildingButtonHolder: {fileID: 149254, guid: 3dbe8943cd1ddde44ac37a5aa6965093, type: 2}
   ErrorAlert: {fileID: 1270087272}
   CommandInput: {fileID: 0}
   InfoPanel: {fileID: 1488488714}
@@ -1119,7 +1119,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 831661547}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 712fadfce3ec95b4a82230be603c41de, type: 3}
+  m_Script: {fileID: 11500000, guid: e3460c9919e5e134bbfb265ee752cdee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 0}
@@ -1559,7 +1559,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1270087272}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21360c70ad69576429f1882f940b9f4e, type: 3}
+  m_Script: {fileID: 11500000, guid: db29e64b9e211f04198ab4b1352d503d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ErrorDisplay: {fileID: 860292808}
@@ -2106,7 +2106,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1964579032}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21667b1a3a46c014cb1d70040a3ba0db, type: 3}
+  m_Script: {fileID: 11500000, guid: 49fcdf3120fad6b49a72fe170401a43c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UiHandlerObject: {fileID: 707706977}

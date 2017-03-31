@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 367bf4b38e74e4042ad3220fe5ff4717
+timeCreated: 1490974220
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Hong Kong Hustle Laser
+  fontNames:
+  - Hong Kong Hustle Laser
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
