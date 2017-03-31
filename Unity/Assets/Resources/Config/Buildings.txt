@@ -50,6 +50,7 @@ Res.RequireWorker=false
 Sprite.All=Buildings/Grass_With_Monument
 Tiles=Grass
 Age=Roman
+Upgrade.To=Landmark
 RequireTownHall=true
 
 [TownHall]
@@ -241,7 +242,7 @@ Res.OnBuild.count=0
 Res.OnTurnInput.type=Money
 Res.OnTurnInput.count=50
 Res.OnTurnOutput.type=Tourism
-Res.OnturnOut.put.count=50
+Res.OnTurnOutput.count=50
 Res.RequireWorker=true
 Sprite.All=Buildings/Grass_With_Palace
 Tiles=Grass

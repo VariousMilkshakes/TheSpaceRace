@@ -185,8 +185,8 @@ namespace SpaceRace.Game
 
         private const int wood = 10;
         private const int pop = 1;
-        private const int money = 600;
-        private const int stone = 10;
+        private const int money = 6000;
+        private const int stone = 1000;
 
         /// <summary>
         /// Default resource values for inventory
