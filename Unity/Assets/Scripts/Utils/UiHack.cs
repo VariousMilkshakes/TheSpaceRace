@@ -190,11 +190,11 @@ namespace SpaceRace.Utils
 				buildingTypes = controller.GetValidBuildings(targetTile);
 			}
 
-		    float panelWidth = 670f;
+		    float panelWidth = 700f;
 		    float xPos = BuildingPanel.transform.position.x - panelWidth / 2;
 		    float startX = xPos;
 			float yPos = 30;
-			float xSpacing = -10f;
+			float xSpacing = 30f;
 		    float ySpacing = 30f;
 			int buttonSize = 64;
 			
@@ -205,13 +205,13 @@ namespace SpaceRace.Utils
 				menuItem.transform.position = new Vector3(xPos, yPos);
                 var text = menuItem.transform.GetChild(0);
 			    text.GetComponent<Text>().text = building.Name;
-			    float scale = 1f;
+			    float scale = 0.5f;
 			    menuItem.transform.localScale = new Vector3(scale, scale);
 				activeUiItems.Add(menuItem);
 
 				xPos += buttonSize * scale + xSpacing;
 
-			    if (xPos + (buttonSize*scale) >= startX + panelWidth / 2)
+			    if (xPos + (buttonSize*scale) >= startX + panelWidth)
 			    {
 			        xPos = startX;
 			        yPos += ySpacing + (buttonSize*scale);
@@ -224,7 +224,12 @@ namespace SpaceRace.Utils
 			AdvanceAge.SetActive(true);
 		}
 
-		public void AdvancePlayer ()
+        public void HideAdvanceButton()
+        {
+            AdvanceAge.SetActive(false);
+        }
+
+        public void AdvancePlayer ()
 		{
             controller.AdvancePlayerAge();
 		    string advanceMessage = "You have advanced to the \n" +

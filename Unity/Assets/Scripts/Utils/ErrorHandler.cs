@@ -53,7 +53,7 @@ public class ErrorHandler : MonoBehaviour
 	void Start ()
 	{
 	    errorMessage = ErrorDisplay.GetComponent<Text>();
-	    lifetime = 2;
+	    lifetime = 4;
 	    fadeTick = -1;
         hideError();
 	}

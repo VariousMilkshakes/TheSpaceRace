@@ -16,7 +16,6 @@ namespace SpaceRace.World.Buildings.Collection
 	{
 		private MapGenerator mapGen;
 		private List<Tile> cityTiles;
-		private Player currentPlayer;
         //All tiles on the map
 		private List<Tile> mapTiles;
         //max X coordinate of the city on the map

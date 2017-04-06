@@ -32,7 +32,7 @@ namespace SpaceRace.World.Disasters{
 	        movement = new Vector3(-1f * speed, -1f * speed);
 	        distance = new Vector3(100f, 100f);
 
-			cost = new ResourceBox(Resource.Faith, 100);
+			cost = new ResourceBox(Resource.Faith, 200);
 		}
 		
 		// Update is called once per frame
@@ -82,8 +82,13 @@ namespace SpaceRace.World.Disasters{
 	    {
 	        Animator ani = GetComponent<Animator>();
 
-	        ani.runtimeAnimatorController = ExplosionAnimation;
-	        explodeTime = 60;
+	        try {
+	            ani.runtimeAnimatorController = ExplosionAnimation;
+	        } catch (Exception e) {
+	            Debug.Log(e);
+	        }
+
+            explodeTime = 60;
 
 	        if (destoryable)
 	            targetTile.GetComponent<Tile>().DestoryBuilding();

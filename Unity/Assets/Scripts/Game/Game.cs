@@ -74,6 +74,7 @@ namespace SpaceRace.Game
         private void newPhase (Player player)
         {
             if (player.ReadyToAdvance) uiHandler.DisplayAdvanceButton();
+            else uiHandler.HideAdvanceButton();
 
             // Switch UI to player
             uiHandler.BindTo(player.PlayerUI);

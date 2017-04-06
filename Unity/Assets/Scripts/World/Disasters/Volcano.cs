@@ -23,7 +23,7 @@ public class Volcano : ANaturalDisaster {
 	private ResourceBox cost;
 
 	void Awake(){
-		cost = new ResourceBox (Resource.Faith, 10000);
+		cost = new ResourceBox (Resource.Faith, 5000);
 		children = new List<GameObject> ();
 	}
 
