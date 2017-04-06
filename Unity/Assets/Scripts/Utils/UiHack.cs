@@ -224,7 +224,12 @@ namespace SpaceRace.Utils
 			AdvanceAge.SetActive(true);
 		}
 
-		public void AdvancePlayer ()
+        public void HideAdvanceButton()
+        {
+            AdvanceAge.SetActive(false);
+        }
+
+        public void AdvancePlayer ()
 		{
             controller.AdvancePlayerAge();
 		    string advanceMessage = "You have advanced to the \n" +
