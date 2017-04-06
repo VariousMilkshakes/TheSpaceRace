@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using SpaceRace.Game;
 using SpaceRace.PlayerTools;
 using Zones;
 /*
@@ -18,7 +18,9 @@ public class MapGenerator : MonoBehaviour
     /// The number of columns (x).
     /// </summary>
     [Range(1, 100)]
-    public int size;
+    public int sizeX;
+    [Range(1, 100)]
+    public int sizeY;
 
     /// <summary>
     /// The seed to pass to the random number generator in the RandomiseGrid method.
@@ -171,6 +173,9 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     void Start()
     {
+        sizeX = GameManager.MAP_WIDTH;
+        sizeY = GameManager.MAP_HEIGHT;
+
         spritePaths = new Dictionary<TileTypes, string>();
         resourceSpritePaths = new Dictionary<Resource, string>();
         setUpSpriteDict();
@@ -185,7 +190,8 @@ public class MapGenerator : MonoBehaviour
         }
         tiles = new List<Tile>();
 
-        int zoneSise = size / 2;
+        // Average x and y and divid by 2
+        int zoneSise = (sizeX + sizeY) / 4;
 
         List<Zone> zones = new List<Zone>();
         zones.Add(new Zone(zoneSise, (float)seed.GetHashCode(), (int)waterPercentage));
@@ -196,7 +202,8 @@ public class MapGenerator : MonoBehaviour
         ZoneManager ZM = new ZoneManager();
         Zone newZone = ZM.CombineZones(zones, zoneSise);
         gridPos = newZone.GetZone();
-        size = zoneSise * 2;
+        sizeY = zoneSise * 2;
+        sizeX = zoneSise * 2;
         SetUpMap();
     }
 
@@ -245,9 +252,9 @@ public class MapGenerator : MonoBehaviour
 
         if (gridPos != null)
         {
-            for (int x = 0; x < size; x++)
+            for (int x = 0; x < sizeX; x++)
             {
-                for (int y = 0; y < size; y++)
+                for (int y = 0; y < sizeY; y++)
                 {
                     GameObject tile = new GameObject("Tile");
                     tile.transform.SetParent(GameObject.Find("PlaneManager").transform);

@@ -35,8 +35,8 @@ public class CameraContol : MonoBehaviour
     {
         _camera = Camera.main;
         rb = _camera.GetComponent<Rigidbody2D>();
-        xMoveMax = (planeManager.size * 2) - 8;
-        yMoveMax = (planeManager.size * 2) - 3.5f;
+        xMoveMax = (planeManager.sizeX * 2) - 8;
+        yMoveMax = (planeManager.sizeY * 2) - 3.5f;
     }
 
     /*

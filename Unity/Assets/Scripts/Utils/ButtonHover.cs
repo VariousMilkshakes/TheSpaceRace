@@ -13,12 +13,12 @@ public class ButtonHover : MonoBehaviour,
 {
     public static void SHOW_TOOL_TIP (bool show)
     {
-        GameObject.Find("InfoPanel")
-                  .GetComponent<Image>()
-                  .enabled = show;
+//        GameObject.Find("BuildingInfo")
+//                  .GetComponent<Image>()
+//                  .enabled = show;
 
         if (!show) {
-            GameObject.Find("Info")
+            GameObject.Find("BuildingInfo")
                       .GetComponent<Text>()
                       .text = "";
         }

@@ -27,7 +27,11 @@ namespace SpaceRace.Game
         private void Start ()
         {
             running = true;
-            activePlayers = GameManager.MANAGER.GetActivePlayers();
+            activePlayers = GameManager.PLAYERS;
+            if (activePlayers.Count == 0) {
+                activePlayers.Add(new Player("P1", Color.cyan));
+                activePlayers.Add(new Player("P2", Color.red));
+            }
 
             // Bind UI to first player
             uiHandler = UiHandlerObject.GetComponent<UiHack>();

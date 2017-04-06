@@ -58,6 +58,7 @@ namespace SpaceRace.Utils
 	    public GameObject ErrorAlert;
 	    public GameObject CommandInput;
 	    public GameObject InfoPanel;
+	    public GameObject BuildingPanel;
 
 		private GameObject DisasterPrefab;
 
@@ -68,13 +69,17 @@ namespace SpaceRace.Utils
 
 	    private bool inputOpen = false;
 
-		#region ResourceTrackers
-		public GameObject WoodTracker;
+        #region ResourceTrackers
+        public GameObject MoneyTracker;
 		public GameObject PopTracker;
-		public GameObject MoneyTracker;
-		public GameObject StoneTracker;
-		public GameObject FoodTracker;
 	    public GameObject FaithTracker;
+		public GameObject FoodTracker;
+        public GameObject WoodTracker;
+		public GameObject StoneTracker;
+	    public GameObject IronTracker;
+	    public GameObject SteelTracker;
+	    public GameObject TourismTracker;
+	    public GameObject HydrogenTracker;
 
         private Dictionary<Resource, Text> trackers;
 		#endregion
@@ -96,10 +101,14 @@ namespace SpaceRace.Utils
 			trackers = new Dictionary<Resource, Text>();
 			trackers.Add(Resource.Money, MoneyTracker.GetComponent<Text>());
 			trackers.Add(Resource.Population, PopTracker.GetComponent<Text>());
+            trackers.Add(Resource.Faith, FaithTracker.GetComponent<Text>());
+			trackers.Add(Resource.Food, FoodTracker.GetComponent<Text>());
 			trackers.Add(Resource.Wood, WoodTracker.GetComponent<Text>());
 			trackers.Add(Resource.Stone, StoneTracker.GetComponent<Text>());
-			trackers.Add(Resource.Food, FoodTracker.GetComponent<Text>());
-            trackers.Add(Resource.Faith, FaithTracker.GetComponent<Text>());
+            trackers.Add(Resource.Iron, IronTracker.GetComponent<Text>());
+            trackers.Add(Resource.Steel, SteelTracker.GetComponent<Text>());
+            trackers.Add(Resource.Tourism, TourismTracker.GetComponent<Text>());
+            trackers.Add(Resource.Hydrogen, HydrogenTracker.GetComponent<Text>());
 
             AdvanceAge.SetActive(false);
 		}
@@ -155,9 +164,7 @@ namespace SpaceRace.Utils
 
 			if (!trackers.ContainsKey(resource)) return;
 
-			string current = trackers[resource].text;
-			string label = current.Split(':')[0];
-			trackers[resource].text = label + ": " + value;
+			trackers[resource].text = value + "";
 		}
 
 		/// <summary>
@@ -179,18 +186,18 @@ namespace SpaceRace.Utils
 				buildingTypes = controller.GetValidBuildings(targetTile);
 			}
 
-		    float panelWidth = 700f;
-		    float startX = Canvas.transform.position.x;
-			float xPos = startX - panelWidth / 2;
-			float yPos = 50;
-			float xSpacing = 10f;
+		    float panelWidth = 670f;
+		    float xPos = BuildingPanel.transform.position.x - panelWidth / 2;
+		    float startX = xPos;
+			float yPos = 30;
+			float xSpacing = -10f;
 		    float ySpacing = 30f;
 			int buttonSize = 64;
 			
 			foreach (Type building in buildingTypes)
 			{
 				GameObject menuItem = controller.CreateBuildingButton(building, buttonSize, targetTile);
-				menuItem.transform.SetParent(Canvas.transform);
+				menuItem.transform.SetParent(BuildingPanel.transform);
 				menuItem.transform.position = new Vector3(xPos, yPos);
                 var text = menuItem.transform.GetChild(0);
 			    text.GetComponent<Text>().text = building.Name;
@@ -233,6 +240,7 @@ namespace SpaceRace.Utils
 			}
 
 			activeUiItems.Clear();
+            BuildingPanel.SetActive(true);
 		}
 
 		private void setPlayer ()
