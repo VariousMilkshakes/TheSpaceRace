@@ -17,6 +17,8 @@ namespace SpaceRace.Game
         public static int MAP_HEIGHT = 64;
         public static int MAP_WATER = 20;
 
+        public static Player Winner;
+
         private static Game CURRENT_GAME;
 
     }

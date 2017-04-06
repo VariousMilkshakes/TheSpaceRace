@@ -15,3 +15,5 @@ EditorBuildSettings:
     path: Assets/Prefabs/_Scenes/PlayerSetting.unity
   - enabled: 1
     path: Assets/Prefabs/_Scenes/Pause.unity
+  - enabled: 1
+    path: Assets/Prefabs/_Scenes/Winner.unity
