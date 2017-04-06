@@ -5,27 +5,25 @@ using System.Linq;
 using SpaceRace.PlayerTools;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Assets.Scripts.Utils;
+using SpaceRace.Utils;
 
-public class Tsunami : ANaturalDisaster {
-
-	private Transform position;
-	private Vector3 movement;
-	private Vector3 distance;
+public class Volcano : ANaturalDisaster {
 
 	private GameObject targetTile;
 	private Vector3 targetPos;
 
-	public RuntimeAnimatorController TsunamiAnimation;
+	public RuntimeAnimatorController VolcanoAnimation;
 
 	private List<GameObject> children;
 
 	private int lifeTime = -1;
-	private const float damageMod = 0.2f;
+	private const float damageMod = 0.5f;
 
 	private ResourceBox cost;
 
 	void Awake(){
-		cost = new ResourceBox (Resource.Faith, 1000);
+		cost = new ResourceBox (Resource.Faith, 10000);
 		children = new List<GameObject> ();
 	}
 
@@ -39,38 +37,35 @@ public class Tsunami : ANaturalDisaster {
 
 	override public void Target(GameObject target, bool destroyBuilding){
 		targetTile = target;
-		targetPos = target.GetComponent<Transform>().position;
+		targetPos = target.GetComponent<Transform> ().position;
+
 
 		int min = 0;
 		int max = Enum.GetValues(typeof(Resource)).Length - 1;
 
-		Animator ani = gameObject.GetComponent<Animator> ();
-		ani.runtimeAnimatorController = TsunamiAnimation;
+		List<Tile> volcanoTiles = GetSurroundingTiles (targetTile.GetComponent<Tile> (), 1);
+		List<Tile> meteorTiles = GetSurroundingTiles (targetTile.GetComponent<Tile> (), 4);
 
-		List<Tile> surroundingTiles = GetSurroundingTiles (target.GetComponent<Tile> ());
-
-		if (!surroundingTiles.Any ()) {
-			throw new Exception ("The List of surrounding tiles is empty!");
-		}
-
-		foreach (Tile t in surroundingTiles) {
-			Debug.Log (t.GetX() + ", " + t.GetY());
-			GameObject tsunamiChild = Instantiate (Resources.Load ("Prefabs/Disasters/TsunamiChild"), t.GetComponentInParent<Transform>().position, Quaternion.identity) as GameObject;
-			children.Add (tsunamiChild);
-
-			tsunamiChild.GetComponent<Animator> ().runtimeAnimatorController = TsunamiAnimation;
-
+		foreach(Tile t in volcanoTiles){
 			if (t.Building != null) {
 				Resource targetResource = (Resource)Random.Range (min, max);
 				t.Building.Owner.Inventory.ModifyResource (targetResource, 1f - damageMod);
 			}
 		}
 
-		lifeTime = 120;
+		UIController controller = GameObject.Find ("TempUIHandler").GetComponent<UiHack> ().GetController () as UIController;
+		foreach (Tile t in meteorTiles) {
+			if(Random.value > 0.8){
+				controller.Player.Inventory.AddResource (Resource.Faith, 100);
+				controller.Cast (t, "Meteor");
+			}
 
+		}
+
+		lifeTime = 320;
 	}
 
-	List<Tile> GetSurroundingTiles(Tile target){
+	List<Tile> GetSurroundingTiles(Tile target, int radius){
 		MapGenerator mapgen = (GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent<MapGenerator> ()) as MapGenerator;
 
 		List<Tile> allTiles = mapgen.GetTiles ();
@@ -82,9 +77,14 @@ public class Tsunami : ANaturalDisaster {
 		foreach (Tile t in allTiles) {
 			int x = t.GetX ();
 			int y = t.GetY ();
-
-			if (x >= tarX - 1 && x <= tarX + 1) {
-				if (y >= tarY - 1 && y <= tarY + 1) {
+			if (radius <= 1) {
+				if (x >= tarX - 1 && x <= tarX + 1) {
+					if (y >= tarY - 1 && y <= tarY + 1) {
+						returnTiles.Add (t);
+					}
+				}
+			} else {
+				if(IsCoordinateWithinCircle(tarX, tarY, radius, x, y)){
 					returnTiles.Add (t);
 				}
 			}
@@ -93,6 +93,12 @@ public class Tsunami : ANaturalDisaster {
 		return returnTiles;
 	}
 
+	private bool IsCoordinateWithinCircle(int midPointX, int midPointY, int radius, int x, int y){
+		if(Mathf.Pow((float) (x - midPointX), 2) + Mathf.Pow((float) (y - midPointY), 2) <= Mathf.Pow((float) radius - 1, 2)){
+			return true;
+		}
+		return false;
+	}
 	void CheckLifeTime(){
 		switch (lifeTime) {
 		case -1:
