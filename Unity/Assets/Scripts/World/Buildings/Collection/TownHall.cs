@@ -1,7 +1,6 @@
 ﻿using System;
 using SpaceRace.PlayerTools;
 using UnityEngine;
-using SpaceRace.Utils;
 using SpaceRace.Game;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +33,11 @@ namespace SpaceRace.World.Buildings.Collection
 		private List<Tile> leftBorder;
         //The complete outer border of tiles which the city can expand to
 		private List<Tile> borderTiles;
-    //    int populationTarget;
 		String playerName;
 		UnityEngine.Color playerColour;
 		public const string BUILDING_NAME = "TownHall";
+        //Keep track of previous population
+        int oldPopulation;
 
 		/// <summary>
 		/// Load sprites as singletons associated with worldstates
@@ -55,11 +55,9 @@ namespace SpaceRace.World.Buildings.Collection
 			mapGen = GameObject.FindGameObjectWithTag ("PlaneManager").GetComponent<MapGenerator> ();
 			playerName = _owner.Name;
 			playerColour = _owner.Color;
-
-			cityTiles = /*PlayerTools.Player.Properties.GetPlayerTiles ();*/ new List<Tile> ();
+            int oldPopulation = _owner.Inventory.CheckResource(Resource.Population);
+            cityTiles = new List<Tile> ();
 			mapTiles = mapGen.GetTiles ();
-
-     //       populationTarget = 2;
 
 			/// Each border of tiles surrounding the city boundary 
 			topBorder = new List<Tile> ();
@@ -114,14 +112,14 @@ namespace SpaceRace.World.Buildings.Collection
 			minXCoord = findMinX (cityTiles);
 			minYCoord = findMinY (cityTiles);
 
-			///Trigger city expansion if population has increased by 2
-			int population = _owner.Inventory.CheckResource (Resource.Population);
-			if (population % 2 == 0) {  //needs to be changed
-				expandCityBoundary ();
-			}
-
-        //    populationTarget ++;
-		}
+            ///Trigger city expansion by three tiles if last building placed was a house
+            int population = _owner.Inventory.CheckResource(Resource.Population);
+            if (oldPopulation != population)
+            {
+                expandCityBoundary();
+                oldPopulation = population;
+            }
+        }
 
 
 		/// <summary>
@@ -198,15 +196,17 @@ namespace SpaceRace.World.Buildings.Collection
 
             if (borderTiles.Count() != 0)
             {
-                //Select a tile to expand to
-                int borderIndex = borderTiles.Count();
-                int expandToIndex = rnd.Next(borderIndex);
-                Tile expandTo = borderTiles.ElementAt(expandToIndex);
+                for (int var = 0; var <= 3; var++)
+                {
+                    //Select a tile to expand to
+                    int borderIndex = borderTiles.Count();
+                    int expandToIndex = rnd.Next(borderIndex);
+                    Tile expandTo = borderTiles.ElementAt(expandToIndex);
 
-                //Expand the city boundary
-                expandTo.SetOwner(playerName, playerColour);
-                cityTiles.Add(expandTo);
-
+                    //Expand the city boundary
+                    expandTo.SetOwner(playerName, playerColour);
+                    cityTiles.Add(expandTo);
+                }
             }
         }
 
@@ -287,5 +287,9 @@ namespace SpaceRace.World.Buildings.Collection
 			return min;
 		}
 
-	}
+
+    
+
+
+    }
 }
