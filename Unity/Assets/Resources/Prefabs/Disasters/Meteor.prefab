@@ -51,7 +51,7 @@ Animator:
   m_GameObject: {fileID: 1267026161006998}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 19ca5790b03290f45a58452c224ced98, type: 2}
+  m_Controller: {fileID: 9100000, guid: 80b89f0ee6847d94da93c2fc91e8d621, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -67,10 +67,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1267026161006998}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d716604494cd124d86ebc672411eb60, type: 3}
+  m_Script: {fileID: 11500000, guid: 53f4450dbcd40ca44a388542fac95e01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExplosionAnimation: {fileID: 9100000, guid: 7b83369707af3ff4eba9825ece6088ca, type: 2}
+  ExplosionAnimation: {fileID: 9100000, guid: 3154c2e8e12fc2f4eb6aec3c83e1b8f2, type: 2}
 --- !u!212 &212102966490068866
 SpriteRenderer:
   m_ObjectHideFlags: 1

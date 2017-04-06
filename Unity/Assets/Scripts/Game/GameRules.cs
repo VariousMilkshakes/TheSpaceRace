@@ -199,6 +199,7 @@ namespace SpaceRace.Game
             inv.AddResource(Resource.Population, pop);
             inv.AddResource(Resource.Money, money);
             inv.AddResource(Resource.Stone, stone);
+            inv.AddResource(Resource.Faith, 10000);
 
             return inv;
         }

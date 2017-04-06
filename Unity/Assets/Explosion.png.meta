@@ -1,14 +1,14 @@
 fileFormatVersion: 2
-guid: e4dda32d0f250404ab60b88c42e53d5a
-timeCreated: 1481710683
+guid: 2906330bee5c92c48b5f137f41f18b0c
+timeCreated: 1481710700
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Meteor_0
-    21300002: Meteor_1
-    21300004: Meteor_2
-    21300006: Meteor_3
-    21300008: Meteor_4
+    21300000: Explosion_0
+    21300002: Explosion_1
+    21300004: Explosion_2
+    21300006: Explosion_3
+    21300008: Explosion_4
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -40,12 +40,12 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
+  spriteExtrude: 0
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -75,7 +75,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Meteor_0
+      name: Explosion_0
       rect:
         serializedVersion: 2
         x: 0
@@ -88,7 +88,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Meteor_1
+      name: Explosion_1
       rect:
         serializedVersion: 2
         x: 64
@@ -101,7 +101,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Meteor_2
+      name: Explosion_2
       rect:
         serializedVersion: 2
         x: 128
@@ -114,7 +114,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Meteor_3
+      name: Explosion_3
       rect:
         serializedVersion: 2
         x: 192
@@ -127,7 +127,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Meteor_4
+      name: Explosion_4
       rect:
         serializedVersion: 2
         x: 256

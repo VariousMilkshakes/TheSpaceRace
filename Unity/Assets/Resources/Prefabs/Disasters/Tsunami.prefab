@@ -51,7 +51,7 @@ Animator:
   m_GameObject: {fileID: 1666500751618406}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 92a327512a990ca47b0ae6983db040fb, type: 2}
+  m_Controller: {fileID: 9100000, guid: 38ea7f07c06ebfd43b32c71f99c1c77f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -67,10 +67,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1666500751618406}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bfce426ec5e20f4a88f6ed297a82d5c, type: 3}
+  m_Script: {fileID: 11500000, guid: 12fe63f22a117a74998b617b44adea37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TsunamiAnimation: {fileID: 9100000, guid: 92a327512a990ca47b0ae6983db040fb, type: 2}
+  TsunamiAnimation: {fileID: 9100000, guid: 38ea7f07c06ebfd43b32c71f99c1c77f, type: 2}
 --- !u!212 &212998689586260602
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -102,7 +102,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: e36e21a4aaf252342ab250f59286f53b, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

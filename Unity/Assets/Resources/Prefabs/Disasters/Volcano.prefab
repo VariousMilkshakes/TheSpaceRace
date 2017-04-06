@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ac7f82073015684c8c352948f2d0557, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VolcanoAnimation: {fileID: 9100000, guid: ada1e92db66013d41a316652ae341fba, type: 2}
+  VolcanoAnimation: {fileID: 9100000, guid: 31c8c1ccd218bbc4b8dc8872f7077eef, type: 2}
 --- !u!212 &212100412783980512
 SpriteRenderer:
   m_ObjectHideFlags: 1
