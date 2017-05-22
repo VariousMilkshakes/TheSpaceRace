@@ -15,12 +15,25 @@ namespace SpaceRace.World.Buildings.Collection
         /// </summary>
 	    private static Dictionary<WorldStates, Sprite> loaded_sprites = new Dictionary<WorldStates, Sprite>();
 
-        public University(Player builder, Tile pos)
-            : base(typeof(University), builder, pos, loaded_sprites) { }
+        public University (Player builder, Tile pos)
+            : base(typeof(University), builder, pos, loaded_sprites)
+        {
+            Upgradeable = true;
+        }
 
         public override Sprite GetActiveSprite()
         {
             return loaded_sprites[_buildingState];
+        }
+
+        public override ResourceBox OnBuild()
+        {
+            if ((int)_owner.Age < (int)WorldStates.Tudor)
+            {
+                _owner.ReadyToAdvance = true;
+            }
+
+            return base.OnBuild();
         }
 
         /// <summary>

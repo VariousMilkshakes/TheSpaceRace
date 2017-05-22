@@ -185,8 +185,8 @@ namespace SpaceRace.Game
 
         private const int wood = 10;
         private const int pop = 1;
-        private const int money = 6000;
-        private const int stone = 1000;
+        private const int money = 750;
+        private const int stone = 100;
 
         /// <summary>
         /// Default resource values for inventory
@@ -199,7 +199,6 @@ namespace SpaceRace.Game
             inv.AddResource(Resource.Population, pop);
             inv.AddResource(Resource.Money, money);
             inv.AddResource(Resource.Stone, stone);
-            inv.AddResource(Resource.Faith, 10000);
 
             return inv;
         }

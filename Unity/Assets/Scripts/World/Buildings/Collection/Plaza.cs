@@ -9,7 +9,7 @@ namespace Assets.Scripts.World.Buildings.Collection
 {
 	class Plaza : Building
 	{
-        public const string BUILDING_NAME = "House";
+        public const string BUILDING_NAME = "Plaza";
 
         /// <summary>
         /// Load sprites as singletons associated with worldstates

@@ -52,11 +52,10 @@ Tiles=Grass
 Age=Roman
 Upgrade.To=Landmark
 RequireTownHall=true
-Upgrade.To=Landmark
 
 [TownHall]
 Res.BuildRequirements.type=Money
-Res.BuildRequirements.count=500
+Res.BuildRequirements.count=700
 Res.OnBuild.type=Free
 Res.OnBuild.count=0
 Res.OnTurnInput.type=Free

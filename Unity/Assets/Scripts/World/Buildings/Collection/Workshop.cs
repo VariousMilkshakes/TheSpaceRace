@@ -15,8 +15,11 @@ namespace SpaceRace.World.Buildings.Collection
         /// </summary>
 	    private static Dictionary<WorldStates, Sprite> loaded_sprites = new Dictionary<WorldStates, Sprite>();
 
-        public Workshop(Player builder, Tile pos)
-            : base (typeof(Workshop), builder, pos, loaded_sprites){ }
+        public Workshop (Player builder, Tile pos)
+            : base(typeof(Workshop), builder, pos, loaded_sprites)
+        {
+            Upgradeable = true;
+        }
 
         public override Sprite GetActiveSprite()
         {

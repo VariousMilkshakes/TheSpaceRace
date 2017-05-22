@@ -7,7 +7,7 @@ namespace SpaceRace.World.Buildings.Collection
 {
     class Landmark : Building
     {
-        public const string BUILDING_NAME = "LumberYard";
+        public const string BUILDING_NAME = "Landmark";
 
         /// <summary>
         /// Load sprites as singletons associated with worldstates

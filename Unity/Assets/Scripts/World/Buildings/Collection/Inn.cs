@@ -7,7 +7,7 @@ namespace SpaceRace.World.Buildings.Collection
 {
     public class Inn : Building
     {
-        public const string BUILDING_NAME = "Blacksmith";
+        public const string BUILDING_NAME = "Inn";
 
         /// <summary>
         /// Load sprites as singletons associated with worldstates
@@ -15,8 +15,11 @@ namespace SpaceRace.World.Buildings.Collection
         /// </summary>
 	    private static Dictionary<WorldStates, Sprite> loaded_sprites = new Dictionary<WorldStates, Sprite>();
 
-        public Inn(Player builder, Tile pos)
-            : base(typeof(Inn), builder, pos, loaded_sprites) { }
+        public Inn (Player builder, Tile pos)
+            : base(typeof(Inn), builder, pos, loaded_sprites)
+        {
+            Upgradeable = true;
+        }
 
         public override Sprite GetActiveSprite()
         {
